@@ -8,7 +8,9 @@ namespace FIFA.Server.Models
 {
     public class Season
     {
+        [Key]
         public int Id { get; set; }
+
         [Required]
         public string Name { get; set; }
     }
