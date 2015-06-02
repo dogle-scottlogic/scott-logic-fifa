@@ -9,7 +9,10 @@ namespace FIFA.Server.Models
     public class FIFAServerContext : DbContext
     {
     
-        public FIFAServerContext() : base("name=FIFAServerContext") { }
+        public FIFAServerContext() : base("name=FIFAServerContext")
+        {
+            base.Configuration.ProxyCreationEnabled = false;
+        }
 
         public System.Data.Entity.DbSet<FIFA.Server.Models.Season> Seasons { get; set; }
 
