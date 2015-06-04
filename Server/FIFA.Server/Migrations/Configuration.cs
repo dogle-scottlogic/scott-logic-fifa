@@ -15,8 +15,8 @@ namespace FIFA.Server.Migrations
 
         protected override void Seed(FIFA.Server.Models.FIFAServerContext context)
         {
-            context.Seasons.AddOrUpdate(x => x.Id,
-                new Season() { Id = 1, Name = "Scotland" }
+            context.Players.AddOrUpdate(x => x.Id,
+                new Player() { Id = 2, Name = "Steven" }
             );
         }
     }

@@ -6,16 +6,19 @@ using System.Web;
 
 namespace FIFA.Server.Models
 {
-    public class Player
+    public class Team
     {
+        public Team()
+        {
+            this.Players = new HashSet<Player>();
+        }
+
         [Key]
         public int Id { get; set; }
 
         [Required]
         public string Name { get; set; }
 
-        public virtual ICollection<Team> Teams { get; set; }
-
-        public virtual ICollection<League> Leagues { get; set; }
+        public virtual ICollection<Player> Players { get; set; }
     }
 }

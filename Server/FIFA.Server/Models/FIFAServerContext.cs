@@ -21,6 +21,10 @@ namespace FIFA.Server.Models
         public System.Data.Entity.DbSet<FIFA.Server.Models.League> Leagues { get; set; }
 
         public System.Data.Entity.DbSet<FIFA.Server.Models.Match> Matches { get; set; }
+
+        public System.Data.Entity.DbSet<FIFA.Server.Models.Team> Teams { get; set; }
+
+        public System.Data.Entity.DbSet<FIFA.Server.Models.Country> Countries { get; set; }
     
     }
 }

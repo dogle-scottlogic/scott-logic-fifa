@@ -6,7 +6,7 @@ using System.Web;
 
 namespace FIFA.Server.Models
 {
-    public class Player
+    public class Country
     {
         [Key]
         public int Id { get; set; }
@@ -14,8 +14,6 @@ namespace FIFA.Server.Models
         [Required]
         public string Name { get; set; }
 
-        public virtual ICollection<Team> Teams { get; set; }
-
-        public virtual ICollection<League> Leagues { get; set; }
+        public virtual ICollection<Season> Seasons { get; set; }
     }
 }

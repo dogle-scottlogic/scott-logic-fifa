@@ -13,43 +13,43 @@ using FIFA.Server.Models;
 
 namespace FIFA.Server.Controllers
 {
-    public class PlayerController : ApiController
+    public class TeamController : ApiController
     {
         private FIFAServerContext db = new FIFAServerContext();
 
-        // GET api/Player
-        public IQueryable<Player> GetPlayers()
+        // GET api/Team
+        public IQueryable<Team> GetTeams()
         {
-            return db.Players.Include(p => p.Leagues).Include(p => p.Teams);
+            return db.Teams.Include(p => p.Players);
         }
 
-        // GET api/Player/5
-        [ResponseType(typeof(Player))]
-        public async Task<IHttpActionResult> GetPlayer(int id)
+        // GET api/Team/5
+        [ResponseType(typeof(Team))]
+        public async Task<IHttpActionResult> GetTeam(int id)
         {
-            Player player = await db.Players.Where(p => p.Id == id).Include(p => p.Teams).Include(p => p.Leagues).FirstAsync();
-            if (player == null)
+            Team team = await db.Teams.Where(p => p.Id == id).Include(p => p.Players).FirstAsync();
+            if (team == null)
             {
                 return NotFound();
             }
 
-            return Ok(player);
+            return Ok(team);
         }
 
-        // PUT api/Player/5
-        public async Task<IHttpActionResult> PutPlayer(int id, Player player)
+        // PUT api/Team/5
+        public async Task<IHttpActionResult> PutTeam(int id, Team team)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != player.Id)
+            if (id != team.Id)
             {
                 return BadRequest();
             }
 
-            db.Entry(player).State = EntityState.Modified;
+            db.Entry(team).State = EntityState.Modified;
 
             try
             {
@@ -57,7 +57,7 @@ namespace FIFA.Server.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!PlayerExists(id))
+                if (!TeamExists(id))
                 {
                     return NotFound();
                 }
@@ -70,35 +70,35 @@ namespace FIFA.Server.Controllers
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-        // POST api/Player
-        [ResponseType(typeof(Player))]
-        public async Task<IHttpActionResult> PostPlayer(Player player)
+        // POST api/Team
+        [ResponseType(typeof(Team))]
+        public async Task<IHttpActionResult> PostTeam(Team team)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            db.Players.Add(player);
+            db.Teams.Add(team);
             await db.SaveChangesAsync();
 
-            return CreatedAtRoute("DefaultApi", new { id = player.Id }, player);
+            return CreatedAtRoute("DefaultApi", new { id = team.Id }, team);
         }
 
-        // DELETE api/Player/5
-        [ResponseType(typeof(Player))]
-        public async Task<IHttpActionResult> DeletePlayer(int id)
+        // DELETE api/Team/5
+        [ResponseType(typeof(Team))]
+        public async Task<IHttpActionResult> DeleteTeam(int id)
         {
-            Player player = await db.Players.FindAsync(id);
-            if (player == null)
+            Team team = await db.Teams.FindAsync(id);
+            if (team == null)
             {
                 return NotFound();
             }
 
-            db.Players.Remove(player);
+            db.Teams.Remove(team);
             await db.SaveChangesAsync();
 
-            return Ok(player);
+            return Ok(team);
         }
 
         protected override void Dispose(bool disposing)
@@ -110,9 +110,9 @@ namespace FIFA.Server.Controllers
             base.Dispose(disposing);
         }
 
-        private bool PlayerExists(int id)
+        private bool TeamExists(int id)
         {
-            return db.Players.Count(e => e.Id == id) > 0;
+            return db.Teams.Count(e => e.Id == id) > 0;
         }
     }
 }

@@ -13,43 +13,43 @@ using FIFA.Server.Models;
 
 namespace FIFA.Server.Controllers
 {
-    public class PlayerController : ApiController
+    public class CountryController : ApiController
     {
         private FIFAServerContext db = new FIFAServerContext();
 
-        // GET api/Player
-        public IQueryable<Player> GetPlayers()
+        // GET api/Country
+        public IQueryable<Season> GetSeasons()
         {
-            return db.Players.Include(p => p.Leagues).Include(p => p.Teams);
+            return db.Seasons;
         }
 
-        // GET api/Player/5
-        [ResponseType(typeof(Player))]
-        public async Task<IHttpActionResult> GetPlayer(int id)
+        // GET api/Country/5
+        [ResponseType(typeof(Season))]
+        public async Task<IHttpActionResult> GetSeason(int id)
         {
-            Player player = await db.Players.Where(p => p.Id == id).Include(p => p.Teams).Include(p => p.Leagues).FirstAsync();
-            if (player == null)
+            Season season = await db.Seasons.FindAsync(id);
+            if (season == null)
             {
                 return NotFound();
             }
 
-            return Ok(player);
+            return Ok(season);
         }
 
-        // PUT api/Player/5
-        public async Task<IHttpActionResult> PutPlayer(int id, Player player)
+        // PUT api/Country/5
+        public async Task<IHttpActionResult> PutSeason(int id, Season season)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != player.Id)
+            if (id != season.Id)
             {
                 return BadRequest();
             }
 
-            db.Entry(player).State = EntityState.Modified;
+            db.Entry(season).State = EntityState.Modified;
 
             try
             {
@@ -57,7 +57,7 @@ namespace FIFA.Server.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!PlayerExists(id))
+                if (!SeasonExists(id))
                 {
                     return NotFound();
                 }
@@ -70,35 +70,35 @@ namespace FIFA.Server.Controllers
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-        // POST api/Player
-        [ResponseType(typeof(Player))]
-        public async Task<IHttpActionResult> PostPlayer(Player player)
+        // POST api/Country
+        [ResponseType(typeof(Season))]
+        public async Task<IHttpActionResult> PostSeason(Season season)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            db.Players.Add(player);
+            db.Seasons.Add(season);
             await db.SaveChangesAsync();
 
-            return CreatedAtRoute("DefaultApi", new { id = player.Id }, player);
+            return CreatedAtRoute("DefaultApi", new { id = season.Id }, season);
         }
 
-        // DELETE api/Player/5
-        [ResponseType(typeof(Player))]
-        public async Task<IHttpActionResult> DeletePlayer(int id)
+        // DELETE api/Country/5
+        [ResponseType(typeof(Season))]
+        public async Task<IHttpActionResult> DeleteSeason(int id)
         {
-            Player player = await db.Players.FindAsync(id);
-            if (player == null)
+            Season season = await db.Seasons.FindAsync(id);
+            if (season == null)
             {
                 return NotFound();
             }
 
-            db.Players.Remove(player);
+            db.Seasons.Remove(season);
             await db.SaveChangesAsync();
 
-            return Ok(player);
+            return Ok(season);
         }
 
         protected override void Dispose(bool disposing)
@@ -110,9 +110,9 @@ namespace FIFA.Server.Controllers
             base.Dispose(disposing);
         }
 
-        private bool PlayerExists(int id)
+        private bool SeasonExists(int id)
         {
-            return db.Players.Count(e => e.Id == id) > 0;
+            return db.Seasons.Count(e => e.Id == id) > 0;
         }
     }
 }

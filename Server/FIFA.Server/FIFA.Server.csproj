@@ -136,11 +136,13 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\SampleDirection.cs" />
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
+    <Compile Include="Controllers\CountryController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LeagueController.cs" />
     <Compile Include="Controllers\MatchController.cs" />
     <Compile Include="Controllers\PlayerController.cs" />
     <Compile Include="Controllers\SeasonController.cs" />
+    <Compile Include="Controllers\TeamController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -148,15 +150,23 @@
     <Compile Include="Migrations\201505291119309_Initial.Designer.cs">
       <DependentUpon>201505291119309_Initial.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201506041428080_TeamsAndCountry.cs" />
+    <Compile Include="Migrations\201506041428080_TeamsAndCountry.Designer.cs">
+      <DependentUpon>201506041428080_TeamsAndCountry.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\FIFAServerContext.cs" />
     <Compile Include="Models\Match.cs" />
     <Compile Include="Models\League.cs" />
+    <Compile Include="Models\Country.cs" />
+    <Compile Include="Models\Team.cs" />
     <Compile Include="Models\Player.cs" />
     <Compile Include="Models\Season.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Data\stevensavery_db.mdf" />
+    <Content Include="App_Data\stevensavery_db_log.ldf" />
     <Content Include="Areas\HelpPage\HelpPage.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
@@ -202,6 +212,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201505291119309_Initial.resx">
       <DependentUpon>201505291119309_Initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201506041428080_TeamsAndCountry.resx">
+      <DependentUpon>201506041428080_TeamsAndCountry.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
