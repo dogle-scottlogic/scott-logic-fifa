@@ -1,0 +1,13 @@
+{
+  "name": "scottlogic-fifa",
+  "version": "0.0.0",
+  "description": "The Scott Logic Xbox FIFA League",
+  "dependencies": {
+    "express": "^4.12.2"
+  },
+  "devDependencies": {
+    "bower": "^1.3.12",
+    "grunt": "^0.4.5",
+    "grunt-nodemon": "^0.4.0"
+  }
+}
