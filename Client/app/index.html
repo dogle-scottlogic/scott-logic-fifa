@@ -1,9 +1,12 @@
-<!DOCTYPE html>
-<html ng-app="fifa">
+﻿<!DOCTYPE html>
+<html>
 <head lang="en">
     <meta charset="UTF-8">
     <title>Scott Logic FIFA League</title>
     <link rel="stylesheet" href="lib/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="style.css">
+    <script type="text/javascript" src="lib/jquery/dist/jquery.min.js"></script>
+    <script type="text/javascript" src="lib/bootstrap/dist/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="lib/angular/angular.js"></script>
 </head>
 <body>
@@ -15,7 +18,36 @@
         </div>
     </nav>
     <div class="container">
-        
+        <div class="tabbable tabs-left">
+            <ul class="nav nav-tabs">
+                <li class="active">
+                    <a href="#home" data-toggle="tab">Dashboard</a>
+                </li>
+                <li>
+                    <a href="#fixtures" data-toggle="tab">Fixtures/Results</a>
+                </li>
+                <li>
+                    <a href="#archives" data-toggle="tab">Archives</a>
+                </li>
+                <li>
+                    <a href="#admin" data-toggle="tab">Administration</a>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane active" id="home">
+                    Home Dashboard
+                </div>
+                <div class="tab-pane" id="fixtures">
+                    Fixtures
+                </div>
+                <div class="tab-pane" id="archives">
+                    Archives (Past Seasons?)
+                </div>
+                <div class="tab-pane" id="admin">
+                    Administration
+                </div>
+            </div>
+        </div>
     </div>
 </body>
 </html>
