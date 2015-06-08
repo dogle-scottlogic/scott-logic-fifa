@@ -16,7 +16,7 @@
     "bootstrap": "~3.3.2",
     "angular-bootstrap": "~0.12.1",
     "angular-resource": "~1.3.14",
-    "bootswatch-dist": "simplex"
+    "bootswatch-dist": "yeti"
   },
   "license": "MIT",
   "resolutions": {
