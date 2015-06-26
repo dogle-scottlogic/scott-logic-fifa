@@ -5,6 +5,7 @@ module.exports = function(grunt) {
         paths: {
             lessSrc : 'less/site.less',
             lessDest: 'app/style.css',
+            bowerAssets: 'lib/',
             jsSrc: [
                 'lib/jquery/dist/jquery.js',
                 'lib/bootstrap/dist//js/bootstrap.js',
@@ -42,6 +43,19 @@ module.exports = function(grunt) {
             scriptMap: ['script.js.map']
         },
 
+        copy: {
+            main: {
+                files: [
+                    {
+                        expand: true,
+                        cwd: '<%= paths.bowerAssets %>/angular',
+                        src: ['*'],
+                        dest: 'app/lib/angular'
+                    }
+                ]
+            }
+        },
+
         nodemon: {
             dev: {
                 script: 'run.js'
@@ -74,9 +88,10 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-less');
     grunt.loadNpmTasks('grunt-contrib-uglify');
+    grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-nodemon');
 
-    grunt.registerTask('build', ['styles', 'scripts', 'nodemon']);
+    grunt.registerTask('build', ['styles', 'scripts', 'copy', 'nodemon']);
     grunt.registerTask('styles', ['clean:styleMap', 'less:production']);
     grunt.registerTask('scripts', ['clean:scriptMap', 'uglify:production']);
     grunt.registerTask('default', ['build']);
