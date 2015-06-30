@@ -6,7 +6,6 @@ using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 using FIFA.Server.Models;
@@ -18,46 +17,46 @@ namespace FIFA.Server.Controllers
         private FIFAServerContext db = new FIFAServerContext();
 
         // GET api/Country
-        public IQueryable<Season> GetSeasons()
+        public IQueryable<Country> GetCountries()
         {
-            return db.Seasons;
+            return db.Countries;
         }
 
         // GET api/Country/5
-        [ResponseType(typeof(Season))]
-        public async Task<IHttpActionResult> GetSeason(int id)
+        [ResponseType(typeof(Country))]
+        public IHttpActionResult GetCountry(int id)
         {
-            Season season = await db.Seasons.FindAsync(id);
-            if (season == null)
+            Country country = db.Countries.Find(id);
+            if (country == null)
             {
                 return NotFound();
             }
 
-            return Ok(season);
+            return Ok(country);
         }
 
         // PUT api/Country/5
-        public async Task<IHttpActionResult> PutSeason(int id, Season season)
+        public IHttpActionResult PutCountry(int id, Country country)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != season.Id)
+            if (id != country.Id)
             {
                 return BadRequest();
             }
 
-            db.Entry(season).State = EntityState.Modified;
+            db.Entry(country).State = EntityState.Modified;
 
             try
             {
-                await db.SaveChangesAsync();
+                db.SaveChanges();
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!SeasonExists(id))
+                if (!CountryExists(id))
                 {
                     return NotFound();
                 }
@@ -71,34 +70,34 @@ namespace FIFA.Server.Controllers
         }
 
         // POST api/Country
-        [ResponseType(typeof(Season))]
-        public async Task<IHttpActionResult> PostSeason(Season season)
+        [ResponseType(typeof(Country))]
+        public IHttpActionResult PostCountry(Country country)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            db.Seasons.Add(season);
-            await db.SaveChangesAsync();
+            db.Countries.Add(country);
+            db.SaveChanges();
 
-            return CreatedAtRoute("DefaultApi", new { id = season.Id }, season);
+            return CreatedAtRoute("DefaultApi", new { id = country.Id }, country);
         }
 
         // DELETE api/Country/5
-        [ResponseType(typeof(Season))]
-        public async Task<IHttpActionResult> DeleteSeason(int id)
+        [ResponseType(typeof(Country))]
+        public IHttpActionResult DeleteCountry(int id)
         {
-            Season season = await db.Seasons.FindAsync(id);
-            if (season == null)
+            Country country = db.Countries.Find(id);
+            if (country == null)
             {
                 return NotFound();
             }
 
-            db.Seasons.Remove(season);
-            await db.SaveChangesAsync();
+            db.Countries.Remove(country);
+            db.SaveChanges();
 
-            return Ok(season);
+            return Ok(country);
         }
 
         protected override void Dispose(bool disposing)
@@ -110,9 +109,9 @@ namespace FIFA.Server.Controllers
             base.Dispose(disposing);
         }
 
-        private bool SeasonExists(int id)
+        private bool CountryExists(int id)
         {
-            return db.Seasons.Count(e => e.Id == id) > 0;
+            return db.Countries.Count(e => e.Id == id) > 0;
         }
     }
 }
