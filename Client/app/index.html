@@ -4,10 +4,12 @@
     <meta charset="UTF-8">
     <title>Scott Logic FIFA League</title>
     <link rel="stylesheet" href="style.css">
-    <script type="text/javascript" src="script.js"></script>
-    <script type="text/javascript" src="lib/angular/angular.js"></script>
+    <script src="script.js"></script>
+    <script src="lib/angular/angular.js"></script>
+    <script src="lib/angular-route/angular-route.js"></script>
+    <script src="leagueManager.js"></script>
 </head>
-<body>
+<body ng-app="FifaLeagueApp">
     <div id="header">
         <div class="wrapper">
             <div id="logo"></div>
@@ -36,11 +38,16 @@
                     <li><a href="#">Results</a></li>
                     <li><a href="#">Archives</a></li>
                     <li><a href="#">Players</a></li>
-                    <li><a href="#">Admin</a></li>
+                    <li class="dropdown">
+                      <a class="dropdown-toggle" data-toggle="dropdown" role="button">Admin <span class="caret"></span></a>
+                      <ul class="dropdown-menu" role="menu">
+                        <li><a href="#/countries">Countries</a></li>
+                      </ul>
+                    </li>
                 </ul>
             </div>
         </div>
     </nav>
-
+<ng-view></ng-view>
 </body>
 </html>
