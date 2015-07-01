@@ -9,109 +9,88 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Description;
 using FIFA.Server.Models;
+using System.Threading.Tasks;
 
 namespace FIFA.Server.Controllers
 {
-    public class CountryController : ApiController
+    public class CountryController : AbstractCRUDAPIController<Country, int>
     {
-        private FIFAServerContext db = new FIFAServerContext();
-
-        // GET api/Country
-        public IQueryable<Country> GetCountries()
+        /// <summary>
+        ///     Constructor
+        /// </summary>
+        /// <returns></returns>
+        public CountryController(ICountryRepository countryRepository)
+            : base(countryRepository)
         {
-            return db.Countries;
         }
 
+        /// <summary>
+        ///     Retrieve a list of countries
+        /// </summary>
+        /// <returns>Return a list of countryModel</returns>
+        /// 
+        // GET api/Country
+        [ResponseType(typeof(IEnumerable<Country>))]
+        public async Task<HttpResponseMessage> GetAll()
+        {
+            return await base.GetAll();
+        }
+
+        /// <summary>
+        ///     Retrieves a specific country by it's ID
+        /// </summary>
+        /// <param name="id">The ID of the country.</param>
+        /// <returns>Return a countryModel if found</returns>
+        /// 
         // GET api/Country/5
         [ResponseType(typeof(Country))]
-        public IHttpActionResult GetCountry(int id)
+        public async Task<HttpResponseMessage> Get(int id)
         {
-            Country country = db.Countries.Find(id);
-            if (country == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(country);
+            return await base.Get(id);
         }
 
-        // PUT api/Country/5
-        public IHttpActionResult PutCountry(int id, Country country)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            if (id != country.Id)
-            {
-                return BadRequest();
-            }
-
-            db.Entry(country).State = EntityState.Modified;
-
-            try
-            {
-                db.SaveChanges();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!CountryExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return StatusCode(HttpStatusCode.NoContent);
-        }
-
+        /// <summary>
+        ///     Create a new country
+        /// </summary>
+        /// <param name="item">The country to add without id</param>
+        /// <returns>Return a countryModel if created and its uri to retrieve it</returns>
+        /// 
         // POST api/Country
         [ResponseType(typeof(Country))]
-        public IHttpActionResult PostCountry(Country country)
+        public async Task<HttpResponseMessage> Post(Country item)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            db.Countries.Add(country);
-            db.SaveChanges();
-
-            return CreatedAtRoute("DefaultApi", new { id = country.Id }, country);
+            return await base.Post(item);
         }
 
+        /// <summary>
+        ///     Update a country by its ID
+        /// </summary>
+        /// <param name="id">The ID of the country.</param>
+        /// <param name="item">The modified country</param>
+        /// <returns>Return the modified countryModel if no error</returns>
+        /// 
+        // PUT api/Country/5
+        [ResponseType(typeof(Country))]
+        public async Task<HttpResponseMessage> Put(int id, Country item)
+        {
+            return await base.Put(id, item);
+        }
+
+        /// <summary>
+        ///     Delete a country by its ID
+        /// </summary>
+        /// <param name="id">The ID of the country.</param>
+        /// <returns>
+        /// Status 200 if deleted correctly
+        /// Status 404 if not (with country not found message)
+        /// </returns>
+        /// 
         // DELETE api/Country/5
         [ResponseType(typeof(Country))]
-        public IHttpActionResult DeleteCountry(int id)
+        public async Task<HttpResponseMessage> Delete(int id)
         {
-            Country country = db.Countries.Find(id);
-            if (country == null)
-            {
-                return NotFound();
-            }
-
-            db.Countries.Remove(country);
-            db.SaveChanges();
-
-            return Ok(country);
+            return await base.Delete(id);
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
-        }
-
-        private bool CountryExists(int id)
-        {
-            return db.Countries.Count(e => e.Id == id) > 0;
-        }
     }
 }
