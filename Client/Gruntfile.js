@@ -11,6 +11,10 @@ module.exports = function(grunt) {
                 'lib/bootstrap/dist//js/bootstrap.js',
             ],
             jsDest: 'app/script.js',
+            typescriptSrc: [
+                'app/typescript/**/*.ts',
+            ],
+            typescriptDest: 'app/leagueManager.js',
         },
 
         less: {
@@ -34,6 +38,20 @@ module.exports = function(grunt) {
                 },
                 files: {
                     '<%= paths.lessDest %>': '<%= paths.lessSrc %>'
+                }
+            }
+        },
+
+        typescript: {
+            base: {
+                src: '<%= paths.typescriptSrc %>',
+                dest: '<%= paths.typescriptDest %>',
+                options: {
+                    sourceMap: false, // (optional) Generates corresponding .map file.
+                    target: 'ES5', // (optional) Specify ECMAScript target version: 'ES3' (default), or 'ES5'
+                    module: 'amd', // (optional) Specify module code generation: 'commonjs' or 'amd'
+                    noImplicitAny: false, // (optional) Warn on expressions and declarations with an implied 'any' type.
+                    removeComments: true // (optional) Do not emit comments to output.
                 }
             }
         },
@@ -90,8 +108,9 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-nodemon');
+    grunt.loadNpmTasks('grunt-typescript');
 
-    grunt.registerTask('build', ['styles', 'scripts', 'copy', 'nodemon']);
+    grunt.registerTask('build', ['typescript', 'styles', 'scripts', 'copy', 'nodemon']);
     grunt.registerTask('styles', ['clean:styleMap', 'less:production']);
     grunt.registerTask('scripts', ['clean:scriptMap', 'uglify:production']);
     grunt.registerTask('default', ['build']);
