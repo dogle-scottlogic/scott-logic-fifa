@@ -1,5 +1,5 @@
 # Scott Logic - FIFA
-This project is designed to track Xbox FIFA play within the Edinburgh office.
+This project is designed to track XBox FIFA play within the Edinburgh office.
 
 To set the project up locally:
 * git clone the repo
