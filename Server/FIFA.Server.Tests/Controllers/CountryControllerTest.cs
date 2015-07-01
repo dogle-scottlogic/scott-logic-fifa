@@ -45,12 +45,12 @@ namespace FIFA.Server.Tests.Controllers
             }
 
             // Method used to generate a country list
-            public List<Country> CreatecountryList()
+            public List<Country> CreateCountryList()
             {
 
                 var countrys = new List<Country>
             {
-                new Country{Id=1,Name="Scottland"},
+                new Country{Id=1,Name="Scotland"},
                 new Country{Id=2,Name="England"},
                 new Country{Id=3,Name="Germany"}
             };
@@ -62,7 +62,7 @@ namespace FIFA.Server.Tests.Controllers
             [TestMethod]
             public void RetrieveACountryInTheRepo()
             {
-                List<Country> countrys = CreatecountryList();
+                List<Country> countrys = CreateCountryList();
 
                 var mock = new Mock<ICountryRepository>(MockBehavior.Strict);
 
@@ -88,7 +88,7 @@ namespace FIFA.Server.Tests.Controllers
             [TestMethod]
             public void RetrieveFailureACountryInTheRepo()
             {
-                List<Country> countrys = CreatecountryList();
+                List<Country> countrys = CreateCountryList();
 
                 var mock = new Mock<ICountryRepository>(MockBehavior.Strict);
 
@@ -111,7 +111,7 @@ namespace FIFA.Server.Tests.Controllers
             [TestMethod]
             public void RetrieveAllcountrysInTheRepo()
             {
-                IEnumerable<Country> countrys = CreatecountryList();
+                IEnumerable<Country> countrys = CreateCountryList();
 
                 var mock = new Mock<ICountryRepository>(MockBehavior.Strict);
 
@@ -136,7 +136,7 @@ namespace FIFA.Server.Tests.Controllers
             [TestMethod]
             public void AddCountryInTheRepo()
             {
-                List<Country> countrys = CreatecountryList();
+                List<Country> countrys = CreateCountryList();
                 List<Country> added = new List<Country>();
                 var mock = new Mock<ICountryRepository>(MockBehavior.Strict);
 
@@ -207,6 +207,7 @@ namespace FIFA.Server.Tests.Controllers
 
             }
 
+                        
             // Verifying the Update failure method
             [TestMethod]
             public void UpdateCountryInTheRepo()
