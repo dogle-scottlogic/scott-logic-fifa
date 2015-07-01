@@ -159,9 +159,9 @@ $RECYCLE.BIN/
 # Client side dev stuff
 # =========================
 
-Client/.idea/
+Client/.idea
 Client/typings/
 Client/node_modules/
 Client/app/leagueManager.js
 Server/FIFA.Server/App_Data/
-Server/FIFA.Server/packages/
+Server/packages/
