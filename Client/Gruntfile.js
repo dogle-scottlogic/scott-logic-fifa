@@ -68,13 +68,13 @@ module.exports = function(grunt) {
                     {
                         expand: true,
                         cwd: '<%= paths.bowerAssets %>/angular/',
-                        src: ['angular.min.js'],
+                        src: ['angular.js'],
                         dest: 'app/lib/angular/'
                     },
                     {
                         expand: true,
                         cwd: '<%= paths.bowerAssets %>/angular-route/',
-                        src: ['angular-route.min.js'],
+                        src: ['angular-route.js'],
                         dest: 'app/lib/angular-route/'
                     }
                 ]
@@ -140,7 +140,6 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-connect');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-open');
-    grunt.loadNpmTasks('grunt-nodemon');
     grunt.loadNpmTasks('grunt-typescript');
 
     grunt.registerTask('dependencies', ['scripts', 'copy']);
