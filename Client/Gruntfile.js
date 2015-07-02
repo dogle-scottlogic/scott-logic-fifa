@@ -69,6 +69,12 @@ module.exports = function(grunt) {
                         cwd: '<%= paths.bowerAssets %>/angular',
                         src: ['*'],
                         dest: 'app/lib/angular'
+                    },
+                    {
+                        expand: true,
+                        cwd: '<%= paths.bowerAssets %>/angular-route',
+                        src: ['*'],
+                        dest: 'app/lib/angular-route'
                     }
                 ]
             }
@@ -111,6 +117,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-typescript');
 
     grunt.registerTask('build', ['typescript', 'styles', 'scripts', 'copy', 'nodemon']);
+    grunt.registerTask('ts', ['typescript']);
     grunt.registerTask('styles', ['clean:styleMap', 'less:production']);
     grunt.registerTask('scripts', ['clean:scriptMap', 'uglify:production']);
     grunt.registerTask('default', ['build']);
