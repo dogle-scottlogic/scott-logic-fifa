@@ -15,6 +15,7 @@ module.exports = function(grunt) {
                 'app/typescript/**/*.ts',
             ],
             typescriptDest: 'app/leagueManager.js',
+            htmlSrc: 'app/**/*.html'
         },
 
         less: {
@@ -66,23 +67,17 @@ module.exports = function(grunt) {
                 files: [
                     {
                         expand: true,
-                        cwd: '<%= paths.bowerAssets %>/angular',
-                        src: ['*'],
-                        dest: 'app/lib/angular'
+                        cwd: '<%= paths.bowerAssets %>/angular/',
+                        src: ['angular.js'],
+                        dest: 'app/lib/angular/'
                     },
                     {
                         expand: true,
-                        cwd: '<%= paths.bowerAssets %>/angular-route',
-                        src: ['*'],
-                        dest: 'app/lib/angular-route'
+                        cwd: '<%= paths.bowerAssets %>/angular-route/',
+                        src: ['angular-route.js'],
+                        dest: 'app/lib/angular-route/'
                     }
                 ]
-            }
-        },
-
-        nodemon: {
-            dev: {
-                script: 'run.js'
             }
         },
 
@@ -105,7 +100,36 @@ module.exports = function(grunt) {
                     '<%= paths.jsDest %>': '<%= paths.jsSrc %>'
                 }
             }
+        },
+
+        connect: {
+            server: {
+                options: {
+                    port: 8080,
+                    base: 'app/',
+                    livereload : true
         }
+            }
+        },
+
+        watch: {
+            files: [
+                '<%= paths.lessSrc %>',
+                '<%= paths.typescriptSrc %>',
+                '<%= paths.htmlSrc %>'
+            ],
+            tasks: ['build'],
+            options : {
+                livereload : true
+            }
+        },
+
+        open: {
+            dev: {
+                path: 'http://localhost:8080/index.html'
+            }
+        }
+
 
     });
 
@@ -113,12 +137,14 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-less');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-copy');
-    grunt.loadNpmTasks('grunt-nodemon');
+    grunt.loadNpmTasks('grunt-contrib-connect');
+    grunt.loadNpmTasks('grunt-contrib-watch');
+    grunt.loadNpmTasks('grunt-open');
     grunt.loadNpmTasks('grunt-typescript');
 
-    grunt.registerTask('build', ['typescript', 'styles', 'scripts', 'copy', 'nodemon']);
-    grunt.registerTask('ts', ['typescript']);
+    grunt.registerTask('dependencies', ['scripts', 'copy']);
+    grunt.registerTask('build', ['typescript', 'styles']);
     grunt.registerTask('styles', ['clean:styleMap', 'less:production']);
     grunt.registerTask('scripts', ['clean:scriptMap', 'uglify:production']);
-    grunt.registerTask('default', ['build']);
+    grunt.registerTask('default', ['dependencies','build', 'connect', 'open', 'watch']);
 };
