@@ -164,12 +164,17 @@
     <Compile Include="Migrations\201506041428080_TeamsAndCountry.Designer.cs">
       <DependentUpon>201506041428080_TeamsAndCountry.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201507020752141_MatchesAndScores.cs" />
+    <Compile Include="Migrations\201507020752141_MatchesAndScores.Designer.cs">
+      <DependentUpon>201507020752141_MatchesAndScores.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Country\Country.cs" />
     <Compile Include="Models\Country\CountryRepository.cs" />
     <Compile Include="Models\Country\ICountryRepository.cs" />
     <Compile Include="Models\FIFAServerContext.cs" />
     <Compile Include="Models\ICRUDRepository.cs" />
+    <Compile Include="Models\Score.cs" />
     <Compile Include="Models\Match.cs" />
     <Compile Include="Models\League.cs" />
     <Compile Include="Models\Team.cs" />
@@ -228,6 +233,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201506041428080_TeamsAndCountry.resx">
       <DependentUpon>201506041428080_TeamsAndCountry.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201507020752141_MatchesAndScores.resx">
+      <DependentUpon>201507020752141_MatchesAndScores.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
