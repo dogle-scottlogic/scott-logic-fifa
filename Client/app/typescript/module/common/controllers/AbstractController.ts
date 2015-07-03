@@ -6,5 +6,9 @@ module FifaLeagueClient.Module.Common.Controllers {
       constructor(scope){
         this.scope = scope;
       }
+
+      protected resetErrors(){
+        this.errors = {};
+      }
   }
 }

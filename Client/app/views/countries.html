@@ -1,1 +1,39 @@
-<h2> Countries </h2>
+<div ng-init="vm.fillCountries()" collapse="!vm.showListForm">
+    <h2> Countries </h2>
+    <a href="#/countries" ng-click="vm.showCreateCountry()">Create a country</a>
+    <ul class="error">
+        <li ng-repeat="value in vm.errors['item.Global']">{{value}}</li>
+    </ul>
+    <table class="table table-striped table-bordered">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="country in vm.countries">
+            <td>{{country.Name}}</td>
+            <td><a href="#/countries" ng-click="vm.showEditCountry(country.Id)">Edit</a></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<div collapse="!vm.showCreateForm">
+    <h2>Creating a country</h2>
+    <hr />
+    <form class="simple-form" ng-submit="vm.addCountry()">
+        <div ng-include="'./views/partials/country-form.html'"></div>
+        <input type="submit" class="btn btn-primary" value="Save" />
+        <input type="button" class="btn" value="Cancel" ng-click="vm.showList()" />
+    </form>
+</div>
+<div collapse="!vm.showEditForm">
+    <h2>Editing a country</h2>
+    <hr />
+    <form class="simple-form" ng-submit="vm.updateCountry()">
+        <div ng-include="'./views/partials/country-form.html'"></div>
+        <input type="submit" class="btn btn-primary" value="Save" />
+        <input type="button" class="btn" value="Cancel" ng-click="vm.showList()" />
+    </form>
+</div>

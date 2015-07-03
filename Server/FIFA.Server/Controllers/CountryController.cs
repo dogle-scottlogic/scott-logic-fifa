@@ -10,9 +10,12 @@ using System.Web.Http;
 using System.Web.Http.Description;
 using FIFA.Server.Models;
 using System.Threading.Tasks;
+using FIFA.Server.Infrastructure;
 
 namespace FIFA.Server.Controllers
 {
+
+    [ConfigurableCorsPolicy("country")]
     public class CountryController : AbstractCRUDAPIController<Country, int>
     {
         /// <summary>
