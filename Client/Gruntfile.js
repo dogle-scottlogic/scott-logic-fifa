@@ -76,12 +76,6 @@ module.exports = function(grunt) {
                         cwd: '<%= paths.bowerAssets %>/angular-route/',
                         src: ['angular-route.js'],
                         dest: 'app/lib/angular-route/'
-                    },
-                    {
-                        expand: true,
-                        cwd: '<%= paths.bowerAssets %>/angular-bootstrap/',
-                        src: ['ui-bootstrap-tpls.js'],
-                        dest: 'app/lib/angular-bootstrap/'
                     }
                 ]
             }
@@ -132,11 +126,16 @@ module.exports = function(grunt) {
 
         open: {
             dev: {
-                path: 'http://localhost:8080/'
+                path: 'http://localhost:8080/index.html'
             }
+        },
+
+        karma: {
+          unit: {
+            configFile: 'karma.conf.js',
+            autoWatch: true
+          }
         }
-
-
     });
 
     grunt.loadNpmTasks('grunt-contrib-clean');
@@ -147,6 +146,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-open');
     grunt.loadNpmTasks('grunt-typescript');
+    grunt.loadNpmTasks('grunt-karma');
 
     grunt.registerTask('dependencies', ['scripts', 'copy']);
     grunt.registerTask('build', ['typescript', 'styles']);
