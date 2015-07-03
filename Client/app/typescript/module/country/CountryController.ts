@@ -40,6 +40,11 @@ module FifaLeagueClient.Module.Country {
           this.loadCountry(Id);
       }
 
+      // Method deleting a Country
+      public deleteCountryInstance(Id:number){
+          this.deleteCountry(Id);
+      }
+
       // Method showing the list of countries
       public showList(){
           this.showCreateForm = false;
@@ -61,6 +66,7 @@ module FifaLeagueClient.Module.Country {
 
     // Do nothing if the creation is successfull
     protected handleLoadSuccess = (data:CountryModel) => {
+      console.log(data);
       this.country = data;
     }
 
@@ -115,14 +121,14 @@ module FifaLeagueClient.Module.Country {
     }
 
     /** DELETING THE COUNTRY **/
-    // Method adding a country in the database
-    public deleteCountry = ()  => {
+    // Method deleting a country in the database
+    public deleteCountry = (Id:number)  => {
       // reset the errors created before
       this.resetErrors();
       // try to create the country
       // refresh the list if it is a success
       // show the errors if not
-      this.mainService.deleteCountry(this.country.Id)
+      this.mainService.deleteCountry(Id)
         .then(this.handleDeleteSuccess)
         .catch(this.handleDeleteErrors);
     }
