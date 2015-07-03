@@ -76,7 +76,13 @@ module.exports = function(grunt) {
                         cwd: '<%= paths.bowerAssets %>/angular-route/',
                         src: ['angular-route.js'],
                         dest: 'app/lib/angular-route/'
-                    }
+                    },
+                    {
+                         expand: true,
+                         cwd: '<%= paths.bowerAssets %>/angular-bootstrap/',
+                         src: ['ui-bootstrap-tpls.js'],
+                         dest: 'app/lib/angular-bootstrap/'
+                     }
                 ]
             }
         },
@@ -126,7 +132,7 @@ module.exports = function(grunt) {
 
         open: {
             dev: {
-                path: 'http://localhost:8080/index.html'
+                path: 'http://localhost:8080/'
             }
         },
 
