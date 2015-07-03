@@ -66,7 +66,6 @@ module FifaLeagueClient.Module.Country {
 
     // Do nothing if the creation is successfull
     protected handleLoadSuccess = (data:CountryModel) => {
-      console.log(data);
       this.country = data;
     }
 
