@@ -4,7 +4,7 @@ module FifaLeagueClient.Module.Country {
   export class CountryController extends Common.Controllers.AbstractController {
 
       scope;
-      countries;
+      countries:CountryModel[];
       country: CountryModel;
       mainService : CountryService;
       showCreateForm : boolean;
@@ -53,17 +53,19 @@ module FifaLeagueClient.Module.Country {
     public loadCountry = (id) => {
       this.resetErrors();
       if(id != null){
-        this.mainService.getCountry(this.handleLoadSuccess, this.handleLoadErrors, this, id);
+        this.mainService.getCountry(id)
+          .then(this.handleLoadSuccess)
+          .catch(this.handleLoadErrors);
       }
     }
 
     // Do nothing if the creation is successfull
-    protected handleLoadSuccess = (data, status, headers, config) => {
+    protected handleLoadSuccess = (data:CountryModel) => {
       this.country = data;
     }
 
     // Method adding loading errors in errors list
-    protected handleLoadErrors = (data, status, headers, config) => {
+    protected handleLoadErrors = (config) => {
       this.errors = config.errors;
     }
 
@@ -74,16 +76,18 @@ module FifaLeagueClient.Module.Country {
       // try to create the country
       // refresh the list if it is a success
       // show the errors if not
-      this.mainService.addCountry(this.handleCreatingSuccess, this.handleCreatingErrors, this, this.country);
+      this.mainService.addCountry(this.country)
+          .then(this.handleCreatingSuccess)
+          .catch(this.handleCreatingErrors);
     }
 
     // Do nothing if the creation is successfull
-    protected handleCreatingSuccess = (data, status, headers, config) => {
+    protected handleCreatingSuccess = (data:CountryModel) => {
       this.showList();
     }
 
     // Method adding creating errors in creatingErrors list
-    protected handleCreatingErrors = (data, status, headers, config) => {
+    protected handleCreatingErrors = (config) => {
       this.errors = config.errors;
     }
 
@@ -95,16 +99,18 @@ module FifaLeagueClient.Module.Country {
       // try to create the country
       // refresh the list if it is a success
       // show the errors if not
-      this.mainService.updateCountry(this.handleUpdateSuccess, this.handleUpdateErrors, this, this.country);
+      this.mainService.updateCountry(this.country)
+          .then(this.handleUpdateSuccess)
+          .catch(this.handleUpdateErrors);
     }
 
     // Do nothing if the creation is successfull
-    protected handleUpdateSuccess = (data, status, headers, config) => {
+    protected handleUpdateSuccess = (data:CountryModel) => {
         this.showList();
     }
 
     // Method adding creating errors in creatingErrors list
-    protected handleUpdateErrors = (data, status, headers, config) => {
+    protected handleUpdateErrors = (config) => {
       this.errors = config.errors;
     }
 
@@ -116,31 +122,35 @@ module FifaLeagueClient.Module.Country {
       // try to create the country
       // refresh the list if it is a success
       // show the errors if not
-      this.mainService.deleteCountry(this.handleDeleteSuccess, this.handleDeleteErrors, this, this.country.Id);
+      this.mainService.deleteCountry(this.country.Id)
+        .then(this.handleDeleteSuccess)
+        .catch(this.handleDeleteErrors);
     }
 
     // Do nothing if the creation is successfull
-    protected handleDeleteSuccess = (data, status, headers, config) => {
+    protected handleDeleteSuccess = (response:boolean) => {
         this.showList();
     }
 
     // Method adding creating errors in creatingErrors list
-    protected handleDeleteErrors = (data, status, headers, config) => {
+    protected handleDeleteErrors = (config) => {
       this.errors = config.errors;
     }
 
     // call the service in order to get the list of countries
     public fillCountries = () => {
       this.errors = {};
-      this.mainService.getCountryList(this.fillCountriesSuccessCallBack, this.fillCountriesErrorCallBack, this);
+      this.mainService.getCountryList()
+          .then(this.fillCountriesSuccessCallBack)
+          .catch(this.fillCountriesErrorCallBack);
     }
 
     // fill the countries - if the callback is a success
-    protected fillCountriesSuccessCallBack = (data, status, headers, config) => {
-      this.countries = data;
+    protected fillCountriesSuccessCallBack = (countries:CountryModel[]) => {
+      this.countries = countries;
     }
 
-    protected fillCountriesErrorCallBack = (data, status, headers, config) => {
+    protected fillCountriesErrorCallBack = (config) => {
       this.errors = config.errors;
     }
 

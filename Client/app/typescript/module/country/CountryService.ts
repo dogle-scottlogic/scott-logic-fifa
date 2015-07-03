@@ -3,80 +3,91 @@ module FifaLeagueClient.Module.Country {
 
     export class CountryService {
         httpService: ng.IHttpService;
-        serverURL : string;
+        qService: ng.IQService;
 
         // URL used to reach the country API
-        countryApi = "api/Country/";
+        apiURL:string;
 
         static $inject = [
-            "$httpService"
+            "$httpService", '$q'
         ];
 
-        constructor($http: ng.IHttpService, config: Common.Config) {
+        constructor($http: ng.IHttpService, config: Common.Config, $q: ng.IQService) {
             this.httpService = $http;
-            this.serverURL = config.backend;
+            this.qService = $q;
+            this.apiURL = config.backend+"api/Country/";
         }
 
         // Get a country list, execute successCallBack if it is a success and errorCallBack if it is a failure
-        public getCountryList(successCallBack, errorCallBack, callbackObj): void {
+        public getCountryList(): ng.IPromise<CountryModel[]> {
+            var deferred = this.qService.defer();
+
             var self = this;
-            this.httpService.get(this.serverURL+this.countryApi)
+            this.httpService.get(this.apiURL)
                 .success(function (data:[string], status, headers, config) {
                     var countryList =  [];
                     for(var i = 0; i<data.length; i++){
                         countryList.push(self.convertDataToCountry(data[i]));
                     }
-                    self.callback(successCallBack, callbackObj, [countryList, status, headers, config]);
+                    deferred.resolve(countryList);
                 })
                 .error(function (data, status, headers, config) {
-                    self.callback(errorCallBack,callbackObj, [data, status, headers, config]);
+                    deferred.reject(config);
                 });
+
+            return deferred.promise;
         }
 
         // Get the detail of a country by its ID
-        public getCountry(successCallBack, errorCallBack, callbackObj, ID){
+        public getCountry(ID): ng.IPromise<CountryModel>{
+            var deferred = this.qService.defer();
             var self = this;
-            this.httpService.get(this.serverURL+ this.countryApi + ID).success(function (data, status, headers, config) {
+            this.httpService.get(this.apiURL + ID).success(function (data, status, headers, config) {
                 var country = self.convertDataToCountry(data);
-                self.callback(successCallBack, callbackObj, [country, status, headers, config]);
+                deferred.resolve(country);
             }).error(function (data, status, headers, config) {
-                self.callback(errorCallBack,callbackObj, [data, status, headers, config]);
+                deferred.reject(config);
             });
+            return deferred.promise;
         }
 
         // add a country in the database
-        public addCountry(successCallBack, errorCallBack, callbackObj, country:CountryModel) {
+        public addCountry(country:CountryModel): ng.IPromise<CountryModel>{
+            var deferred = this.qService.defer();
             var self = this;
-            this.httpService.post(this.serverURL+this.countryApi, country).success(function (data, status, headers, config) {
-                self.callback(successCallBack, callbackObj, [data, status, headers, config]);
+
+            this.httpService.post(this.apiURL, country).success(function (data, status, headers, config) {
+                var country = self.convertDataToCountry(data);
+                deferred.resolve(country);
             }).error(function (data, status, headers, config) {
-                self.callback(errorCallBack,callbackObj, [data, status, headers, config]);
+                deferred.reject(config);
             });
+            return deferred.promise;
         }
 
         // Updating a country with the country informations
-        public updateCountry(successCallBack, errorCallBack, callbackObj, country:CountryModel) {
+        public updateCountry(country:CountryModel): ng.IPromise<CountryModel> {
+            var deferred = this.qService.defer();
             var self = this;
-            this.httpService.put(this.serverURL+ this.countryApi + country.Id, country).success(function (data, status, headers, config) {
-                self.callback(successCallBack, callbackObj, [data, status, headers, config]);
+            this.httpService.put(this.apiURL + country.Id, country).success(function (data, status, headers, config) {
+                var country = self.convertDataToCountry(data);
+                deferred.resolve(country);
             }).error(function (data, status, headers, config) {
-                self.callback(errorCallBack,callbackObj, [data, status, headers, config]);
+                deferred.reject(config);
             });
+            return deferred.promise;
         }
 
         // Deleting a country by is ID
-        public deleteCountry(successCallBack, errorCallBack, callbackObj, Id) {
+        public deleteCountry(Id) : ng.IPromise<boolean> {
+            var deferred = this.qService.defer();
             var self = this;
-            this.httpService.delete(this.serverURL+ this.countryApi + Id).success(function (data, status, headers, config) {
-                self.callback(successCallBack, callbackObj, [data, status, headers, config]);
+            this.httpService.delete(this.apiURL + Id).success(function (data, status, headers, config) {
+                deferred.resolve(true);
             }).error(function (data, status, headers, config) {
-                self.callback(errorCallBack,callbackObj, [data, status, headers, config]);
+                deferred.reject(config);
             });
-        }
-
-        // Method in order to do callbacks
-        protected callback(callbackMethod, callbackObj, parameters){
-            callbackMethod.apply (callbackObj, parameters);
+            return deferred.promise;
         }
 
         // Method converting the data into a country
@@ -88,7 +99,7 @@ module FifaLeagueClient.Module.Country {
 
     export var countryServiceName = 'countryService';
 
-    countryModule.factory(countryServiceName, ['$http', Common.configService, ($http,config)=>
-        new CountryService($http,config)
+    countryModule.factory(countryServiceName, ['$http', Common.configService, '$q', ($http,config,$q)=>
+        new CountryService($http,config,$q)
     ]);
 }

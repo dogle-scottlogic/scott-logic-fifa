@@ -70,7 +70,7 @@ module FifaLeagueClient.Module.Common {
     /**
      * Module with HTTPErrorHandle : Used to parse errors from .net webApi
      */
-    export const HTTPErrorHandleModuleName = 'HTTPErrorHanleModule';
+    export const HTTPErrorHandleModuleName = 'HTTPErrorHandleModule';
 
     /**
      * Module with HTTPErrorHandle

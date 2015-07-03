@@ -7,14 +7,12 @@
     <table class="table table-striped table-bordered">
         <thead>
         <tr>
-            <th>Id</th>
             <th>Name</th>
             <th></th>
         </tr>
         </thead>
         <tbody>
         <tr ng-repeat="country in vm.countries">
-            <td>{{country.Id}}</td>
             <td>{{country.Name}}</td>
             <td><a href="#/countries" ng-click="vm.showEditCountry(country.Id)">Edit</a></td>
         </tr>
