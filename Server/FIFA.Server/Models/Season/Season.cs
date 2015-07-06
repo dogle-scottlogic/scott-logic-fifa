@@ -21,5 +21,7 @@ namespace FIFA.Server.Models
         public int CountryId { get; set; }
 
         public virtual Country SeasonCountry  { get; set; }
+
+        public virtual ICollection<TeamPlayer> TeamPlayers { get; set; }
     }
 }

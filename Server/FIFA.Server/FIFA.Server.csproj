@@ -133,7 +133,11 @@
       <HintPath>..\packages\Antlr.3.4.1.9004\lib\Antlr3.Runtime.dll</HintPath>
     </Reference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201507061356271_Initial.resx">
+      <DependentUpon>201507061356271_Initial.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
@@ -166,21 +170,9 @@
     </Compile>
     <Compile Include="Infrastructure\Cors\ICorsPolicyProvider.cs" />
     <Compile Include="Infrastructure\Cors\CorsSection.cs" />
-    <Compile Include="Migrations\201505291119309_Initial.cs" />
-    <Compile Include="Migrations\201505291119309_Initial.Designer.cs">
-      <DependentUpon>201505291119309_Initial.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201506041428080_TeamsAndCountry.cs" />
-    <Compile Include="Migrations\201506041428080_TeamsAndCountry.Designer.cs">
-      <DependentUpon>201506041428080_TeamsAndCountry.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201507020752141_MatchesAndScores.cs" />
-    <Compile Include="Migrations\201507020752141_MatchesAndScores.Designer.cs">
-      <DependentUpon>201507020752141_MatchesAndScores.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201507031537351_UniqueNameCountryAndSeason.cs" />
-    <Compile Include="Migrations\201507031537351_UniqueNameCountryAndSeason.Designer.cs">
-      <DependentUpon>201507031537351_UniqueNameCountryAndSeason.cs</DependentUpon>
+    <Compile Include="Migrations\201507061356271_Initial.cs" />
+    <Compile Include="Migrations\201507061356271_Initial.Designer.cs">
+      <DependentUpon>201507061356271_Initial.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Country\Country.cs" />
@@ -196,6 +188,7 @@
     <Compile Include="Models\Team.cs" />
     <Compile Include="Models\Player.cs" />
     <Compile Include="Models\Season\Season.cs" />
+    <Compile Include="Models\TeamPlayer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -244,20 +237,6 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Scripts\jquery-1.10.2.min.map" />
     <Content Include="Views\Home\Index.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Migrations\201505291119309_Initial.resx">
-      <DependentUpon>201505291119309_Initial.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201506041428080_TeamsAndCountry.resx">
-      <DependentUpon>201506041428080_TeamsAndCountry.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201507020752141_MatchesAndScores.resx">
-      <DependentUpon>201507020752141_MatchesAndScores.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201507031537351_UniqueNameCountryAndSeason.resx">
-      <DependentUpon>201507031537351_UniqueNameCountryAndSeason.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
