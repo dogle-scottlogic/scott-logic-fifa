@@ -53,9 +53,10 @@ module FifaLeagueClient.Module.Season {
         public loadSeason = (id) => {
             this.resetErrors();
             if(id != null){
-                this.mainService.getSeason(id)
-                    .then(this.handleLoadSuccess)
-                    .catch(this.handleLoadErrors);
+                this.loadingPromise =
+                    this.mainService.getSeason(id)
+                        .then(this.handleLoadSuccess)
+                        .catch(this.handleLoadErrors);
             }
         }
 
@@ -76,9 +77,10 @@ module FifaLeagueClient.Module.Season {
             // try to create the season
             // refresh the list if it is a success
             // show the errors if not
-            this.mainService.addSeason(this.season)
-                .then(this.handleCreatingSuccess)
-                .catch(this.handleCreatingErrors);
+            this.loadingPromise =
+                this.mainService.addSeason(this.season)
+                    .then(this.handleCreatingSuccess)
+                    .catch(this.handleCreatingErrors);
         }
 
         // Do nothing if the creation is successfull
@@ -99,9 +101,10 @@ module FifaLeagueClient.Module.Season {
             // try to create the season
             // refresh the list if it is a success
             // show the errors if not
-            this.mainService.updateSeason(this.season)
-                .then(this.handleUpdateSuccess)
-                .catch(this.handleUpdateErrors);
+            this.loadingPromise =
+                this.mainService.updateSeason(this.season)
+                    .then(this.handleUpdateSuccess)
+                    .catch(this.handleUpdateErrors);
         }
 
         // Do nothing if the creation is successfull
@@ -128,9 +131,10 @@ module FifaLeagueClient.Module.Season {
             // try to delete the season
             // refresh the list if it is a success
             // show the errors if not
-            this.mainService.deleteSeason(Id)
-                .then(this.handleDeleteSuccess)
-                .catch(this.handleDeleteErrors);
+            this.loadingPromise =
+                this.mainService.deleteSeason(Id)
+                    .then(this.handleDeleteSuccess)
+                    .catch(this.handleDeleteErrors);
         }
 
         // Do nothing if the creation is successfull
@@ -146,9 +150,10 @@ module FifaLeagueClient.Module.Season {
         // call the service in order to get the list of seasons
         public fillSeasons = () => {
             this.errors = {};
-            this.mainService.getSeasonList()
-                .then(this.fillSeasonsSuccessCallBack)
-                .catch(this.fillSeasonsErrorCallBack);
+            this.loadingPromise =
+                this.mainService.getSeasonList()
+                    .then(this.fillSeasonsSuccessCallBack)
+                    .catch(this.fillSeasonsErrorCallBack);
         }
 
         // fill the seasons - if the callback is a success

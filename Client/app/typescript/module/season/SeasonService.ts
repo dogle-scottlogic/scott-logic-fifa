@@ -24,7 +24,7 @@ module FifaLeagueClient.Module.Season {
 
             var self = this;
             this.httpService.get(this.apiURL)
-                .success(function (data:[string], status, headers, config) {
+                .success(function (data:[String], status, headers, config) {
                     var seasonList =  [];
                     for(var i = 0; i<data.length; i++){
                         seasonList.push(self.convertDataToSeason(data[i]));

@@ -82,7 +82,13 @@ module.exports = function(grunt) {
                          cwd: '<%= paths.bowerAssets %>/angular-bootstrap/',
                          src: ['ui-bootstrap-tpls.js'],
                          dest: 'app/lib/angular-bootstrap/'
-                     }
+                     },
+                    {
+                        expand: true,
+                        cwd: '<%= paths.bowerAssets %>/angular-busy/dist/',
+                        src: ['angular-busy.js', 'angular-busy.css'],
+                        dest: 'app/lib/angular-busy/'
+                    }
                 ]
             }
         },
