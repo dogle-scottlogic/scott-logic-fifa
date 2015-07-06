@@ -48,6 +48,7 @@ namespace FIFA.Server
         {
             //register services with Ninject DI container
             kernel.Bind<ICountryRepository>().To<CountryRepository>();
+            kernel.Bind<ISeasonRepository>().To<SeasonRepository>();
 
         }
     }

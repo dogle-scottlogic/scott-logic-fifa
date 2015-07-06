@@ -145,6 +145,9 @@ namespace FIFA.Server.Tests.Controllers
                     .Returns(Task.FromResult(countrys.FirstOrDefault()))
                     .Callback<Country>(c => added.Add(c));
 
+                mock.As<ICountryRepository>().Setup(m => m.isCountryNameExist(It.IsAny<string>(), null))
+                    .Returns(Task.FromResult(false));
+
                 // Creating the controller which we want to create
                 CountryController controller = new CountryController(mock.Object);
                 // configuring the context for the controler
@@ -172,6 +175,9 @@ namespace FIFA.Server.Tests.Controllers
                 // Filling mock rull with repository
                 mock.As<ICRUDRepository<Country, int>>().Setup(m => m.Add(It.IsAny<Country>()));
 
+                mock.As<ICountryRepository>().Setup(m => m.isCountryNameExist(It.IsAny<string>(), null))
+                    .Returns(Task.FromResult(false));
+
                 // Creating the controller which we want to create
                 CountryController controller = new CountryController(mock.Object);
 
@@ -188,12 +194,41 @@ namespace FIFA.Server.Tests.Controllers
 
             // Verifying the Add failure method
             [TestMethod]
+            public void AddFailureNameExistsCountryInTheRepo()
+            {
+                Country country = new Country();
+                var mock = new Mock<ICountryRepository>(MockBehavior.Strict);
+
+                // Filling mock rull with repository
+                mock.As<ICRUDRepository<Country, int>>().Setup(m => m.Add(It.IsAny<Country>()));
+                // Setting up that the country name already exist
+                mock.As<ICountryRepository>().Setup(m => m.isCountryNameExist(null, null))
+                    .Returns(Task.FromResult(true));
+
+                // Creating the controller which we want to create
+                CountryController controller = new CountryController(mock.Object);
+
+                // configuring the context for the controler
+                fakeContext(controller);
+
+                HttpResponseMessage response = controller.Post(country).Result;
+                // the result should say "HttpStatusCode.BadRequest"
+                Assert.AreEqual(response.StatusCode, HttpStatusCode.BadRequest);
+
+            }
+
+
+            // Verifying the Add failure method
+            [TestMethod]
             public void AddFailureNullCountryInTheRepo()
             {
                 var mock = new Mock<ICountryRepository>(MockBehavior.Strict);
 
                 // Filling mock rull with repository
                 mock.As<ICRUDRepository<Country, int>>().Setup(m => m.Add(It.IsAny<Country>()));
+
+                mock.As<ICountryRepository>().Setup(m => m.isCountryNameExist(It.IsAny<string>(), null))
+                    .Returns(Task.FromResult(false));
 
                 // Creating the controller which we want to create
                 CountryController controller = new CountryController(mock.Object);
@@ -207,6 +242,7 @@ namespace FIFA.Server.Tests.Controllers
 
             }
 
+
                         
             // Verifying the Update failure method
             [TestMethod]
@@ -219,6 +255,9 @@ namespace FIFA.Server.Tests.Controllers
                 // Creating the rules for mock, always send true in this case
                 mock.As<ICRUDRepository<Country, int>>().Setup(m => m.Update(It.IsAny<int>(), It.IsAny<Country>()))
                     .Returns(Task.FromResult(true));
+
+                mock.As<ICountryRepository>().Setup(m => m.isCountryNameExist(It.IsAny<string>(), It.IsAny<int>()))
+                    .Returns(Task.FromResult(false));
 
                 // Creating the controller which we want to create
                 CountryController controller = new CountryController(mock.Object);
@@ -249,6 +288,8 @@ namespace FIFA.Server.Tests.Controllers
                 // Creating the rules for mock, always send true in this case
                 mock.As<ICRUDRepository<Country, int>>().Setup(m => m.Update(It.IsAny<int>(), It.IsAny<Country>()))
                     .Returns(Task.FromResult(true));
+                mock.As<ICountryRepository>().Setup(m => m.isCountryNameExist(null, null))
+                    .Returns(Task.FromResult(false));
 
                 // Creating the controller which we want to create
                 CountryController controller = new CountryController(mock.Object);
@@ -274,6 +315,8 @@ namespace FIFA.Server.Tests.Controllers
                 // Creating the rules for mock, always send true in this case
                 mock.As<ICRUDRepository<Country, int>>().Setup(m => m.Update(It.IsAny<int>(), It.IsAny<Country>()))
                     .Returns(Task.FromResult(true));
+                mock.As<ICountryRepository>().Setup(m => m.isCountryNameExist(It.IsAny<string>(), It.IsAny<int>()))
+                    .Returns(Task.FromResult(false));
 
                 // Creating the controller which we want to create
                 CountryController controller = new CountryController(mock.Object);
@@ -281,6 +324,31 @@ namespace FIFA.Server.Tests.Controllers
                 fakeContext(controller);
 
                 HttpResponseMessage response = controller.Post(null).Result;
+                // the result should say "HttpStatusCode.BadRequest"
+                Assert.AreEqual(response.StatusCode, HttpStatusCode.BadRequest);
+
+            }
+
+
+            // Verifying the Update method if country exists
+            [TestMethod]
+            public void UpdateFailureCountryNameExistsInTheRepo()
+            {
+                Country country = new Country();
+                var mock = new Mock<ICountryRepository>(MockBehavior.Strict);
+
+                // Creating the rules for mock, always send true in this case
+                mock.As<ICRUDRepository<Country, int>>().Setup(m => m.Update(It.IsAny<int>(), It.IsAny<Country>()))
+                    .Returns(Task.FromResult(true));
+                mock.As<ICountryRepository>().Setup(m => m.isCountryNameExist(null, null))
+                    .Returns(Task.FromResult(true));
+
+                // Creating the controller which we want to create
+                CountryController controller = new CountryController(mock.Object);
+                // configuring the context for the controler
+                fakeContext(controller);
+
+                HttpResponseMessage response = controller.Post(country).Result;
                 // the result should say "HttpStatusCode.BadRequest"
                 Assert.AreEqual(response.StatusCode, HttpStatusCode.BadRequest);
 

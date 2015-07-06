@@ -6,8 +6,8 @@ using System.Web;
 
 namespace FIFA.Server.Models
 {
-    public interface ICountryRepository : ICRUDRepository<Country, int>
+    public interface ISeasonRepository : ICRUDRepository<Season, int>
     {
-        Task<bool> isCountryNameExist(string countryName, int? Id);
+        Task<bool> isSeasonNameExist(int countryId, string seasonName, int? Id);
     }
 }

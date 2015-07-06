@@ -1,6 +1,6 @@
 <div class="gridview" ng-init="vm.fillCountries()" collapse="!vm.showListForm">
     <h2>Countries</h2>
-    <a href="#/countries" ng-click="vm.showCreateCountry()" type="button" class="btn btn-primary right">Add Country</a>
+    <button ng-click="vm.showCreateCountry()" type="button" class="btn btn-primary right">Add Country</button>
     <ul class="error">
         <li ng-repeat="value in vm.errors['item.Global']">{{value}}</li>
     </ul>
@@ -14,9 +14,8 @@
         <tbody>
           <tr ng-repeat="country in vm.countries">
               <td>{{country.Name}}</td>
-              <td>
-                <a href="#/countries" ng-click="vm.showEditCountry(country.Id)">Edit</a>
-                <a href="#/countries" ng-click="vm.deleteCountryInstance(country.Id)">Delete</a>
+              <td align="right"><button ng-click="vm.showEditCountry(country.Id)" type="button" class="btn btn-primary middle">Edit</button>
+                  <button ng-click="vm.deleteCountryInstance(country.Id)" type="button" class="btn btn-danger right">Delete</button>
               </td>
           </tr>
         </tbody>
@@ -24,6 +23,9 @@
 </div>
 <div collapse="!vm.showCreateForm">
     <h2>Add Country</h2>
+    <ul class="error">
+        <li ng-repeat="value in vm.errors['item.Global']">{{value}}</li>
+    </ul>
     <hr />
     <form class="simple-form" ng-submit="vm.addCountry()">
         <div ng-include="'./views/partials/country-form.html'"></div>
@@ -33,6 +35,9 @@
 </div>
 <div collapse="!vm.showEditForm">
     <h2>Edit Country</h2>
+    <ul class="error">
+        <li ng-repeat="value in vm.errors['item.Global']">{{value}}</li>
+    </ul>
     <hr />
     <form class="simple-form" ng-submit="vm.updateCountry()">
         <div ng-include="'./views/partials/country-form.html'"></div>
