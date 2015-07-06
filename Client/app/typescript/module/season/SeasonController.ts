@@ -117,8 +117,7 @@ module FifaLeagueClient.Module.Season {
         /** DELETING THE SEASON **/
         // Method adding a season in the database
 
-
-        // Method deleting a Country
+        // Method deleting a season
         public deleteSeasonInstance(Id:number){
             this.deleteSeason(Id);
         }
