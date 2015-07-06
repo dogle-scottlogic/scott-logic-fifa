@@ -10,109 +10,121 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 using FIFA.Server.Models;
+using FIFA.Server.Infrastructure;
 
 namespace FIFA.Server.Controllers
 {
-    public class TeamController : ApiController
+    [ConfigurableCorsPolicy("localhost")]
+    public class TeamController : AbstractCRUDAPIController<Team, int>
     {
-        private FIFAServerContext db = new FIFAServerContext();
+        ICountryRepository countryRepository;
 
-        // GET api/Team
-        public IQueryable<Team> GetTeams()
-        {
-            return db.Teams;
+        public TeamController(ITeamRepository teamRepository, ICountryRepository countryRepository) : base(teamRepository) {
+            this.countryRepository = countryRepository;
         }
 
+        /// <summary>
+        ///     Retrieve a list of teams
+        /// </summary>
+        /// <returns>Return a list of team models</returns>
+        /// 
+        // GET api/Team
+        [ResponseType(typeof(IEnumerable<Team>))]
+        public async Task<HttpResponseMessage> GetAll()
+        {
+            return await base.GetAll();
+        }
+
+        /// <summary>
+        ///     Retrieves a specific team by its ID
+        /// </summary>
+        /// <param name="id">The ID of the team.</param>
+        /// <returns>Return a team model if found</returns>
+        /// 
         // GET api/Team/5
         [ResponseType(typeof(Team))]
-        public async Task<IHttpActionResult> GetTeam(int id)
+        public async Task<HttpResponseMessage> Get(int id)
         {
-            Team team = await db.Teams.Where(p => p.Id == id).FirstAsync();
-            if (team == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(team);
+            return await base.Get(id);
         }
 
-        // PUT api/Team/5
-        public async Task<IHttpActionResult> PutTeam(int id, Team team)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            if (id != team.Id)
-            {
-                return BadRequest();
-            }
-
-            db.Entry(team).State = EntityState.Modified;
-
-            try
-            {
-                await db.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!TeamExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return StatusCode(HttpStatusCode.NoContent);
-        }
-
+        /// <summary>
+        ///     Create a new team
+        /// </summary>
+        /// <param name="item">The team to add without id</param>
+        /// <returns>Return a team model if created and the uri to retrieve it</returns>
+        /// 
         // POST api/Team
         [ResponseType(typeof(Team))]
-        public async Task<IHttpActionResult> PostTeam(Team team)
+        public async Task<HttpResponseMessage> Post(Team team)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
+            // try to get the country, if it returns null, send an error
+            if (!await this.countryExists(team)){
+                return this.createErrorResponseWithMessage(NON_EXISTENT_COUNTRY_ERR);
+            } else if (await ((ITeamRepository)repository).teamNameExists(team.Name, team.CountryId, team.Id)){
+                return this.createErrorResponseWithMessage(TEAM_EXISTS_ERR);
+            } else {
+                return await base.Post(team);
             }
-
-            db.Teams.Add(team);
-            await db.SaveChangesAsync();
-
-            return CreatedAtRoute("DefaultApi", new { id = team.Id }, team);
         }
 
+        /// <summary>
+        ///     Update a team by its ID
+        /// </summary>
+        /// <param name="id">The ID of the team.</param>
+        /// <param name="item">The modified team</param>
+        /// <returns>Return the modified team model if no error</returns>
+        /// 
+        // PUT api/Team/5
+        [ResponseType(typeof(Team))]
+        public async Task<HttpResponseMessage> Put(int id, Team team)
+        {
+            // try to get the country, if it returns null, send an error
+            if (!await this.countryExists(team)){
+                return this.createErrorResponseWithMessage(NON_EXISTENT_COUNTRY_ERR);
+            }
+            else if (await ((ITeamRepository)repository).teamNameExists(team.Name, team.CountryId, team.Id)){
+                return this.createErrorResponseWithMessage(TEAM_EXISTS_ERR);
+            }  
+            else {
+                return await base.Put(id, team);
+            }
+        }
+
+        /// <summary>
+        ///     Delete a team by its ID
+        /// </summary>
+        /// <param name="id">The ID of the team</param>
+        /// <returns>
+        /// Status 200 if deleted correctly
+        /// Status 404 if not (with team not found message)
+        /// </returns>
+        /// 
         // DELETE api/Team/5
         [ResponseType(typeof(Team))]
-        public async Task<IHttpActionResult> DeleteTeam(int id)
+        public async Task<HttpResponseMessage> Delete(int id)
         {
-            Team team = await db.Teams.FindAsync(id);
-            if (team == null)
-            {
-                return NotFound();
-            }
-
-            db.Teams.Remove(team);
-            await db.SaveChangesAsync();
-
-            return Ok(team);
+            return await base.Delete(id);
         }
 
-        protected override void Dispose(bool disposing)
+        /**
+         * Method verifying if the country associated with the team exists
+         **/
+        private async Task<bool> countryExists(Team item)
         {
-            if (disposing)
-            {
-                db.Dispose();
+            if (item != null){
+                Country country = await this.countryRepository.Get(item.CountryId);
+                return (country != null);
             }
-            base.Dispose(disposing);
+
+            return false;
         }
 
-        private bool TeamExists(int id)
-        {
-            return db.Teams.Count(e => e.Id == id) > 0;
+        private const string NON_EXISTENT_COUNTRY_ERR = "The country doesn't exist";
+        private const string TEAM_EXISTS_ERR = "The team name already exists";
+
+        private HttpResponseMessage createErrorResponseWithMessage(string msg) {
+            return Request.CreateErrorResponse(HttpStatusCode.BadRequest, msg);
         }
     }
 }

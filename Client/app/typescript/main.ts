@@ -5,11 +5,12 @@
 /// <reference path="module/country/CountryModule.ts" />
 /// <reference path="module/player/PlayerModule.ts" />
 /// <reference path="module/season/SeasonModule.ts" />
+/// <reference path="module/team/TeamModule.ts" />
 
 module FifaLeagueClient {
     export var mainModule = angular.module("FifaLeagueApp", ['ngRoute',
-        Module.Common.HTTPErrorHandleModuleName, Module.Common.devConfig, Module.Country.moduleName, Module.Season.moduleName, Module.Player.moduleName
-    ])
+        Module.Common.HTTPErrorHandleModuleName, Module.Common.devConfig, Module.Player.moduleName,
+        Module.Country.moduleName, Module.Season.moduleName, Module.Team.moduleName
     .config(["$routeProvider",
     function routes($routeProvider: ng.route.IRouteProvider){
       $routeProvider.when('/', {
@@ -23,6 +24,18 @@ module FifaLeagueClient {
         .when('/seasons', {
           templateUrl: 'views/seasons.html',
           controller: Module.Season.SeasonController,
+              controllerAs: 'vm'
+          }).when('/teams', {
+              templateUrl: 'views/team/teams.html',
+              controller: Module.Team.TeamController,
+              controllerAs: 'vm'
+          }).when('/teams/add', {
+              templateUrl: 'views/team/add-team.html',
+              controller: Module.Team.AddTeamController,
+              controllerAs: 'vm'
+          }).when('/teams/edit/:id', {
+              templateUrl: 'views/team/edit-team.html',
+              controller: Module.Team.EditTeamController,
           controllerAs: 'vm'
         })
         .when('/players', {

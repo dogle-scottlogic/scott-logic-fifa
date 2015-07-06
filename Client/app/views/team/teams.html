@@ -1,0 +1,26 @@
+<div class="gridview" ng-init="vm.showTeams()">
+        <h2>Teams</h2>
+        <a href="#/teams/add" class="btn btn-primary right">Add Team</a>
+        <ul class="error">
+            <li ng-repeat="value in vm.errors['item.Global']">{{value}}</li>
+        </ul>
+        <table class="table table-striped table-bordered">
+            <thead>
+              <tr>
+                  <th>Name</th>
+                  <th>Country</th>
+                  <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="team in vm.teams">
+                  <td>{{team.Name}}</td>
+                  <td>{{team.Country.Name}}</td>
+                  <td align="right">
+                  <a ng-href="#/teams/edit/{{team.Id}}" type="button" class="btn btn-primary middle">Edit</a>
+                      <button ng-click="vm.deleteTeam(team.Id)" type="button" class="btn btn-danger right">Delete</button>
+                  </td>
+              </tr>
+            </tbody>
+        </table>
+</div>

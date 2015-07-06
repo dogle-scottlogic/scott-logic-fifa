@@ -85,7 +85,7 @@ namespace FIFA.Server.Controllers
         [ResponseType(typeof(Country))]
         public async Task<HttpResponseMessage> Put(int id, Country item)
         {
-            if (await ((ICountryRepository)repository).isCountryNameExist(item.Name, id))
+            if (item != null && await ((ICountryRepository)repository).isCountryNameExist(item.Name, id))
             {
                 return this.createErrorResponseCountryNameExists();
             }
