@@ -15,10 +15,7 @@ module FifaLeagueClient.Module.Country.Directives {
             },
             controller: CountryController,
             controllerAs: "vm",
-            templateUrl: './views/partials/country-show.html',
-            link: function(scope:IMyScope, element, attrs) {
-                scope.countryid = scope.countryid;
-            }
+            templateUrl: './views/partials/country-show.html'
         }
     }
 

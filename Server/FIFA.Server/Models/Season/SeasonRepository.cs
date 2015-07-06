@@ -20,7 +20,11 @@ namespace FIFA.Server.Models
         // Get all the Seasons ordered by name / seasons
         public async Task<IEnumerable<Season>> GetAll()
         {
-            return await db.Seasons.ToListAsync();
+            IEnumerable<Season> seasons = await db.Seasons
+                .Include(s => s.SeasonCountry)
+                .ToListAsync();
+
+            return seasons;
         }
 
         // Get one Season by its ID

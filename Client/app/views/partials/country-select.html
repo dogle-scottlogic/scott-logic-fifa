@@ -1,6 +1,6 @@
 <div ng-init="vm.fillCountries()">
-    <select class="form-control" ng-model="selectedcountry" ng-change="vm.select()">
+    <select class="form-control" ng-model="selectedcountry" ng-change="vm.select()"
+            ng-options="country.Id as country.Name for country in vm.countries">
         <option value=""></option>
-        <option ng-repeat="country in vm.countries" value="{{country.Id}}" ng-selected="selectedcountry == country.Id">{{country.Name}}</option>
     </select>
 </div>
