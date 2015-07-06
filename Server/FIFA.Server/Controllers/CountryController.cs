@@ -15,9 +15,11 @@ using FIFA.Server.Infrastructure;
 namespace FIFA.Server.Controllers
 {
 
-    [ConfigurableCorsPolicy("country")]
+    [ConfigurableCorsPolicy("localhost")]
     public class CountryController : AbstractCRUDAPIController<Country, int>
     {
+
+
         /// <summary>
         ///     Constructor
         /// </summary>
@@ -62,7 +64,14 @@ namespace FIFA.Server.Controllers
         [ResponseType(typeof(Country))]
         public async Task<HttpResponseMessage> Post(Country item)
         {
-            return await base.Post(item);
+            if (item != null && await((ICountryRepository)repository).isCountryNameExist(item.Name, null))
+            {
+                return this.createErrorResponseCountryNameExists();
+            }
+            else
+            {
+                return await base.Post(item);
+            }
         }
 
         /// <summary>
@@ -76,7 +85,14 @@ namespace FIFA.Server.Controllers
         [ResponseType(typeof(Country))]
         public async Task<HttpResponseMessage> Put(int id, Country item)
         {
-            return await base.Put(id, item);
+            if (await ((ICountryRepository)repository).isCountryNameExist(item.Name, id))
+            {
+                return this.createErrorResponseCountryNameExists();
+            }
+            else
+            {
+                return await base.Put(id, item);
+            }
         }
 
         /// <summary>
@@ -93,6 +109,15 @@ namespace FIFA.Server.Controllers
         public async Task<HttpResponseMessage> Delete(int id)
         {
             return await base.Delete(id);
+        }
+
+        /**
+         * Creating an error message indicating that the country name already exists
+         **/
+        private const string countryNameExistsError = "The country name already exists";
+        private HttpResponseMessage createErrorResponseCountryNameExists()
+        {
+            return Request.CreateErrorResponse(HttpStatusCode.BadRequest, countryNameExistsError);
         }
 
     }

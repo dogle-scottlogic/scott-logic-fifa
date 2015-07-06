@@ -12,6 +12,7 @@ using Ninject.Web.WebApi;
 using Newtonsoft.Json;
 using System.Reflection;
 using FIFA.Server.Models;
+using System.Net.Http.Headers;
 
 namespace FIFA.Server
 {
@@ -29,7 +30,10 @@ namespace FIFA.Server
 
             // Setting the json formatter to Utc
             var jsonFormatter = GlobalConfiguration.Configuration.Formatters.JsonFormatter;
-            jsonFormatter.SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
+            GlobalConfiguration.Configuration.Formatters.Remove(GlobalConfiguration.Configuration.Formatters.XmlFormatter);
+            GlobalConfiguration.Configuration.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+            GlobalConfiguration.Configuration.Formatters.JsonFormatter.SerializerSettings.PreserveReferencesHandling = Newtonsoft.Json.PreserveReferencesHandling.None;
+            GlobalConfiguration.Configuration.Formatters.JsonFormatter.SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
         }
 
         protected override IKernel CreateKernel()
@@ -48,6 +52,7 @@ namespace FIFA.Server
         {
             //register services with Ninject DI container
             kernel.Bind<ICountryRepository>().To<CountryRepository>();
+            kernel.Bind<ISeasonRepository>().To<SeasonRepository>();
 
         }
     }

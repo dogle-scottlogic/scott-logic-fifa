@@ -74,6 +74,11 @@ namespace FIFA.Server.Models
             }
         }
 
+        public async Task<bool> isCountryNameExist(string countryName, int? Id)
+        {
+            return await db.Countries.AnyAsync(c => c.Name == countryName && (Id == null || c.Id != Id));
+        }
+
 
     }
 }

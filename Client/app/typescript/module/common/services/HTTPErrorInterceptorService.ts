@@ -21,15 +21,17 @@ module FifaLeagueClient.Module.Common {
             // handling the no response status
             if(rejection.status == 0){
                 errorList.push("The server is unreachable");
-                propertyErrors["item.Global"] = errorList;
             }else if(rejection.statusMessage != undefined){
                 errorList.push(rejection.status+" : "+rejection.statusMessage);
-                propertyErrors["item.Global"] = errorList;
             }
             else if(rejection.statusText != null) {
                 errorList.push(rejection.status+" : "+rejection.statusText);
-                propertyErrors["item.Global"] = errorList;
             }
+
+            if(rejection.data != null && rejection.data.Message != null){
+                errorList.push(rejection.data.Message);
+            }
+            propertyErrors["item.Global"] = errorList;
 
             if(rejection.data != null){
                 this.parsePropertyErrors(rejection.data, propertyErrors);

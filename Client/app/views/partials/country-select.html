@@ -1,0 +1,6 @@
+<div ng-init="vm.fillCountries()">
+    <select class="form-control" ng-model="selectedcountry" ng-change="vm.select()"
+            ng-options="country.Id as country.Name for country in vm.countries">
+        <option value=""></option>
+    </select>
+</div>
