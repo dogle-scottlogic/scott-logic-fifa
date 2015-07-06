@@ -58,9 +58,10 @@ module FifaLeagueClient.Module.Country {
     public loadCountry = (id) => {
       this.resetErrors();
       if(id != null){
-        this.mainService.getCountry(id)
-          .then(this.handleLoadSuccess)
-          .catch(this.handleLoadErrors);
+          this.loadingPromise =
+              this.mainService.getCountry(id)
+                .then(this.handleLoadSuccess)
+                .catch(this.handleLoadErrors);
       }
     }
 
@@ -81,9 +82,10 @@ module FifaLeagueClient.Module.Country {
       // try to create the country
       // refresh the list if it is a success
       // show the errors if not
-      this.mainService.addCountry(this.country)
-          .then(this.handleCreatingSuccess)
-          .catch(this.handleCreatingErrors);
+        this.loadingPromise =
+          this.mainService.addCountry(this.country)
+              .then(this.handleCreatingSuccess)
+              .catch(this.handleCreatingErrors);
     }
 
     // Do nothing if the creation is successfull
@@ -104,9 +106,10 @@ module FifaLeagueClient.Module.Country {
       // try to create the country
       // refresh the list if it is a success
       // show the errors if not
-      this.mainService.updateCountry(this.country)
-          .then(this.handleUpdateSuccess)
-          .catch(this.handleUpdateErrors);
+        this.loadingPromise =
+          this.mainService.updateCountry(this.country)
+              .then(this.handleUpdateSuccess)
+              .catch(this.handleUpdateErrors);
     }
 
     // Do nothing if the creation is successfull
@@ -127,9 +130,10 @@ module FifaLeagueClient.Module.Country {
       // try to create the country
       // refresh the list if it is a success
       // show the errors if not
-      this.mainService.deleteCountry(Id)
-        .then(this.handleDeleteSuccess)
-        .catch(this.handleDeleteErrors);
+        this.loadingPromise =
+            this.mainService.deleteCountry(Id)
+            .then(this.handleDeleteSuccess)
+            .catch(this.handleDeleteErrors);
     }
 
     // Do nothing if the creation is successfull
@@ -139,25 +143,27 @@ module FifaLeagueClient.Module.Country {
 
     // Method adding creating errors in creatingErrors list
     protected handleDeleteErrors = (config) => {
-      this.errors = config.errors;
+        this.errors = config.errors;
     }
 
     // call the service in order to get the list of countries
     public fillCountries = () => {
-      this.errors = {};
-      this.mainService.getCountryList()
-          .then(this.fillCountriesSuccessCallBack)
-          .catch(this.fillCountriesErrorCallBack);
+        this.errors = {};
+        this.loadingPromise =
+            this.mainService.getCountryList()
+            .then(this.fillCountriesSuccessCallBack)
+            .catch(this.fillCountriesErrorCallBack);
     }
 
     // fill the countries - if the callback is a success
     protected fillCountriesSuccessCallBack = (countries:CountryModel[]) => {
-      this.countries = countries;
+        this.countries = countries;
     }
 
     protected fillCountriesErrorCallBack = (config) => {
-      this.errors = config.errors;
+        this.errors = config.errors;
     }
 
   }
+
 }
