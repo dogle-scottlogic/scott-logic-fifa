@@ -20,14 +20,14 @@ namespace FIFA.Server.Controllers
         // GET api/Team
         public IQueryable<Team> GetTeams()
         {
-            return db.Teams.Include(p => p.Players);
+            return db.Teams;
         }
 
         // GET api/Team/5
         [ResponseType(typeof(Team))]
         public async Task<IHttpActionResult> GetTeam(int id)
         {
-            Team team = await db.Teams.Where(p => p.Id == id).Include(p => p.Players).FirstAsync();
+            Team team = await db.Teams.Where(p => p.Id == id).FirstAsync();
             if (team == null)
             {
                 return NotFound();
