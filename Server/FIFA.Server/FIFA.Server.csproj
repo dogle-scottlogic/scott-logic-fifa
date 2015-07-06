@@ -137,6 +137,9 @@
     <EmbeddedResource Include="Migrations\201507061356271_Initial.resx">
       <DependentUpon>201507061356271_Initial.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201507061432383_score_table.resx">
+      <DependentUpon>201507061432383_score_table.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
@@ -163,6 +166,7 @@
     <Compile Include="Controllers\LeagueController.cs" />
     <Compile Include="Controllers\MatchController.cs" />
     <Compile Include="Controllers\PlayerController.cs" />
+    <Compile Include="Controllers\ScoreController.cs" />
     <Compile Include="Controllers\SeasonController.cs" />
     <Compile Include="Controllers\TeamController.cs" />
     <Compile Include="Global.asax.cs">
@@ -173,6 +177,10 @@
     <Compile Include="Migrations\201507061356271_Initial.cs" />
     <Compile Include="Migrations\201507061356271_Initial.Designer.cs">
       <DependentUpon>201507061356271_Initial.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201507061432383_score_table.cs" />
+    <Compile Include="Migrations\201507061432383_score_table.Designer.cs">
+      <DependentUpon>201507061432383_score_table.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Country\Country.cs" />

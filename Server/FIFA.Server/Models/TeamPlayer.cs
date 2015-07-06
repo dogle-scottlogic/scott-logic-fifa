@@ -14,10 +14,10 @@ namespace FIFA.Server.Models
         public int TeamId { get; set; }
         public int PlayerId { get; set; }
 
-        [ForeignKey("TeamId"), Column(Order = 0)]
+        [ForeignKey("TeamId")]
         public Team Team { get; set; }
 
-        [ForeignKey("PlayerId"), Column(Order = 0)]
+        [ForeignKey("PlayerId")]
         public Player Player { get; set; }
 
         public virtual ICollection<Season> Seasons { get; set; }

@@ -18,10 +18,10 @@ namespace FIFA.Server.Models
         [Key]
         public int Id { get; set; }
 
-        [ForeignKey("Match"), Column(Order = 0)]
+        [ForeignKey("Match")]
         public int MatchId { get; set; }
 
-        [ForeignKey("Player"), Column(Order = 0)]
+        [ForeignKey("Player")]
         public int PlayerId { get; set; }
         
         public int Goals { get; set; }
