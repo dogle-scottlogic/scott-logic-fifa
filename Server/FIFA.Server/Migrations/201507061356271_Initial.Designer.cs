@@ -7,13 +7,13 @@ namespace FIFA.Server.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class UniqueNameCountryAndSeason : IMigrationMetadata
+    public sealed partial class Initial : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(UniqueNameCountryAndSeason));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(Initial));
         
         string IMigrationMetadata.Id
         {
-            get { return "201507031537351_UniqueNameCountryAndSeason"; }
+            get { return "201507061356271_Initial"; }
         }
         
         string IMigrationMetadata.Source

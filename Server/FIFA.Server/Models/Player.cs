@@ -14,8 +14,6 @@ namespace FIFA.Server.Models
         [Required]
         public string Name { get; set; }
 
-        public virtual ICollection<Team> Teams { get; set; }
-
         public virtual ICollection<League> Leagues { get; set; }
     }
 }
