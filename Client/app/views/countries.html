@@ -1,4 +1,4 @@
-<div cg-busy="{promise:vm.loadingPromise,templateUrl:'./views/partials/busy-template.html'}">
+<div cg-busy="vm.loadingPromise">
     <div class="gridview" ng-init="vm.fillCountries()" collapse="!vm.showListForm">
         <h2>Countries</h2>
         <button ng-click="vm.showCreateCountry()" type="button" class="btn btn-primary right">Add Country</button>

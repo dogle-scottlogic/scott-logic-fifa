@@ -150,7 +150,7 @@ module FifaLeagueClient.Module.Country {
     public fillCountries = () => {
         this.errors = {};
         this.loadingPromise =
-            this.loadingPromise = this.mainService.getCountryList()
+            this.mainService.getCountryList()
             .then(this.fillCountriesSuccessCallBack)
             .catch(this.fillCountriesErrorCallBack);
     }
@@ -165,4 +165,5 @@ module FifaLeagueClient.Module.Country {
     }
 
   }
+
 }

@@ -1,4 +1,4 @@
-<div cg-busy="{promise:vm.loadingPromise,templateUrl:'./views/partials/busy-template.html'}">
+<div cg-busy="vm.loadingPromise">
     <div class="gridview" ng-init="vm.fillSeasons()" collapse="!vm.showListForm">
     <h2> Seasons </h2>
     <button ng-click="vm.showCreateSeason()" type="button" class="btn btn-primary right">Add Season</button>
