@@ -18,9 +18,12 @@ module.exports = function(config) {
       'lib/angular/angular.js',
       'lib/angular-route/angular-route.js',
       'lib/angular-mocks/angular-mocks.js',
-      'lib/angular-bootstrap/ui-bootstrap.js',
+      'lib/angular-bootstrap/ui-bootstrap-tpls.js',
+      'lib/angular-busy/angular-busy.js',
       'app/leagueManager.js',
-      'test/*.js'
+      'test/*.js',
+      // Loading the html files
+      'app/views/**/*.html'
     ],
 
 
@@ -32,6 +35,15 @@ module.exports = function(config) {
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
+      'app/views/**/*.html': ['ng-html2js']
+    },
+
+    ngHtml2JsPreprocessor: {
+      stripPrefix: 'app/',
+
+      // setting this option will create only a single module that contains templates
+      // from all the files, so you can load them all with module('templates')
+      moduleName: 'templates'
     },
 
 
@@ -65,7 +77,8 @@ module.exports = function(config) {
     plugins : [
       'karma-chrome-launcher',
       'karma-jasmine',
-      'karma-story-reporter'
+      'karma-story-reporter',
+      'karma-ng-html2js-preprocessor'
     ]
   })
 }
