@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 
 namespace FIFA.Server.Models
 {
-    // Interface representing a client repository
     public interface ICRUDRepository<TObject, TKey>
     {
         Task<IEnumerable<TObject>> GetAll();

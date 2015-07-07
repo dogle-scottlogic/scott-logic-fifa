@@ -10,9 +10,11 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 using FIFA.Server.Models;
+using FIFA.Server.Infrastructure;
 
 namespace FIFA.Server.Controllers
 {
+    [ConfigurableCorsPolicy("localhost")]
     public class PlayerController : ApiController
     {
         private FIFAServerContext db = new FIFAServerContext();
