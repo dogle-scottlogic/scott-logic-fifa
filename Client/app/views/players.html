@@ -1,0 +1,48 @@
+<div cg-busy="vm.loadingPromise">
+  <div class="gridview" ng-init="vm.fillPlayers()" collapse="!vm.showListForm">
+      <h2>Players</h2>
+      <button ng-click="vm.showCreatePlayer()" type="button" class="btn btn-primary right">Add Player</button>
+      <div class="clear"></div>
+      <div class="alert alert-danger" role="alert" ng-repeat="value in vm.errors['item.Global']">{{value}}</div>
+      <table class="table table-striped table-bordered">
+          <thead>
+            <tr>
+                <th>Name</th>
+                <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="player in vm.players">
+                <td>{{player.Name}}</td>
+                <td align="right"><button ng-click="vm.showEditPlayer(player.Id)" type="button" class="btn btn-primary middle btn-custom">Edit</button>
+                    <button ng-click="vm.deletePlayerInstance(player.Id)" type="button" class="btn btn-danger right btn-custom">Delete</button>
+                </td>
+            </tr>
+          </tbody>
+      </table>
+  </div>
+  <div collapse="!vm.showCreateForm">
+      <h2>Add Player</h2>
+      <ul class="error">
+          <li ng-repeat="value in vm.errors['item.Global']">{{value}}</li>
+      </ul>
+      <hr />
+      <form class="simple-form" ng-submit="vm.addPlayer()">
+          <div ng-include="'./views/partials/player-form.html'"></div>
+          <input type="submit" class="btn btn-primary" value="Save" />
+          <input type="button" class="btn" value="Cancel" ng-click="vm.showList()" />
+      </form>
+  </div>
+  <div collapse="!vm.showEditForm">
+      <h2>Edit Player</h2>
+      <ul class="error">
+          <li ng-repeat="value in vm.errors['item.Global']">{{value}}</li>
+      </ul>
+      <hr />
+      <form class="simple-form" ng-submit="vm.updatePlayer()">
+          <div ng-include="'./views/partials/player-form.html'"></div>
+          <input type="submit" class="btn btn-primary" value="Save" />
+          <input type="button" class="btn" value="Cancel" ng-click="vm.showList()" />
+      </form>
+  </div>
+</div>

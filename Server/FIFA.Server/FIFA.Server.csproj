@@ -188,20 +188,20 @@
     <Compile Include="Models\Country\ICountryRepository.cs" />
     <Compile Include="Models\FIFAServerContext.cs" />
     <Compile Include="Models\ICRUDRepository.cs" />
+    <Compile Include="Models\Players\Player.cs" />
+    <Compile Include="Models\Players\PlayerRepository.cs" />
+    <Compile Include="Models\Players\IPlayerRepository.cs" />
     <Compile Include="Models\Score.cs" />
     <Compile Include="Models\Match.cs" />
     <Compile Include="Models\League.cs" />
     <Compile Include="Models\Season\SeasonRepository.cs" />
     <Compile Include="Models\Season\ISeasonRepository.cs" />
     <Compile Include="Models\Team.cs" />
-    <Compile Include="Models\Player.cs" />
     <Compile Include="Models\Season\Season.cs" />
     <Compile Include="Models\TeamPlayer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_Data\stevensavery_db.mdf" />
-    <Content Include="App_Data\stevensavery_db_log.ldf" />
     <Content Include="Areas\HelpPage\HelpPage.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
@@ -251,6 +251,9 @@
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Data\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
