@@ -188,7 +188,9 @@
     <Compile Include="Models\Country\ICountryRepository.cs" />
     <Compile Include="Models\FIFAServerContext.cs" />
     <Compile Include="Models\ICRUDRepository.cs" />
-    <Compile Include="Models\Player.cs" />
+    <Compile Include="Models\Players\Player.cs" />
+    <Compile Include="Models\Players\PlayerRepository.cs" />
+    <Compile Include="Models\Players\IPlayerRepository.cs" />
     <Compile Include="Models\Score.cs" />
     <Compile Include="Models\Match.cs" />
     <Compile Include="Models\League.cs" />
