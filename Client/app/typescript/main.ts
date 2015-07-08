@@ -9,23 +9,24 @@
 module FifaLeagueClient {
     export var mainModule = angular.module("FifaLeagueApp", ['ngRoute',
         Module.Common.HTTPErrorHandleModuleName, Module.Common.devConfig, Module.Country.moduleName, Module.Season.moduleName, Module.Player.moduleName
-    ]).config(["$routeProvider",
+    ])
+    .config(["$routeProvider",
     function routes($routeProvider: ng.route.IRouteProvider){
       $routeProvider.when('/', {
-          templateUrl: '../views/partials/dashboard.html'
+          templateUrl: 'views/partials/dashboard.html'
         })
         .when('/countries', {
-          templateUrl: '../views/countries.html',
+          templateUrl: 'views/countries.html',
           controller: Module.Country.CountryController,
           controllerAs: 'vm'
         })
         .when('/seasons', {
-          templateUrl: '../views/seasons.html',
+          templateUrl: 'views/seasons.html',
           controller: Module.Season.SeasonController,
           controllerAs: 'vm'
         })
         .when('/players', {
-          templateUrl: '../views/players.html',
+          templateUrl: 'views/players.html',
           controller: Module.Player.PlayerController,
           controllerAs: 'vm'
         });
@@ -33,6 +34,6 @@ module FifaLeagueClient {
 
     // Adding the default template for the busy message
     angular.module('FifaLeagueApp').value('cgBusyDefaults',{
-        templateUrl:'./views/partials/busy-template.html'
+        templateUrl:'views/partials/busy-template.html'
     });
 }
