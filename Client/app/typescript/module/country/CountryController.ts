@@ -164,6 +164,11 @@ module FifaLeagueClient.Module.Country {
         this.errors = config.errors;
     }
 
+    // Selecting a country
+    public select(){
+      this.scope.triggerselect({country : this.scope.selectedcountry});
+    }
+
   }
 
 }

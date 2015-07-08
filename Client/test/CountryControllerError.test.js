@@ -1,6 +1,7 @@
-describe('Testing the CountryController', function() {
+describe('Testing the CountryController in error', function() {
   beforeEach(module('country'));
   beforeEach(module(FifaLeagueClient.Module.Common.devConfig));
+  beforeEach(module(FifaLeagueClient.Module.Common.HTTPErrorHandleModuleName));
 
   var countryController;
   var $httpBackend;
@@ -19,7 +20,7 @@ describe('Testing the CountryController', function() {
       $httpBackend = $injector.get('$httpBackend');
       $q = $injector.get('$q');
 
-      country_mockHTTPBackend(config, $httpBackend, $q, dataRepository);
+      country_mockHTTPBackend_Error(config, $httpBackend, $q, dataRepository);
     });
 
   });
@@ -31,7 +32,6 @@ describe('Testing the CountryController', function() {
     countryController = $controller(FifaLeagueClient.Module.Country.CountryController,
         {$scope: scope});
 
-
     // Initialize the list of the countries
     countryController.fillCountries();
     verifyPromiseAndFlush(countryController, $httpBackend);
@@ -39,49 +39,42 @@ describe('Testing the CountryController', function() {
     scope.$digest();
   }));
 
-  describe('CountryController in normal case (no error) : ', function(){
+  describe('CountryController in error case : ', function(){
 
-    it('should contain all the countries at initialize', function() {
-      expect(countryController.countries).toEqual(dataRepository);
+    it('should contain an error', function() {
+      expect(countryController.errors["item.Global"]).toEqual([ 'The server is unreachable' ]);
     });
 
   // Get test
-    it('should get a country', function () {
-
+    it('Try getting a country but have an error', function () {
       // And that we clicked a button or something
       countryController.loadCountry(2);
       verifyPromiseAndFlush(countryController, $httpBackend);
-
-      var countryLoaded = countryController.country;
-      expect(countryLoaded).toEqual(dataRepository[1]);
+      expect(countryController.errors["item.Global"]).toEqual([ '404 : ', 'Not Found' ]);
     });
 
-    it('should create new country and append it to the list', function () {
+    it('Try creating a new country with an already existing name', function () {
       // We simulate we entered a new Country
       countryController.country.Name = "Spain";
-
       // And that we clicked a button or something
       countryController.addCountry();
       verifyPromiseAndFlush(countryController, $httpBackend);
 
-      var lastCountry = countryController.countries[countryController.countries.length - 1];
-      expect(lastCountry.Name).toEqual(countryController.country.Name);
+      expect(countryController.errors["item.Global"]).toEqual([ '400 : ', 'The country name already exists' ]);
     });
 
-    it('should update country and append it to the list', function () {
+    it('Try update a country with an already existing name', function () {
       // We simulate we change a country
       countryController.country.Id = 1;
       countryController.country.Name = "Francia";
-
       // And that we clicked a button or something
       countryController.updateCountry();
       verifyPromiseAndFlush(countryController, $httpBackend);
 
-      var updatedCountry = countryController.countries[0];
-      expect(updatedCountry.Name).toEqual(countryController.country.Name);
+      expect(countryController.errors["item.Global"]).toEqual([ '400 : ', 'The country name already exists' ]);
     });
 
-    it('should delete country', function () {
+    it('Try deleting a country which not exists', function () {
 
       var nbRow = countryController.countries.length;
 
@@ -89,8 +82,7 @@ describe('Testing the CountryController', function() {
       countryController.deleteCountry(2);
       verifyPromiseAndFlush(countryController, $httpBackend);
 
-      var nbRowAfterDelete = countryController.countries.length;
-      expect(nbRow).toEqual(nbRowAfterDelete + 1);
+      expect(countryController.errors["item.Global"]).toEqual([ '404 : ', 'Not Found' ]);
     });
 
   });
