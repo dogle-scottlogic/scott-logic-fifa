@@ -140,6 +140,9 @@
     <EmbeddedResource Include="Migrations\201507061432383_score_table.resx">
       <DependentUpon>201507061432383_score_table.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201507071252246_uploadTable.resx">
+      <DependentUpon>201507071252246_uploadTable.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
@@ -169,6 +172,7 @@
     <Compile Include="Controllers\ScoreController.cs" />
     <Compile Include="Controllers\SeasonController.cs" />
     <Compile Include="Controllers\TeamController.cs" />
+    <Compile Include="Controllers\UploadController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -181,6 +185,10 @@
     <Compile Include="Migrations\201507061432383_score_table.cs" />
     <Compile Include="Migrations\201507061432383_score_table.Designer.cs">
       <DependentUpon>201507061432383_score_table.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201507071252246_uploadTable.cs" />
+    <Compile Include="Migrations\201507071252246_uploadTable.Designer.cs">
+      <DependentUpon>201507071252246_uploadTable.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Country\Country.cs" />
@@ -196,12 +204,17 @@
     <Compile Include="Models\League.cs" />
     <Compile Include="Models\Season\SeasonRepository.cs" />
     <Compile Include="Models\Season\ISeasonRepository.cs" />
+    <Compile Include="Models\Upload\Upload.cs" />
     <Compile Include="Models\Team.cs" />
     <Compile Include="Models\Season\Season.cs" />
     <Compile Include="Models\TeamPlayer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Data\FIFAServerContext-20150529115617.mdf" />
+    <Content Include="App_Data\FIFAServerContext-20150529115617_log.ldf">
+      <DependentUpon>FIFAServerContext-20150529115617.mdf</DependentUpon>
+    </Content>
     <Content Include="Areas\HelpPage\HelpPage.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
@@ -252,9 +265,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="App_Data\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
