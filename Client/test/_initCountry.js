@@ -22,7 +22,7 @@ country_buildDataRepository = function() {
     ];
 }
 
-// mocking the backend
+// mocking the backend in normal case
 country_mockHTTPBackend = function(config, $httpBackend, $q, dataRepository){
 
     $httpBackend.whenGET(config.backend+"api/Country/")
@@ -108,5 +108,26 @@ country_mockHTTPBackend = function(config, $httpBackend, $q, dataRepository){
 
             return [200,true];
         });
+
+}
+
+// mocking the backend in error case
+country_mockHTTPBackend_Error = function(config, $httpBackend, $q, dataRepository){
+
+    $httpBackend.whenGET(config.backend+"api/Country/")
+        .respond(0,{status:0});
+
+    $httpBackend.whenGET(config.backend+"api/Country/2")
+        .respond(404,{Message: 'Not Found'});
+
+    $httpBackend.whenPOST(config.backend+"api/Country/")
+        .respond(400,{Message: 'The country name already exists'});
+
+
+    $httpBackend.whenPUT(config.backend+"api/Country/1")
+        .respond(400,{Message: 'The country name already exists'});
+
+    $httpBackend.whenDELETE(config.backend+"api/Country/2")
+        .respond(404,{Message: 'Not Found'});
 
 }

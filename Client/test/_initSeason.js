@@ -119,3 +119,25 @@ season_mockHTTPBackend = function(config, $httpBackend, $q, dataRepository){
         });
 
 }
+
+
+// mocking the backend in error case
+season_mockHTTPBackend_Error = function(config, $httpBackend, $q, dataRepository){
+
+    $httpBackend.whenGET(config.backend+"api/Season/")
+        .respond(0,{status:0});
+
+    $httpBackend.whenGET(config.backend+"api/Season/2")
+        .respond(404,{Message: 'Not Found'});
+
+    $httpBackend.whenPOST(config.backend+"api/Season/")
+        .respond(400,{Message: 'The season name already exists'});
+
+
+    $httpBackend.whenPUT(config.backend+"api/Season/1")
+        .respond(400,{Message: 'The season name already exists'});
+
+    $httpBackend.whenDELETE(config.backend+"api/Season/2")
+        .respond(404,{Message: 'Not Found'});
+
+}

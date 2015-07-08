@@ -1,6 +1,7 @@
-describe('Testing the SeasonController', function() {
+describe('Testing the SeasonController in error', function() {
     beforeEach(module(FifaLeagueClient.Module.Season.moduleName));
     beforeEach(module(FifaLeagueClient.Module.Common.devConfig));
+    beforeEach(module(FifaLeagueClient.Module.Common.HTTPErrorHandleModuleName));
 
     var seasonController;
     var $httpBackend;
@@ -19,7 +20,7 @@ describe('Testing the SeasonController', function() {
             $httpBackend = $injector.get('$httpBackend');
             $q = $injector.get('$q');
 
-            season_mockHTTPBackend(config, $httpBackend, $q, dataRepository);
+            season_mockHTTPBackend_Error(config, $httpBackend, $q, dataRepository);
         });
 
     });
@@ -40,25 +41,25 @@ describe('Testing the SeasonController', function() {
     }));
 
     // Verify if the controller contain the list of seasons
-    describe('SeasonController in normal case (no error) :', function(){
+    describe('CountryController in  error :', function(){
 
-        it('should contain all the seasons at initialize', function() {
-            expect(seasonController.seasons).toEqual(dataRepository);
+        it('should contain an error', function() {
+            expect(seasonController.errors["item.Global"]).toEqual([ 'The server is unreachable' ]);
         });
 
 
         // Get test
-        it('should get a season', function () {
+        it("Try getting a season that doesn't exists", function () {
 
             // loading a season
             seasonController.loadSeason(2);
             verifyPromiseAndFlush(seasonController, $httpBackend);
 
             var seasonLoaded = seasonController.season;
-            expect(seasonLoaded).toEqual(dataRepository[1]);
+            expect(seasonController.errors["item.Global"]).toEqual([ '404 : ', 'Not Found' ]);
         });
 
-        it('should create new seasons and append it to the list', function () {
+        it('Try creating a new season with an already existing name', function () {
             // We simulate we entered a new Country
             seasonController.season.CountryId = 1;
             seasonController.season.Name = "Ligue 3";
@@ -66,12 +67,10 @@ describe('Testing the SeasonController', function() {
             // And that we clicked a button or something
             seasonController.addSeason();
             verifyPromiseAndFlush(seasonController, $httpBackend);
-
-            var lastSeason = seasonController.seasons[seasonController.seasons.length - 1];
-            expect(lastSeason.Name).toEqual(seasonController.season.Name);
+            expect(seasonController.errors["item.Global"]).toEqual([ '400 : ', 'The season name already exists' ]);
         });
 
-        it('should update season and append it to the list', function () {
+        it('Try updating a new season with an already existing name', function () {
             // We simulate we change a season
             seasonController.season.Id = 1;
             seasonController.season.CountryId = 1;
@@ -80,21 +79,17 @@ describe('Testing the SeasonController', function() {
             // And that we clicked a button or something
             seasonController.updateSeason();
             verifyPromiseAndFlush(seasonController, $httpBackend);
-
-            var updatedSeason = seasonController.seasons[0];
-            expect(updatedSeason.Name).toEqual(seasonController.season.Name);
+            expect(seasonController.errors["item.Global"]).toEqual([ '400 : ', 'The season name already exists' ]);
         });
 
-        it('should delete season', function () {
+        it("Try deleting a season that doesn't exists", function () {
 
             var nbRow = seasonController.seasons.length;
 
             // And that we clicked a button or something
             seasonController.deleteSeason(2);
             verifyPromiseAndFlush(seasonController, $httpBackend);
-
-            var nbRowAfterDelete = seasonController.seasons.length;
-            expect(nbRow).toEqual(nbRowAfterDelete + 1);
+            expect(seasonController.errors["item.Global"]).toEqual([ '404 : ', 'Not Found' ]);
         });
 
     });
