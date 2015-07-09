@@ -1,4 +1,4 @@
-﻿using System;
+﻿    using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,24 +21,8 @@ using FIFA.Server.Controllers;
 namespace FIFATests.ControllerTests
 {
     [TestClass]
-    public class countryControllerTests
+        public class countryControllerTests : AbstractControllerTest
     {
-
-        public static void fakeContext(ApiController controller)
-        {
-            // arrange
-            var config = new HttpConfiguration();
-            config.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
-            var request = new HttpRequestMessage(HttpMethod.Post, "http://localhost/api/Country");
-            var route = config.Routes.MapHttpRoute("defaultAPI", "api/{controller}/{id}");
-            var routeData = new HttpRouteData(route, new HttpRouteValueDictionary(new { controller = "product" }));
-            controller.ControllerContext = new HttpControllerContext(config, routeData, request);
-            controller.Request = request;
-            controller.Url = new UrlHelper(request);
-            controller.Request.Properties[HttpPropertyKeys.HttpConfigurationKey] = config;
-            controller.Request.Properties[HttpPropertyKeys.HttpRouteDataKey] = routeData;
-        }
-
         // Method used to generate a country list
         public List<Country> CreateCountryList()
         {
@@ -236,8 +220,6 @@ namespace FIFATests.ControllerTests
             Assert.AreEqual(response.StatusCode, HttpStatusCode.BadRequest);
 
         }
-
-
                         
         // Verifying the Update failure method
         [TestMethod]
@@ -283,18 +265,18 @@ namespace FIFATests.ControllerTests
             // Creating the rules for mock, always send true in this case
             mock.As<ICRUDRepository<Country, int>>().Setup(m => m.Update(It.IsAny<int>(), It.IsAny<Country>()))
                 .Returns(Task.FromResult(true));
-            mock.As<ICountryRepository>().Setup(m => m.isCountryNameExist(null, null))
+                mock.As<ICountryRepository>().Setup(m => m.isCountryNameExist(null, 1))
                 .Returns(Task.FromResult(false));
 
             // Creating the controller which we want to create
             CountryController controller = new CountryController(mock.Object);
-            // configuring the context for the controler
+                // configuring the context for the controller
             fakeContext(controller);
 
             // Facking a model error
             controller.ModelState.AddModelError("key", "errorMessage");
 
-            HttpResponseMessage response = controller.Post(country).Result;
+                HttpResponseMessage response = controller.Put(1, country).Result;
             // the result should say "HttpStatusCode.BadRequest"
             Assert.AreEqual(response.StatusCode, HttpStatusCode.BadRequest);
 
@@ -318,7 +300,7 @@ namespace FIFATests.ControllerTests
             // configuring the context for the controler
             fakeContext(controller);
 
-            HttpResponseMessage response = controller.Post(null).Result;
+                HttpResponseMessage response = controller.Put(1, null).Result;
             // the result should say "HttpStatusCode.BadRequest"
             Assert.AreEqual(response.StatusCode, HttpStatusCode.BadRequest);
 
@@ -335,7 +317,7 @@ namespace FIFATests.ControllerTests
             // Creating the rules for mock, always send true in this case
             mock.As<ICRUDRepository<Country, int>>().Setup(m => m.Update(It.IsAny<int>(), It.IsAny<Country>()))
                 .Returns(Task.FromResult(true));
-            mock.As<ICountryRepository>().Setup(m => m.isCountryNameExist(null, null))
+                mock.As<ICountryRepository>().Setup(m => m.isCountryNameExist(null, 1))
                 .Returns(Task.FromResult(true));
 
             // Creating the controller which we want to create
@@ -343,7 +325,7 @@ namespace FIFATests.ControllerTests
             // configuring the context for the controler
             fakeContext(controller);
 
-            HttpResponseMessage response = controller.Post(country).Result;
+                HttpResponseMessage response = controller.Put(1, country).Result;
             // the result should say "HttpStatusCode.BadRequest"
             Assert.AreEqual(response.StatusCode, HttpStatusCode.BadRequest);
 

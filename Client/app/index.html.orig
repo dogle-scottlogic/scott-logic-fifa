@@ -48,8 +48,11 @@
                           <li><a href="#/countries">Countries</a></li>
                           <li><a href="#/players">Players</a></li>
                           <li><a href="#/seasons">Seasons</a></li>
-                          <li><a href="#/teams">Teams</a></li>
+<<<<<<< HEAD
                           <li><a href="#/leaguewizard">LeagueWizard</a></li>
+=======
+                          <li><a href="#/teams">Teams</a></li>
+>>>>>>> edf9aeff8090f7b8ff5a0114627ebb22a9cd2449
                       </ul>
                     </li>
                 </ul>

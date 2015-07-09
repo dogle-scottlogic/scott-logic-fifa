@@ -94,10 +94,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\AbstractControllerTest.cs" />
     <Compile Include="Controllers\PlayerControllerTest.cs" />
     <Compile Include="Controllers\LeagueControllerTest.cs" />
     <Compile Include="Controllers\SeasonControllerTest.cs" />
     <Compile Include="Controllers\CountryControllerTest.cs" />
+    <Compile Include="Controllers\TeamControllerTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

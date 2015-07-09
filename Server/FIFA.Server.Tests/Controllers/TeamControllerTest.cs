@@ -1,4 +1,4 @@
-﻿    using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,44 +18,39 @@ using System.Net;
 using FIFA.Server.Models;
 using FIFA.Server.Controllers;
 
-namespace FIFATests.ControllerTests
-{
+namespace FIFATests.ControllerTests {
+
     [TestClass]
-        public class seasonControllerTests : AbstractControllerTest
+    public class TeamControllerTest : AbstractControllerTest
     {
-        // Method used to generate a season list
-        public List<Season> CreateSeasonList()
-        {
+        public List<Team> createTeams() { 
+            
+            var teams = new List<Team>
+            {
+                new Team {Id = 1, Name = "Hamburger SV"},
+                new Team {Id = 2, Name = "Borussia Dortmund"}
+            };
 
-            var seasons = new List<Season>
-        {
-            new Season{Id=1,CountryId=1, Name="Serie A"},
-            new Season{Id=2,CountryId=1, Name="Ligue 1"},
-            new Season{Id=3,CountryId=1, Name="La Liga"}
-        };
-
-            return seasons;
+            return teams;
         }
-
 
         // Verifying the get(i) method
         [TestMethod]
-        public void RetrieveASeasonInTheRepo()
+        public void RetrieveATeamInTheRepo()
         {
-            List<Season> seasons = CreateSeasonList();
+            List<Team> teams = createTeams();
 
-            var mock = new Mock<ISeasonRepository>(MockBehavior.Strict);
-
+            var mock = new Mock<ITeamRepository>(MockBehavior.Strict);
             // Filling mock with data
-            mock.As<ICRUDRepository<Season, int>>().Setup(m => m.Get(It.IsAny<int>()))
-                .Returns<int>(id => Task.FromResult(seasons.FirstOrDefault(c => c.Id == id)));
+            mock.As<ICRUDRepository<Team, int>>().Setup(m => m.Get(It.IsAny<int>()))
+                .Returns<int>(id => Task.FromResult(teams.FirstOrDefault(c => c.Id == id)));
 
             var mockCountryRepo = new Mock<ICountryRepository>(MockBehavior.Strict);
             mockCountryRepo.As<ICRUDRepository<Country, int>>().Setup(m => m.Get(It.IsAny<int>()))
                 .Returns<int>(id => Task.FromResult(new Country()));
 
             // Creating the controller which we want to create
-            SeasonController controller = new SeasonController(mock.Object, mockCountryRepo.Object);
+            TeamController controller = new TeamController(mock.Object, mockCountryRepo.Object);
 
             // configuring the context for the controler
             fakeContext(controller);
@@ -63,80 +58,76 @@ namespace FIFATests.ControllerTests
             HttpResponseMessage response = controller.Get(1).Result;
             Assert.AreEqual(response.StatusCode, HttpStatusCode.OK);
             var objectContent = response.Content as ObjectContent;
-            Assert.AreEqual(seasons[0], objectContent.Value);
-
-
+            Assert.AreEqual(teams[0], objectContent.Value);
         }
 
         // Verifying the get(i) method
         [TestMethod]
-        public void RetrieveFailureASeasonInTheRepo()
+        public void RetrieveFailureATeamInTheRepo()
         {
-            List<Season> seasons = CreateSeasonList();
+            List<Team> Teams = createTeams();
 
-            var mock = new Mock<ISeasonRepository>(MockBehavior.Strict);
+            var mock = new Mock<ITeamRepository>(MockBehavior.Strict);
 
             // Filling mock with data
-            mock.As<ICRUDRepository<Season, int>>().Setup(m => m.Get(It.IsAny<int>()))
-                .Returns<int?>(id => Task.FromResult(seasons.FirstOrDefault(c => false)));
+            mock.As<ICRUDRepository<Team, int>>().Setup(m => m.Get(It.IsAny<int>()))
+                .Returns<int?>(id => Task.FromResult(Teams.FirstOrDefault(c => false)));
 
             var mockCountryRepo = new Mock<ICountryRepository>(MockBehavior.Strict);
             mockCountryRepo.As<ICRUDRepository<Country, int>>().Setup(m => m.Get(It.IsAny<int>()))
                 .Returns<int>(id => Task.FromResult(new Country()));
 
             // Creating the controller which we want to create
-            SeasonController controller = new SeasonController(mock.Object, mockCountryRepo.Object);
+            TeamController controller = new TeamController(mock.Object, mockCountryRepo.Object);
 
             // configuring the context for the controler
             fakeContext(controller);
 
-            HttpResponseMessage response = controller.Get(1).Result;
+            HttpResponseMessage response = controller.Get(0).Result;
             Assert.AreEqual(response.StatusCode, HttpStatusCode.NotFound);
-
         }
 
         // Verifying the getAll method
         [TestMethod]
-        public void RetrieveAllseasonsInTheRepo()
+        public void RetrieveAllTeamsInTheRepo()
         {
-            IEnumerable<Season> seasons = CreateSeasonList();
+            IEnumerable<Team> Teams = createTeams();
 
-            var mock = new Mock<ISeasonRepository>(MockBehavior.Strict);
+            var mock = new Mock<ITeamRepository>(MockBehavior.Strict);
 
             // Filling mock with data
-            mock.As<ICRUDRepository<Season, int>>().Setup(m => m.GetAll())
-                .Returns(Task.FromResult(seasons));
+            mock.As<ICRUDRepository<Team, int>>().Setup(m => m.GetAll())
+                .Returns(Task.FromResult(Teams));
 
             var mockCountryRepo = new Mock<ICountryRepository>(MockBehavior.Strict);
             mockCountryRepo.As<ICRUDRepository<Country, int>>().Setup(m => m.Get(It.IsAny<int>()))
                 .Returns<int>(id => Task.FromResult(new Country()));
 
             // Creating the controller which we want to create
-            SeasonController controller = new SeasonController(mock.Object, mockCountryRepo.Object);
+            TeamController controller = new TeamController(mock.Object, mockCountryRepo.Object);
             fakeContext(controller);
 
             HttpResponseMessage response = controller.GetAll().Result;
 
             Assert.AreEqual(response.StatusCode, HttpStatusCode.OK);
             var objectContent = response.Content as ObjectContent;
-            Assert.AreEqual(seasons, objectContent.Value);
-
+            Assert.AreEqual(Teams, objectContent.Value);
         }
 
 
         // Verifying the Add method
         [TestMethod]
-        public void AddSeasonInTheRepo()
+        public void AddTeamInTheRepo()
         {
-            List<Season> seasons = CreateSeasonList();
-            List<Season> added = new List<Season>();
-            var mock = new Mock<ISeasonRepository>(MockBehavior.Strict);
+            List<Team> teams = createTeams();
+            List<Team> added = new List<Team>();
+            var mock = new Mock<ITeamRepository>(MockBehavior.Strict);
 
             // Filling mock with data
-            mock.As<ICRUDRepository<Season, int>>().Setup(m => m.Add(It.IsAny<Season>()))
-                .Returns(Task.FromResult(seasons.FirstOrDefault()))
-                .Callback<Season>(c => added.Add(c));
-            mock.As<ISeasonRepository>().Setup(m => m.isSeasonNameExist(It.IsAny<int>(), It.IsAny<string>(), null))
+            mock.As<ICRUDRepository<Team, int>>().Setup(m => m.Add(It.IsAny<Team>()))
+                .Returns(Task.FromResult(teams.FirstOrDefault()))
+                .Callback<Team>(c => added.Add(c));
+            mock.As<ITeamRepository>().Setup(m => m.teamNameExists(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>()))
                 .Returns(Task.FromResult(false));
 
             var mockCountryRepo = new Mock<ICountryRepository>(MockBehavior.Strict);
@@ -144,61 +135,32 @@ namespace FIFATests.ControllerTests
                 .Returns<int>(id => Task.FromResult(new Country()));
 
             // Creating the controller which we want to create
-            SeasonController controller = new SeasonController(mock.Object, mockCountryRepo.Object);
+            TeamController controller = new TeamController(mock.Object, mockCountryRepo.Object);
             // configuring the context for the controler
             fakeContext(controller);
 
-            // Testing all the list that we can retrieve correctly the seasons
-            for (int i = 0; i < seasons.Count; i++)
+            // Testing all the list that we can retrieve correctly the Teams
+            for (int i = 0; i < teams.Count; i++)
             {
-                HttpResponseMessage response = controller.Post(seasons[i]).Result;
+                HttpResponseMessage response = controller.Post(teams[i]).Result;
                 // the result should say "HttpStatusCode.Created"
                 Assert.AreEqual(response.StatusCode, HttpStatusCode.Created);
             }
 
             // the added list should be the same as the list
-            CollectionAssert.AreEqual(seasons, added);
-        }
-
-
-        // Verifying the Add method fail if the country is unknown
-        [TestMethod]
-        public void AddfailureSeasonCountryUnknownInTheRepo()
-        {
-            Season season = new Season();
-            List<Season> added = new List<Season>();
-            var mock = new Mock<ISeasonRepository>(MockBehavior.Strict);
-
-            // Filling mock rull with repository
-            mock.As<ICRUDRepository<Season, int>>().Setup(m => m.Add(It.IsAny<Season>()));
-            mock.As<ISeasonRepository>().Setup(m => m.isSeasonNameExist(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<int>()))
-                .Returns(Task.FromResult(false));
-
-            var mockCountryRepo = new Mock<ICountryRepository>(MockBehavior.Strict);
-            mockCountryRepo.As<ICRUDRepository<Country, int>>().Setup(m => m.Get(It.IsAny<int>()))
-                .Returns<int>(id => Task.FromResult((Country)null));
-
-            // Creating the controller which we want to create
-            SeasonController controller = new SeasonController(mock.Object, mockCountryRepo.Object);
-            // configuring the context for the controler
-            fakeContext(controller);
-
-            HttpResponseMessage response = controller.Post(season).Result;
-            // the result should say "HttpStatusCode.Created"
-            Assert.AreEqual(response.StatusCode, HttpStatusCode.BadRequest);
-
+            CollectionAssert.AreEqual(teams, added);
         }
 
         // Verifying the Add failure method
         [TestMethod]
-        public void AddFailureSeasonInTheRepo()
+        public void AddFailureTeamInTheRepo()
         {
-            Season season = new Season();
-            var mock = new Mock<ISeasonRepository>(MockBehavior.Strict);
+            Team Team = new Team();
+            var mock = new Mock<ITeamRepository>(MockBehavior.Strict);
 
             // Filling mock rull with repository
-            mock.As<ICRUDRepository<Season, int>>().Setup(m => m.Add(It.IsAny<Season>()));
-            mock.As<ISeasonRepository>().Setup(m => m.isSeasonNameExist(0, null, null))
+            mock.As<ICRUDRepository<Team, int>>().Setup(m => m.Add(It.IsAny<Team>()));
+            mock.As<ITeamRepository>().Setup(m => m.teamNameExists(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>()))
                 .Returns(Task.FromResult(false));
 
             var mockCountryRepo = new Mock<ICountryRepository>(MockBehavior.Strict);
@@ -206,7 +168,7 @@ namespace FIFATests.ControllerTests
                 .Returns<int>(id => Task.FromResult(new Country()));
 
             // Creating the controller which we want to create
-            SeasonController controller = new SeasonController(mock.Object, mockCountryRepo.Object);
+            TeamController controller = new TeamController(mock.Object, mockCountryRepo.Object);
 
             // configuring the context for the controler
             fakeContext(controller);
@@ -214,20 +176,20 @@ namespace FIFATests.ControllerTests
             // Facking a model error
             controller.ModelState.AddModelError("key", "errorMessage");
 
-            HttpResponseMessage response = controller.Post(season).Result;
+            HttpResponseMessage response = controller.Post(Team).Result;
             // the result should say "HttpStatusCode.BadRequest"
             Assert.AreEqual(response.StatusCode, HttpStatusCode.BadRequest);
         }
 
         // Verifying the Add failure method
         [TestMethod]
-        public void AddFailureNullSeasonInTheRepo()
+        public void AddFailureNullTeamInTheRepo()
         {
-            var mock = new Mock<ISeasonRepository>(MockBehavior.Strict);
+            var mock = new Mock<ITeamRepository>(MockBehavior.Strict);
 
             // Filling mock rull with repository
-            mock.As<ICRUDRepository<Season, int>>().Setup(m => m.Add(It.IsAny<Season>()));
-            mock.As<ISeasonRepository>().Setup(m => m.isSeasonNameExist(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<int>()))
+            mock.As<ICRUDRepository<Team, int>>().Setup(m => m.Add(It.IsAny<Team>()));
+            mock.As<ITeamRepository>().Setup(m => m.teamNameExists(It.IsAny<string>(), It.IsAny<int>(), null))
                 .Returns(Task.FromResult(false));
 
             var mockCountryRepo = new Mock<ICountryRepository>(MockBehavior.Strict);
@@ -235,7 +197,7 @@ namespace FIFATests.ControllerTests
                 .Returns<int>(id => Task.FromResult(new Country()));
 
             // Creating the controller which we want to create
-            SeasonController controller = new SeasonController(mock.Object, mockCountryRepo.Object);
+            TeamController controller = new TeamController(mock.Object, mockCountryRepo.Object);
 
             // configuring the context for the controler
             fakeContext(controller);
@@ -249,14 +211,14 @@ namespace FIFATests.ControllerTests
 
         // Verifying the Add failure exist name in the repo
         [TestMethod]
-        public void AddFailureSeasonNameExistsInTheRepo()
+        public void AddFailureTeamNameExistsInTheRepo()
         {
-            Season season = new Season();
-            var mock = new Mock<ISeasonRepository>(MockBehavior.Strict);
+            Team Team = new Team();
+            var mock = new Mock<ITeamRepository>(MockBehavior.Strict);
 
             // Filling mock rull with repository
-            mock.As<ICRUDRepository<Season, int>>().Setup(m => m.Add(It.IsAny<Season>()));
-            mock.As<ISeasonRepository>().Setup(m => m.isSeasonNameExist(It.IsAny<int>(), It.IsAny<string>(), null))
+            mock.As<ICRUDRepository<Team, int>>().Setup(m => m.Add(It.IsAny<Team>()));
+            mock.As<ITeamRepository>().Setup(m => m.teamNameExists(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>()))
                 .Returns(Task.FromResult(true));
 
             var mockCountryRepo = new Mock<ICountryRepository>(MockBehavior.Strict);
@@ -264,65 +226,24 @@ namespace FIFATests.ControllerTests
                 .Returns<int>(id => Task.FromResult(new Country()));
 
             // Creating the controller which we want to create
-            SeasonController controller = new SeasonController(mock.Object, mockCountryRepo.Object);
+            TeamController controller = new TeamController(mock.Object, mockCountryRepo.Object);
 
             // configuring the context for the controler
             fakeContext(controller);
 
-            HttpResponseMessage response = controller.Post(season).Result;
+            HttpResponseMessage response = controller.Post(Team).Result;
             // the result should say "HttpStatusCode.BadRequest"
             Assert.AreEqual(response.StatusCode, HttpStatusCode.BadRequest);
 
         }
 
-                        
-        // Verifying the Update failure method
         [TestMethod]
-        public void UpdateSeasonInTheRepo()
-        {
-            Season season = new Season();
-
-            var mock = new Mock<ISeasonRepository>(MockBehavior.Strict);
-
-            // Creating the rules for mock, always send true in this case
-            mock.As<ICRUDRepository<Season, int>>().Setup(m => m.Update(It.IsAny<int>(), It.IsAny<Season>()))
-                .Returns(Task.FromResult(true));
-            mock.As<ISeasonRepository>().Setup(m => m.isSeasonNameExist(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<int>()))
-                .Returns(Task.FromResult(false));
-
-            var mockCountryRepo = new Mock<ICountryRepository>(MockBehavior.Strict);
-            mockCountryRepo.As<ICRUDRepository<Country, int>>().Setup(m => m.Get(It.IsAny<int>()))
-                .Returns<int>(id => Task.FromResult(new Country()));
-
-            // Creating the controller which we want to create
-            SeasonController controller = new SeasonController(mock.Object, mockCountryRepo.Object);
-            // configuring the context for the controler
-            fakeContext(controller);
-
-            Season modifiedseason = new Season();
-            modifiedseason.Id = season.Id;
-            modifiedseason.Name = "ModifiedName";
-            HttpResponseMessage response = controller.Put(modifiedseason.Id, modifiedseason).Result;
-            // the result should say "HttpStatusCode.Created" and the returned object should have a different lastName
-            Assert.AreEqual(response.StatusCode, HttpStatusCode.Created);
-
-            var objectContent = response.Content as ObjectContent;
-            Assert.AreNotEqual(season.Name, ((Season)objectContent.Value).Name);
-
-        }
-
-
-        // Verifying the update method fail if the country is unknown
-        [TestMethod]
-        public void UpdatefailureSeasonCountryUnknownInTheRepo()
-        {
-            Season season = new Season();
-            List<Season> added = new List<Season>();
-            var mock = new Mock<ISeasonRepository>(MockBehavior.Strict);
-
-            // Filling mock rull with repository
-            mock.As<ICRUDRepository<Season, int>>().Setup(m => m.Update(It.IsAny<int>(), It.IsAny<Season>()));
-            mock.As<ISeasonRepository>().Setup(m => m.isSeasonNameExist(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<int>()))
+        public void AddFailureCountryNotExistsInTheRepo() {
+            Team Team = new Team();
+            var mock = new Mock<ITeamRepository>(MockBehavior.Strict);
+            // Filling mock with data
+            mock.As<ICRUDRepository<Team, int>>().Setup(m => m.Add(It.IsAny<Team>()));
+            mock.As<ITeamRepository>().Setup(m => m.teamNameExists(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>()))
                 .Returns(Task.FromResult(false));
 
             var mockCountryRepo = new Mock<ICountryRepository>(MockBehavior.Strict);
@@ -330,29 +251,28 @@ namespace FIFATests.ControllerTests
                 .Returns<int>(id => Task.FromResult((Country)null));
 
             // Creating the controller which we want to create
-            SeasonController controller = new SeasonController(mock.Object, mockCountryRepo.Object);
+            TeamController controller = new TeamController(mock.Object, mockCountryRepo.Object);
             // configuring the context for the controler
             fakeContext(controller);
 
-            HttpResponseMessage response = controller.Put(season.Id, season).Result;
-            // the result should say "HttpStatusCode.Created"
+            HttpResponseMessage response = controller.Post(Team).Result;
+            // the result should say "HttpStatusCode.BadRequest"
             Assert.AreEqual(response.StatusCode, HttpStatusCode.BadRequest);
-
         }
 
 
-        // Verifying the Update method
+        // Verifying the Update failure method
         [TestMethod]
-        public void UpdateFailureSeasonInTheRepo()
+        public void UpdateTeamInTheRepo()
         {
-            Season season = new Season();
+            Team Team = new Team();
 
-            var mock = new Mock<ISeasonRepository>(MockBehavior.Strict);
+            var mock = new Mock<ITeamRepository>(MockBehavior.Strict);
 
             // Creating the rules for mock, always send true in this case
-            mock.As<ICRUDRepository<Season, int>>().Setup(m => m.Update(It.IsAny<int>(), It.IsAny<Season>()))
+            mock.As<ICRUDRepository<Team, int>>().Setup(m => m.Update(It.IsAny<int>(), It.IsAny<Team>()))
                 .Returns(Task.FromResult(true));
-            mock.As<ISeasonRepository>().Setup(m => m.isSeasonNameExist(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<int>()))
+            mock.As<ITeamRepository>().Setup(m => m.teamNameExists(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>()))
                 .Returns(Task.FromResult(false));
 
             var mockCountryRepo = new Mock<ICountryRepository>(MockBehavior.Strict);
@@ -360,14 +280,49 @@ namespace FIFATests.ControllerTests
                 .Returns<int>(id => Task.FromResult(new Country()));
 
             // Creating the controller which we want to create
-            SeasonController controller = new SeasonController(mock.Object, mockCountryRepo.Object);
+            TeamController controller = new TeamController(mock.Object, mockCountryRepo.Object);
+            // configuring the context for the controler
+            fakeContext(controller);
+
+            Team modifiedTeam = new Team();
+            modifiedTeam.Id = Team.Id;
+            modifiedTeam.Name = "ModifiedName";
+            HttpResponseMessage response = controller.Put(modifiedTeam.Id, modifiedTeam).Result;
+            // the result should say "HttpStatusCode.Created" and the returned object should have a different lastName
+            Assert.AreEqual(response.StatusCode, HttpStatusCode.Created);
+
+            var objectContent = response.Content as ObjectContent;
+            Assert.AreNotEqual(Team.Name, ((Team)objectContent.Value).Name);
+
+        }
+
+        // Verifying the Update method
+        [TestMethod]
+        public void UpdateFailureTeamInTheRepo()
+        {
+            Team Team = new Team();
+
+            var mock = new Mock<ITeamRepository>(MockBehavior.Strict);
+
+            // Creating the rules for mock, always send true in this case
+            mock.As<ICRUDRepository<Team, int>>().Setup(m => m.Update(It.IsAny<int>(), It.IsAny<Team>()))
+                .Returns(Task.FromResult(true));
+            mock.As<ITeamRepository>().Setup(m => m.teamNameExists(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>()))
+                .Returns(Task.FromResult(false));
+
+            var mockCountryRepo = new Mock<ICountryRepository>(MockBehavior.Strict);
+            mockCountryRepo.As<ICRUDRepository<Country, int>>().Setup(m => m.Get(It.IsAny<int>()))
+                .Returns<int>(id => Task.FromResult(new Country()));
+
+            // Creating the controller which we want to create
+            TeamController controller = new TeamController(mock.Object, mockCountryRepo.Object);
             // configuring the context for the controler
             fakeContext(controller);
 
             // Facking a model error
             controller.ModelState.AddModelError("key", "errorMessage");
 
-            HttpResponseMessage response = controller.Put(season.Id, season).Result;
+            HttpResponseMessage response = controller.Put(Team.Id, Team).Result;
             // the result should say "HttpStatusCode.BadRequest"
             Assert.AreEqual(response.StatusCode, HttpStatusCode.BadRequest);
 
@@ -376,14 +331,14 @@ namespace FIFATests.ControllerTests
 
         // Verifying the Update method
         [TestMethod]
-        public void UpdateFailureNullSeasonInTheRepo()
+        public void UpdateFailureNullTeamInTheRepo()
         {
-            var mock = new Mock<ISeasonRepository>(MockBehavior.Strict);
+            var mock = new Mock<ITeamRepository>(MockBehavior.Strict);
 
             // Creating the rules for mock, always send true in this case
-            mock.As<ICRUDRepository<Season, int>>().Setup(m => m.Update(It.IsAny<int>(), It.IsAny<Season>()))
+            mock.As<ICRUDRepository<Team, int>>().Setup(m => m.Update(It.IsAny<int>(), It.IsAny<Team>()))
                 .Returns(Task.FromResult(true));
-            mock.As<ISeasonRepository>().Setup(m => m.isSeasonNameExist(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<int>()))
+            mock.As<ITeamRepository>().Setup(m => m.teamNameExists(It.IsAny<string>(), It.IsAny<int>(), null))
                 .Returns(Task.FromResult(false));
 
             var mockCountryRepo = new Mock<ICountryRepository>(MockBehavior.Strict);
@@ -391,11 +346,11 @@ namespace FIFATests.ControllerTests
                 .Returns<int>(id => Task.FromResult(new Country()));
 
             // Creating the controller which we want to create
-            SeasonController controller = new SeasonController(mock.Object, mockCountryRepo.Object);
+            TeamController controller = new TeamController(mock.Object, mockCountryRepo.Object);
             // configuring the context for the controler
             fakeContext(controller);
 
-            HttpResponseMessage response = controller.Put(1,null).Result;
+            HttpResponseMessage response = controller.Put(1, null).Result;
             // the result should say "HttpStatusCode.BadRequest"
             Assert.AreEqual(response.StatusCode, HttpStatusCode.BadRequest);
 
@@ -404,14 +359,14 @@ namespace FIFATests.ControllerTests
 
         // Verifying the Add failure exist name in the repo
         [TestMethod]
-        public void UpdateFailureSeasonNameExistsInTheRepo()
+        public void UpdateFailureTeamNameExistsInTheRepo()
         {
-            Season season = new Season();
-            var mock = new Mock<ISeasonRepository>(MockBehavior.Strict);
+            Team Team = new Team();
+            var mock = new Mock<ITeamRepository>(MockBehavior.Strict);
 
             // Filling mock rull with repository
-            mock.As<ICRUDRepository<Season, int>>().Setup(m => m.Add(It.IsAny<Season>()));
-            mock.As<ISeasonRepository>().Setup(m => m.isSeasonNameExist(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<int>()))
+            mock.As<ICRUDRepository<Team, int>>().Setup(m => m.Add(It.IsAny<Team>()));
+            mock.As<ITeamRepository>().Setup(m => m.teamNameExists(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>()))
                 .Returns(Task.FromResult(true));
 
             var mockCountryRepo = new Mock<ICountryRepository>(MockBehavior.Strict);
@@ -419,26 +374,50 @@ namespace FIFATests.ControllerTests
                 .Returns<int>(id => Task.FromResult(new Country()));
 
             // Creating the controller which we want to create
-            SeasonController controller = new SeasonController(mock.Object, mockCountryRepo.Object);
+            TeamController controller = new TeamController(mock.Object, mockCountryRepo.Object);
 
             // configuring the context for the controler
             fakeContext(controller);
 
-            HttpResponseMessage response = controller.Put(1, season).Result;
+            HttpResponseMessage response = controller.Put(1, Team).Result;
             // the result should say "HttpStatusCode.BadRequest"
             Assert.AreEqual(response.StatusCode, HttpStatusCode.BadRequest);
 
         }
 
+        [TestMethod]
+        public void UpdateFailureCountryNotExistsInTheRepo()
+        {
+            Team Team = new Team();
+            var mock = new Mock<ITeamRepository>(MockBehavior.Strict);
+            // Filling mock with data
+            mock.As<ICRUDRepository<Team, int>>().Setup(m => m.Add(It.IsAny<Team>()));
+            mock.As<ITeamRepository>().Setup(m => m.teamNameExists(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>()))
+                .Returns(Task.FromResult(false));
+
+            var mockCountryRepo = new Mock<ICountryRepository>(MockBehavior.Strict);
+            mockCountryRepo.As<ICRUDRepository<Country, int>>().Setup(m => m.Get(It.IsAny<int>()))
+                .Returns<int>(id => Task.FromResult((Country)null));
+
+            // Creating the controller which we want to create
+            TeamController controller = new TeamController(mock.Object, mockCountryRepo.Object);
+            // configuring the context for the controler
+            fakeContext(controller);
+
+            HttpResponseMessage response = controller.Put(1, Team).Result;
+            // the result should say "HttpStatusCode.BadRequest"
+            Assert.AreEqual(response.StatusCode, HttpStatusCode.BadRequest);
+        }
+
 
         // Verifying the delete method
         [TestMethod]
-        public void DeleteSeasonInTheRepo()
+        public void DeleteTeamInTheRepo()
         {
-            var mock = new Mock<ISeasonRepository>(MockBehavior.Strict);
+            var mock = new Mock<ITeamRepository>(MockBehavior.Strict);
 
             // Creating the rules for mock, always send true in this case
-            mock.As<ICRUDRepository<Season, int>>().Setup(m => m.Remove(It.IsAny<int>()))
+            mock.As<ICRUDRepository<Team, int>>().Setup(m => m.Remove(It.IsAny<int>()))
                 .Returns(Task.FromResult(true));
 
             var mockCountryRepo = new Mock<ICountryRepository>(MockBehavior.Strict);
@@ -446,7 +425,7 @@ namespace FIFATests.ControllerTests
                 .Returns<int>(id => Task.FromResult(new Country()));
 
             // Creating the controller which we want to create
-            SeasonController controller = new SeasonController(mock.Object, mockCountryRepo.Object);
+            TeamController controller = new TeamController(mock.Object, mockCountryRepo.Object);
             // configuring the context for the controler
             fakeContext(controller);
 
@@ -458,12 +437,12 @@ namespace FIFATests.ControllerTests
 
         // Verifying the delete method
         [TestMethod]
-        public void DeleteFailureSeasonInTheRepo()
+        public void DeleteFailureTeamInTheRepo()
         {
-            var mock = new Mock<ISeasonRepository>(MockBehavior.Strict);
+            var mock = new Mock<ITeamRepository>(MockBehavior.Strict);
 
             // Creating the rules for mock, always send true in this case
-            mock.As<ICRUDRepository<Season, int>>().Setup(m => m.Remove(It.IsAny<int>()))
+            mock.As<ICRUDRepository<Team, int>>().Setup(m => m.Remove(It.IsAny<int>()))
                 .Returns(Task.FromResult(false));
 
             var mockCountryRepo = new Mock<ICountryRepository>(MockBehavior.Strict);
@@ -471,7 +450,7 @@ namespace FIFATests.ControllerTests
                 .Returns<int>(id => Task.FromResult(new Country()));
 
             // Creating the controller which we want to create
-            SeasonController controller = new SeasonController(mock.Object, mockCountryRepo.Object);
+            TeamController controller = new TeamController(mock.Object, mockCountryRepo.Object);
             // configuring the context for the controler
             fakeContext(controller);
 
@@ -482,6 +461,4 @@ namespace FIFATests.ControllerTests
 
 
     }
-
-
 }

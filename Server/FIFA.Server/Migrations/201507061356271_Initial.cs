@@ -107,7 +107,7 @@ namespace FIFA.Server.Migrations
                 .ForeignKey("dbo.Seasons", t => t.Season_Id, cascadeDelete: true)
                 .Index(t => t.TeamPlayer_Id)
                 .Index(t => t.Season_Id);
-            
+           
         }
         
         public override void Down()
