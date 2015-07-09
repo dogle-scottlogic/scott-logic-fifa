@@ -140,8 +140,11 @@
     <EmbeddedResource Include="Migrations\201507061432383_score_table.resx">
       <DependentUpon>201507061432383_score_table.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201507071252246_uploadTable.resx">
-      <DependentUpon>201507071252246_uploadTable.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201507081023025_TeamCountryFk.resx">
+      <DependentUpon>201507081023025_TeamCountryFk.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201507091003092_UploadTable.resx">
+      <DependentUpon>201507091003092_UploadTable.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
@@ -186,9 +189,13 @@
     <Compile Include="Migrations\201507061432383_score_table.Designer.cs">
       <DependentUpon>201507061432383_score_table.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201507071252246_uploadTable.cs" />
-    <Compile Include="Migrations\201507071252246_uploadTable.Designer.cs">
-      <DependentUpon>201507071252246_uploadTable.cs</DependentUpon>
+    <Compile Include="Migrations\201507081023025_TeamCountryFk.cs" />
+    <Compile Include="Migrations\201507081023025_TeamCountryFk.Designer.cs">
+      <DependentUpon>201507081023025_TeamCountryFk.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201507091003092_UploadTable.cs" />
+    <Compile Include="Migrations\201507091003092_UploadTable.Designer.cs">
+      <DependentUpon>201507091003092_UploadTable.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Country\Country.cs" />
@@ -205,9 +212,11 @@
     <Compile Include="Models\Season\SeasonRepository.cs" />
     <Compile Include="Models\Season\ISeasonRepository.cs" />
     <Compile Include="Models\Upload\Upload.cs" />
-    <Compile Include="Models\Team.cs" />
+    <Compile Include="Models\Team\ITeamRepository.cs" />
+    <Compile Include="Models\Team\Team.cs" />
     <Compile Include="Models\Season\Season.cs" />
     <Compile Include="Models\TeamPlayer.cs" />
+    <Compile Include="Models\Team\TeamRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

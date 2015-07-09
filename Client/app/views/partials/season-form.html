@@ -1,6 +1,6 @@
 <table>
     <label>Country</label>
-    <countryselect selectedcountry="vm.season.CountryId"></countryselect>
+    <countryselect selectedcountry="vm.season.CountryId" required='true'></countryselect>
     <ul class="error">
         <li ng-repeat="value in vm.errors['item.CountryId']">{{value}}</li>
     </ul>

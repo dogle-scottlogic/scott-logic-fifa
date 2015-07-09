@@ -5,6 +5,7 @@ module FifaLeagueClient.Module.Country.Directives {
     interface IMyScope extends ng.IScope {
         vm : CountryController;
         selectedcountry:string;
+        required: boolean;
     }
 
     export function countrySelectDirective(): ng.IDirective {
@@ -12,6 +13,7 @@ module FifaLeagueClient.Module.Country.Directives {
             restrict: "E",
             scope: {
                 selectedcountry:'=',
+                required:'=',
                 'triggerselect':'&onSelect'
             },
             controller: CountryController,
