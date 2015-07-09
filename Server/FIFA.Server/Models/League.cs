@@ -17,9 +17,10 @@ namespace FIFA.Server.Models
         [Key]
         public int Id { get; set; }
         public string Name { get; set; }
+
+        [ForeignKey("Season")]
         public int SeasonId { get; set; }
 
-        [ForeignKey("SeasonId")]
         public Season Season { get; set; }
 
         public virtual ICollection<Player> Players { get; set; }
