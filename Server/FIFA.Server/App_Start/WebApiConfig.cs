@@ -16,16 +16,6 @@ namespace FIFA.Server
             // Web API routes
             config.MapHttpAttributeRoutes();
 
-            /* config.Routes.MapHttpRoute(
-                name: "ActivePlayers",
-                routeTemplate: "api/{controller}/{state}",
-                defaults: new
-                {
-                    controller = "Player",
-                    action = "GetAllActivePlayers"
-                }
-            ); */
-
             config.Routes.MapHttpRoute(
                 name: "DefaultApi",
                 routeTemplate: "api/{controller}/{id}",
