@@ -12,12 +12,16 @@ namespace FIFA.Server.Models
     {
         private FIFAServerContext db = new FIFAServerContext();
 
-        public CountryRepository(){
-
-        }
+        public CountryRepository() { }
         
         // Get all the countries ordered by name / seasons
         public async Task<IEnumerable<Country>> GetAll()
+        {
+            return await db.Countries.ToListAsync();
+        }
+
+        // Get all the countries by filter
+        public async Task<IEnumerable<Country>> GetAllWithFilter(CountryFilter filter)
         {
             return await db.Countries.ToListAsync();
         }
@@ -27,7 +31,6 @@ namespace FIFA.Server.Models
         {
             return await db.Countries.FindAsync(id);
         }
-
 
         // Add one country
         public async Task<Country> Add(Country item){

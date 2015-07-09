@@ -19,6 +19,36 @@ namespace FIFA.Server.Models
             return await db.Players.ToListAsync();
         }
 
+
+        public async Task<IEnumerable<Player>> GetAllWithFilter(PlayerFilter filter)
+        {
+            return await FilterPlayers(db.Players, filter).ToListAsync();
+        }
+
+
+        private IQueryable<Player> FilterPlayers(IQueryable<Player> query, PlayerFilter filter)
+        {
+            if (filter != null)
+            {
+                if (filter.Id != 0)
+                {
+                    query = query.Where(m => m.Id == filter.Id);
+                }
+
+                if (!String.IsNullOrEmpty(filter.Name))
+                {
+                    query = query.Where(m => m.Name.Contains(filter.Name));
+                }
+
+                if (filter.Archived != null)
+                {
+                    query = query.Where(m => m.Archived == filter.Archived);
+                }
+            }
+
+            return query;
+        }
+
         public async Task<Player> Get(int id)
         {
             return await db.Players.FindAsync(id);

@@ -27,6 +27,29 @@ namespace FIFA.Server.Models
             return seasons;
         }
 
+        public async Task<IEnumerable<Season>> GetAllWithFilter(SeasonFilter filter)
+        {
+            return await FilterSeasons(db.Seasons.Include(s => s.SeasonCountry), filter).ToListAsync();
+        }
+
+        private IQueryable<Season> FilterSeasons(IQueryable<Season> query, SeasonFilter filter)
+        {
+            if (filter != null)
+            {
+                if (filter.Id != 0)
+                {
+                    query = query.Where(m => m.Id == filter.Id);
+                }
+
+                if (!String.IsNullOrEmpty(filter.Name))
+                {
+                    query = query.Where(m => m.Name.Contains(filter.Name));
+                }
+            }
+
+            return query;
+        }
+
         // Get one Season by its ID
         public async Task<Season> Get(int id)
         {

@@ -6,7 +6,7 @@ using System.Web;
 
 namespace FIFA.Server.Models
 {
-    public interface IPlayerRepository : ICRUDRepository<Player, int>
+    public interface IPlayerRepository : ICRUDRepository<Player, int, PlayerFilter>
     {
         Task<bool> isPlayerNameExist(string playerName, int? Id);
     }

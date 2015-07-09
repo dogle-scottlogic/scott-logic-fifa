@@ -6,16 +6,12 @@ using System.Web;
 
 namespace FIFA.Server.Models
 {
-    public class Player
+    public class PlayerFilter
     {
-        [Key]
         public int Id { get; set; }
 
-        [Required]
         public string Name { get; set; }
 
-        public bool Archived { get; set; }
-
-        public virtual ICollection<League> Leagues { get; set; }
+        public bool? Archived { get; set; }
     }
 }
