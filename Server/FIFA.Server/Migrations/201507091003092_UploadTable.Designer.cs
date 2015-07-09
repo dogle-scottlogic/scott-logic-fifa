@@ -7,18 +7,18 @@ namespace FIFA.Server.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class uploadTable : IMigrationMetadata
+    public sealed partial class UploadTable : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(uploadTable));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(UploadTable));
         
         string IMigrationMetadata.Id
         {
-            get { return "201507071252246_uploadTable"; }
+            get { return "201507091003092_UploadTable"; }
         }
         
         string IMigrationMetadata.Source
         {
-            get { return Resources.GetString("Source"); }
+            get { return null; }
         }
         
         string IMigrationMetadata.Target

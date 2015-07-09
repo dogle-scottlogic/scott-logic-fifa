@@ -9,8 +9,7 @@ namespace FIFA.Server.Migrations
     {
         public Configuration()
         {
-            AutomaticMigrationsEnabled = true;
-            AutomaticMigrationDataLossAllowed = true;
+            AutomaticMigrationsEnabled = false;
         }
 
         protected override void Seed(FIFA.Server.Models.FIFAServerContext context)

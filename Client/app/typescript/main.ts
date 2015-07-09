@@ -10,40 +10,40 @@
 module FifaLeagueClient {
     export var mainModule = angular.module("FifaLeagueApp", ['ngRoute',
         Module.Common.HTTPErrorHandleModuleName, Module.Common.devConfig, Module.Player.moduleName,
-        Module.Country.moduleName, Module.Season.moduleName, Module.Team.moduleName
+        Module.Country.moduleName, Module.Season.moduleName, Module.Team.moduleName])
     .config(["$routeProvider",
-    function routes($routeProvider: ng.route.IRouteProvider){
-      $routeProvider.when('/', {
+      function routes($routeProvider: ng.route.IRouteProvider) {
+        $routeProvider.when('/', {
           templateUrl: 'views/partials/dashboard.html'
         })
-        .when('/countries', {
-          templateUrl: 'views/countries.html',
-          controller: Module.Country.CountryController,
-          controllerAs: 'vm'
-        })
-        .when('/seasons', {
-          templateUrl: 'views/seasons.html',
-          controller: Module.Season.SeasonController,
-              controllerAs: 'vm'
+          .when('/countries', {
+            templateUrl: 'views/countries.html',
+            controller: Module.Country.CountryController,
+            controllerAs: 'vm'
+          })
+          .when('/seasons', {
+            templateUrl: 'views/seasons.html',
+            controller: Module.Season.SeasonController,
+            controllerAs: 'vm'
           }).when('/teams', {
-              templateUrl: 'views/team/teams.html',
-              controller: Module.Team.TeamController,
-              controllerAs: 'vm'
+            templateUrl: 'views/team/teams.html',
+            controller: Module.Team.TeamController,
+            controllerAs: 'vm'
           }).when('/teams/add', {
-              templateUrl: 'views/team/add-team.html',
-              controller: Module.Team.AddTeamController,
-              controllerAs: 'vm'
+            templateUrl: 'views/team/add-team.html',
+            controller: Module.Team.AddTeamController,
+            controllerAs: 'vm'
           }).when('/teams/edit/:id', {
-              templateUrl: 'views/team/edit-team.html',
-              controller: Module.Team.EditTeamController,
-          controllerAs: 'vm'
-        })
-        .when('/players', {
-          templateUrl: 'views/players.html',
-          controller: Module.Player.PlayerController,
-          controllerAs: 'vm'
-        });
-    }]);
+            templateUrl: 'views/team/edit-team.html',
+            controller: Module.Team.EditTeamController,
+            controllerAs: 'vm'
+          })
+          .when('/players', {
+            templateUrl: 'views/players.html',
+            controller: Module.Player.PlayerController,
+            controllerAs: 'vm'
+          })
+      }]);
 
     // Adding the default template for the busy message
     angular.module('FifaLeagueApp').value('cgBusyDefaults',{
