@@ -54,6 +54,7 @@ namespace FIFA.Server
             kernel.Bind<ICountryRepository>().To<CountryRepository>();
             kernel.Bind<ISeasonRepository>().To<SeasonRepository>();
             kernel.Bind<IPlayerRepository>().To<PlayerRepository>();
+            kernel.Bind<ILeagueRepository>().To<LeagueRepository>();
 
         }
     }

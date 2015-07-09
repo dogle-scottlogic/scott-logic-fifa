@@ -1,0 +1,6 @@
+<div ng-init="vm.fillSeasons()">
+    <select class="form-control" ng-model="selectedseason" ng-change="vm.select()"
+            ng-options="season.Id as season.Name for season in vm.seasons">
+        <option value=""></option>
+    </select>
+</div>

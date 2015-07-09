@@ -3,12 +3,13 @@ module.exports = function(grunt) {
     grunt.initConfig({
 
         paths: {
-            lessSrc : 'less/site.less',
-            lessDest: 'app/style.css',
             bowerAssets: 'lib/',
+            lessSrc : ['less/site.less', '<%= paths.bowerAssets %>/angular-wizard/dist/angular-wizard.less'],
+            lessDest: 'app/style.css',
             jsSrc: [
                 'lib/jquery/dist/jquery.js',
-                'lib/bootstrap/dist//js/bootstrap.js',
+                'lib/bootstrap/dist/js/bootstrap.js',
+                'lib/underscore/underscore.js'
             ],
             jsDest: 'app/script.js',
             typescriptSrc: [
@@ -88,7 +89,13 @@ module.exports = function(grunt) {
                         cwd: '<%= paths.bowerAssets %>/angular-busy/dist/',
                         src: ['angular-busy.js', 'angular-busy.css'],
                         dest: 'app/lib/angular-busy/'
-                    }
+                    },
+                   {
+                       expand: true,
+                       cwd: '<%= paths.bowerAssets %>/underscore/',
+                       src: ['underscore-min.js'],
+                       dest: 'app/lib/underscore/'
+                   }
                 ]
             }
         },

@@ -5,10 +5,12 @@
 /// <reference path="module/country/CountryModule.ts" />
 /// <reference path="module/player/PlayerModule.ts" />
 /// <reference path="module/season/SeasonModule.ts" />
+/// <reference path="module/league/LeagueModule.ts" />
 
 module FifaLeagueClient {
     export var mainModule = angular.module("FifaLeagueApp", ['ngRoute',
-        Module.Common.HTTPErrorHandleModuleName, Module.Common.devConfig, Module.Country.moduleName, Module.Season.moduleName, Module.Player.moduleName
+        Module.Common.HTTPErrorHandleModuleName, Module.Common.devConfig,
+        Module.Country.moduleName, Module.Season.moduleName, Module.Player.moduleName, Module.League.moduleName
     ])
     .config(["$routeProvider",
     function routes($routeProvider: ng.route.IRouteProvider){
@@ -29,6 +31,9 @@ module FifaLeagueClient {
           templateUrl: 'views/players.html',
           controller: Module.Player.PlayerController,
           controllerAs: 'vm'
+        })
+        .when('/leaguewizard', {
+          template: '<leaguewizard></leaguewizard'
         });
     }]);
 

@@ -1,0 +1,25 @@
+<div>
+  <wizard on-finish="finishedWizard()">
+    <wz-step title="Starting">
+        <h1>Selecting a country</h1>
+        <p>Please choose the country for the league</p>
+        <countryselect selectedcountry="countryId"></countryselect>
+        <input type="submit" wz-next value="Continue" />
+    </wz-step>
+    <wz-step title="Selecting a season" canexit="controlseason">
+        <h1>Selecting a season</h1>
+        <p>Please choose a season for the league</p>
+        <seasonselect selectedseason="vm.league.SeasonId"></seasonselect>
+        <input type="submit" wz-next value="Go on" />
+    </wz-step>
+    <wz-step title="Selecting teams">
+        <h1>Selecting teams</h1>
+        <p>Please select the teams </p>
+        <input type="submit" wz-next value="Go on2" />
+    </wz-step>
+    <wz-step title="Selecting players">
+        <h1>Selecting players</h1>
+        <p>Please select the players </p>
+        <input type="submit" wz-next value="Finish now" />
+    </wz-step>
+</wizard>

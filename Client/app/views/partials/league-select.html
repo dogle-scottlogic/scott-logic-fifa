@@ -1,0 +1,6 @@
+<div ng-init="vm.fillLeagues()">
+    <select class="form-control" ng-model="selectedleague" ng-change="vm.select()"
+            ng-options="league.Id as league.Name for league in vm.leagues">
+        <option value=""></option>
+    </select>
+</div>
