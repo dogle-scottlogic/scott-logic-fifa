@@ -38,9 +38,20 @@ namespace FIFA.Server.Controllers
         /// 
         // GET api/League
         [ResponseType(typeof(IEnumerable<League>))]
-        public async Task<HttpResponseMessage> GetAll()
+        public async Task<HttpResponseMessage> GetAll([FromUri] LeagueFilter leagueFilter = null)
         {
-            return await base.GetAll();
+            IEnumerable<League> list;
+
+            if (leagueFilter == null)
+            {
+                list = await base.repository.GetAll();
+            }
+            else
+            {
+                list = await base.repository.GetAllWithFilter(leagueFilter);
+            }
+
+            return Request.CreateResponse(HttpStatusCode.OK, list);
         }
 
         /// <summary>
