@@ -16,10 +16,10 @@ namespace FIFA.Server.Controllers
 {
 
     [ConfigurableCorsPolicy("localhost")]
-    public class PlayerController : AbstractCRUDAPIController<Player, int>
+    public class PlayerController : AbstractCRUDAPIController<Player, int, PlayerFilter>
     {
-
-
+        private FIFAServerContext db = new FIFAServerContext();
+        
         /// <summary>
         ///     Constructor
         /// </summary>
@@ -36,9 +36,20 @@ namespace FIFA.Server.Controllers
         /// 
         // GET api/Player
         [ResponseType(typeof(IEnumerable<Player>))]
-        public async Task<HttpResponseMessage> GetAll()
+        public async Task<HttpResponseMessage> GetAll([FromUri] PlayerFilter playerFilter = null)
         {
-            return await base.GetAll();
+            IEnumerable<Player> list;
+
+            if (playerFilter == null)
+            {
+                list = await base.repository.GetAll();
+            }
+            else
+            {
+                list = await base.repository.GetAllWithFilter(playerFilter);
+            }
+
+            return Request.CreateResponse(HttpStatusCode.OK, list);
         }
 
         /// <summary>

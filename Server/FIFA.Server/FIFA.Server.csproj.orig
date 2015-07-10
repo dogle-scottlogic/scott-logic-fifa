@@ -211,17 +211,23 @@
     <Compile Include="Models\Country\ICountryRepository.cs" />
     <Compile Include="Models\FIFAServerContext.cs" />
     <Compile Include="Models\ICRUDRepository.cs" />
-    <Compile Include="Models\League\LeagueFilter.cs" />
-    <Compile Include="Models\Players\PlayerFilter.cs" />
+<<<<<<< HEAD
     <Compile Include="Models\League\ILeagueRepository.cs" />
     <Compile Include="Models\League\LeagueRepository.cs" />
+=======
+    <Compile Include="Models\Players\PlayerFilter.cs" />
+>>>>>>> a3ea84db24c280e9d11256eff7c1cb273a4f1850
     <Compile Include="Models\Players\Player.cs" />
     <Compile Include="Models\Players\PlayerRepository.cs" />
     <Compile Include="Models\Players\IPlayerRepository.cs" />
     <Compile Include="Models\Score.cs" />
     <Compile Include="Models\Match.cs" />
+<<<<<<< HEAD
     <Compile Include="Models\League\League.cs" />
+=======
+    <Compile Include="Models\League.cs" />
     <Compile Include="Models\Season\SeasonFilter.cs" />
+>>>>>>> a3ea84db24c280e9d11256eff7c1cb273a4f1850
     <Compile Include="Models\Season\SeasonRepository.cs" />
     <Compile Include="Models\Season\ISeasonRepository.cs" />
     <Compile Include="Models\Team\TeamFilter.cs" />

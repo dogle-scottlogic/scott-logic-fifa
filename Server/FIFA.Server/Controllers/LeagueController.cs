@@ -16,7 +16,7 @@ namespace FIFA.Server.Controllers
 {
 
     [ConfigurableCorsPolicy("localhost")]
-    public class LeagueController : AbstractCRUDAPIController<League, int>
+    public class LeagueController : AbstractCRUDAPIController<League, int, LeagueFilter>
     {
 
         ISeasonRepository seasonRepository;

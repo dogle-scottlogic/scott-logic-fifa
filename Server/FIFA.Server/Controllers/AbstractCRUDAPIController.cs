@@ -11,12 +11,12 @@ using FIFA.Server.Models;
 
 namespace FIFA.Server.Controllers
 {
-    public abstract class AbstractCRUDAPIController<TObject, TKey> : ApiController
+    public abstract class AbstractCRUDAPIController<TObject, TKey, TFilter> : ApiController
     {
 
-        protected ICRUDRepository<TObject, TKey> repository;
+        protected ICRUDRepository<TObject, TKey, TFilter> repository;
 
-        protected AbstractCRUDAPIController(ICRUDRepository<TObject, TKey> repository)
+        protected AbstractCRUDAPIController(ICRUDRepository<TObject, TKey, TFilter> repository)
         {
             this.repository = repository;
         }
@@ -24,6 +24,12 @@ namespace FIFA.Server.Controllers
         protected async Task<HttpResponseMessage> GetAll()
         {
             IEnumerable<TObject> objectList = await repository.GetAll();
+            return Request.CreateResponse<IEnumerable<TObject>>(HttpStatusCode.OK, objectList);
+        }
+
+        protected async Task<HttpResponseMessage> GetAllWithFilter(TFilter filter)
+        {
+            IEnumerable<TObject> objectList = await repository.GetAllWithFilter(filter);
             return Request.CreateResponse<IEnumerable<TObject>>(HttpStatusCode.OK, objectList);
         }
 

@@ -16,7 +16,7 @@ namespace FIFA.Server.Controllers
 {
 
     [ConfigurableCorsPolicy("localhost")]
-    public class CountryController : AbstractCRUDAPIController<Country, int>
+    public class CountryController : AbstractCRUDAPIController<Country, int, CountryFilter>
     {
 
 
@@ -36,9 +36,20 @@ namespace FIFA.Server.Controllers
         /// 
         // GET api/Country
         [ResponseType(typeof(IEnumerable<Country>))]
-        public async Task<HttpResponseMessage> GetAll()
+        public async Task<HttpResponseMessage> GetAll([FromUri] CountryFilter countryFilter = null)
         {
-            return await base.GetAll();
+            IEnumerable<Country> list;
+
+            if (countryFilter == null)
+            {
+                list = await base.repository.GetAll();
+            }
+            else
+            {
+                list = await base.repository.GetAllWithFilter(countryFilter);
+            }
+
+            return Request.CreateResponse(HttpStatusCode.OK, list);
         }
 
         /// <summary>

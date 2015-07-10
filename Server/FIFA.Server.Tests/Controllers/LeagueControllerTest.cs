@@ -63,11 +63,11 @@ namespace FIFATests.ControllerTests
             var mock = new Mock<ILeagueRepository>(MockBehavior.Strict);
 
             // Filling mock with data
-            mock.As<ICRUDRepository<League, int>>().Setup(m => m.Get(It.IsAny<int>()))
+            mock.As<ICRUDRepository<League, int, LeagueFilter>>().Setup(m => m.Get(It.IsAny<int>()))
                 .Returns<int>(id => Task.FromResult(leagues.FirstOrDefault(c => c.Id == id)));
 
             var mockSeasonRepo = new Mock<ISeasonRepository>(MockBehavior.Strict);
-            mockSeasonRepo.As<ICRUDRepository<Season, int>>().Setup(m => m.Get(It.IsAny<int>()))
+            mockSeasonRepo.As<ICRUDRepository<Season, int, SeasonFilter>>().Setup(m => m.Get(It.IsAny<int>()))
                 .Returns<int>(id => Task.FromResult(new Season()));
 
             // Creating the controller which we want to create
@@ -93,11 +93,11 @@ namespace FIFATests.ControllerTests
             var mock = new Mock<ILeagueRepository>(MockBehavior.Strict);
 
             // Filling mock with data
-            mock.As<ICRUDRepository<League, int>>().Setup(m => m.Get(It.IsAny<int>()))
+            mock.As<ICRUDRepository<League, int, LeagueFilter>>().Setup(m => m.Get(It.IsAny<int>()))
                 .Returns<int?>(id => Task.FromResult(leagues.FirstOrDefault(c => false)));
 
             var mockSeasonRepo = new Mock<ISeasonRepository>(MockBehavior.Strict);
-            mockSeasonRepo.As<ICRUDRepository<Season, int>>().Setup(m => m.Get(It.IsAny<int>()))
+            mockSeasonRepo.As<ICRUDRepository<Season, int, SeasonFilter>>().Setup(m => m.Get(It.IsAny<int>()))
                 .Returns<int>(id => Task.FromResult(new Season()));
 
             // Creating the controller which we want to create
@@ -120,11 +120,11 @@ namespace FIFATests.ControllerTests
             var mock = new Mock<ILeagueRepository>(MockBehavior.Strict);
 
             // Filling mock with data
-            mock.As<ICRUDRepository<League, int>>().Setup(m => m.GetAll())
+            mock.As<ICRUDRepository<League, int, LeagueFilter>>().Setup(m => m.GetAll())
                 .Returns(Task.FromResult(leagues));
 
             var mockSeasonRepo = new Mock<ISeasonRepository>(MockBehavior.Strict);
-            mockSeasonRepo.As<ICRUDRepository<Season, int>>().Setup(m => m.Get(It.IsAny<int>()))
+            mockSeasonRepo.As<ICRUDRepository<Season, int, SeasonFilter>>().Setup(m => m.Get(It.IsAny<int>()))
                 .Returns<int>(id => Task.FromResult(new Season()));
 
             // Creating the controller which we want to create
@@ -149,14 +149,14 @@ namespace FIFATests.ControllerTests
             var mock = new Mock<ILeagueRepository>(MockBehavior.Strict);
 
             // Filling mock with data
-            mock.As<ICRUDRepository<League, int>>().Setup(m => m.Add(It.IsAny<League>()))
+            mock.As<ICRUDRepository<League, int, LeagueFilter>>().Setup(m => m.Add(It.IsAny<League>()))
                 .Returns(Task.FromResult(leagues.FirstOrDefault()))
                 .Callback<League>(c => added.Add(c));
             mock.As<ILeagueRepository>().Setup(m => m.isLeagueNameExist(It.IsAny<int>(), It.IsAny<string>(), null))
                 .Returns(Task.FromResult(false));
 
             var mockSeasonRepo = new Mock<ISeasonRepository>(MockBehavior.Strict);
-            mockSeasonRepo.As<ICRUDRepository<Season, int>>().Setup(m => m.Get(It.IsAny<int>()))
+            mockSeasonRepo.As<ICRUDRepository<Season, int, SeasonFilter>>().Setup(m => m.Get(It.IsAny<int>()))
                 .Returns<int>(id => Task.FromResult(new Season()));
 
             // Creating the controller which we want to create
@@ -186,12 +186,12 @@ namespace FIFATests.ControllerTests
             var mock = new Mock<ILeagueRepository>(MockBehavior.Strict);
 
             // Filling mock rull with repository
-            mock.As<ICRUDRepository<League, int>>().Setup(m => m.Add(It.IsAny<League>()));
+            mock.As<ICRUDRepository<League, int, LeagueFilter>>().Setup(m => m.Add(It.IsAny<League>()));
             mock.As<ILeagueRepository>().Setup(m => m.isLeagueNameExist(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<int>()))
                 .Returns(Task.FromResult(false));
 
             var mockSeasonRepo = new Mock<ISeasonRepository>(MockBehavior.Strict);
-            mockSeasonRepo.As<ICRUDRepository<Season, int>>().Setup(m => m.Get(It.IsAny<int>()))
+            mockSeasonRepo.As<ICRUDRepository<Season, int, SeasonFilter>>().Setup(m => m.Get(It.IsAny<int>()))
                 .Returns<int>(id => Task.FromResult((Season)null));
 
             // Creating the controller which we want to create
@@ -213,12 +213,12 @@ namespace FIFATests.ControllerTests
             var mock = new Mock<ILeagueRepository>(MockBehavior.Strict);
 
             // Filling mock rull with repository
-            mock.As<ICRUDRepository<League, int>>().Setup(m => m.Add(It.IsAny<League>()));
+            mock.As<ICRUDRepository<League, int, LeagueFilter>>().Setup(m => m.Add(It.IsAny<League>()));
             mock.As<ILeagueRepository>().Setup(m => m.isLeagueNameExist(0, null, null))
                 .Returns(Task.FromResult(false));
 
             var mockSeasonRepo = new Mock<ISeasonRepository>(MockBehavior.Strict);
-            mockSeasonRepo.As<ICRUDRepository<Season, int>>().Setup(m => m.Get(It.IsAny<int>()))
+            mockSeasonRepo.As<ICRUDRepository<Season, int, SeasonFilter>>().Setup(m => m.Get(It.IsAny<int>()))
                 .Returns<int>(id => Task.FromResult(new Season()));
 
             // Creating the controller which we want to create
@@ -242,12 +242,12 @@ namespace FIFATests.ControllerTests
             var mock = new Mock<ILeagueRepository>(MockBehavior.Strict);
 
             // Filling mock rull with repository
-            mock.As<ICRUDRepository<League, int>>().Setup(m => m.Add(It.IsAny<League>()));
+            mock.As<ICRUDRepository<League, int, LeagueFilter>>().Setup(m => m.Add(It.IsAny<League>()));
             mock.As<ILeagueRepository>().Setup(m => m.isLeagueNameExist(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<int>()))
                 .Returns(Task.FromResult(false));
 
             var mockSeasonRepo = new Mock<ISeasonRepository>(MockBehavior.Strict);
-            mockSeasonRepo.As<ICRUDRepository<Season, int>>().Setup(m => m.Get(It.IsAny<int>()))
+            mockSeasonRepo.As<ICRUDRepository<Season, int, SeasonFilter>>().Setup(m => m.Get(It.IsAny<int>()))
                 .Returns<int>(id => Task.FromResult(new Season()));
 
             // Creating the controller which we want to create
@@ -271,12 +271,12 @@ namespace FIFATests.ControllerTests
             var mock = new Mock<ILeagueRepository>(MockBehavior.Strict);
 
             // Filling mock rull with repository
-            mock.As<ICRUDRepository<League, int>>().Setup(m => m.Add(It.IsAny<League>()));
+            mock.As<ICRUDRepository<League, int, LeagueFilter>>().Setup(m => m.Add(It.IsAny<League>()));
             mock.As<ILeagueRepository>().Setup(m => m.isLeagueNameExist(It.IsAny<int>(), It.IsAny<string>(), null))
                 .Returns(Task.FromResult(true));
 
             var mockSeasonRepo = new Mock<ISeasonRepository>(MockBehavior.Strict);
-            mockSeasonRepo.As<ICRUDRepository<Season, int>>().Setup(m => m.Get(It.IsAny<int>()))
+            mockSeasonRepo.As<ICRUDRepository<Season, int, SeasonFilter>>().Setup(m => m.Get(It.IsAny<int>()))
                 .Returns<int>(id => Task.FromResult(new Season()));
 
             // Creating the controller which we want to create
@@ -301,13 +301,13 @@ namespace FIFATests.ControllerTests
             var mock = new Mock<ILeagueRepository>(MockBehavior.Strict);
 
             // Creating the rules for mock, always send true in this case
-            mock.As<ICRUDRepository<League, int>>().Setup(m => m.Update(It.IsAny<int>(), It.IsAny<League>()))
+            mock.As<ICRUDRepository<League, int, LeagueFilter>>().Setup(m => m.Update(It.IsAny<int>(), It.IsAny<League>()))
                 .Returns(Task.FromResult(true));
             mock.As<ILeagueRepository>().Setup(m => m.isLeagueNameExist(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<int>()))
                 .Returns(Task.FromResult(false));
 
             var mockSeasonRepo = new Mock<ISeasonRepository>(MockBehavior.Strict);
-            mockSeasonRepo.As<ICRUDRepository<Season, int>>().Setup(m => m.Get(It.IsAny<int>()))
+            mockSeasonRepo.As<ICRUDRepository<Season, int, SeasonFilter>>().Setup(m => m.Get(It.IsAny<int>()))
                 .Returns<int>(id => Task.FromResult(new Season()));
 
             // Creating the controller which we want to create
@@ -337,12 +337,12 @@ namespace FIFATests.ControllerTests
             var mock = new Mock<ILeagueRepository>(MockBehavior.Strict);
 
             // Filling mock rull with repository
-            mock.As<ICRUDRepository<League, int>>().Setup(m => m.Update(It.IsAny<int>(), It.IsAny<League>()));
+            mock.As<ICRUDRepository<League, int, LeagueFilter>>().Setup(m => m.Update(It.IsAny<int>(), It.IsAny<League>()));
             mock.As<ILeagueRepository>().Setup(m => m.isLeagueNameExist(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<int>()))
                 .Returns(Task.FromResult(false));
 
             var mockSeasonRepo = new Mock<ISeasonRepository>(MockBehavior.Strict);
-            mockSeasonRepo.As<ICRUDRepository<Season, int>>().Setup(m => m.Get(It.IsAny<int>()))
+            mockSeasonRepo.As<ICRUDRepository<Season, int, SeasonFilter>>().Setup(m => m.Get(It.IsAny<int>()))
                 .Returns<int>(id => Task.FromResult((Season)null));
 
             // Creating the controller which we want to create
@@ -366,13 +366,13 @@ namespace FIFATests.ControllerTests
             var mock = new Mock<ILeagueRepository>(MockBehavior.Strict);
 
             // Creating the rules for mock, always send true in this case
-            mock.As<ICRUDRepository<League, int>>().Setup(m => m.Update(It.IsAny<int>(), It.IsAny<League>()))
+            mock.As<ICRUDRepository<League, int, LeagueFilter>>().Setup(m => m.Update(It.IsAny<int>(), It.IsAny<League>()))
                 .Returns(Task.FromResult(true));
             mock.As<ILeagueRepository>().Setup(m => m.isLeagueNameExist(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<int>()))
                 .Returns(Task.FromResult(false));
 
             var mockSeasonRepo = new Mock<ISeasonRepository>(MockBehavior.Strict);
-            mockSeasonRepo.As<ICRUDRepository<Season, int>>().Setup(m => m.Get(It.IsAny<int>()))
+            mockSeasonRepo.As<ICRUDRepository<Season, int, SeasonFilter>>().Setup(m => m.Get(It.IsAny<int>()))
                 .Returns<int>(id => Task.FromResult(new Season()));
 
             // Creating the controller which we want to create
@@ -397,13 +397,13 @@ namespace FIFATests.ControllerTests
             var mock = new Mock<ILeagueRepository>(MockBehavior.Strict);
 
             // Creating the rules for mock, always send true in this case
-            mock.As<ICRUDRepository<League, int>>().Setup(m => m.Update(It.IsAny<int>(), It.IsAny<League>()))
+            mock.As<ICRUDRepository<League, int, LeagueFilter>>().Setup(m => m.Update(It.IsAny<int>(), It.IsAny<League>()))
                 .Returns(Task.FromResult(true));
             mock.As<ILeagueRepository>().Setup(m => m.isLeagueNameExist(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<int>()))
                 .Returns(Task.FromResult(false));
 
             var mockSeasonRepo = new Mock<ISeasonRepository>(MockBehavior.Strict);
-            mockSeasonRepo.As<ICRUDRepository<Season, int>>().Setup(m => m.Get(It.IsAny<int>()))
+            mockSeasonRepo.As<ICRUDRepository<Season, int, SeasonFilter>>().Setup(m => m.Get(It.IsAny<int>()))
                 .Returns<int>(id => Task.FromResult(new Season()));
 
             // Creating the controller which we want to create
@@ -426,12 +426,12 @@ namespace FIFATests.ControllerTests
             var mock = new Mock<ILeagueRepository>(MockBehavior.Strict);
 
             // Filling mock rull with repository
-            mock.As<ICRUDRepository<League, int>>().Setup(m => m.Add(It.IsAny<League>()));
+            mock.As<ICRUDRepository<League, int, LeagueFilter>>().Setup(m => m.Add(It.IsAny<League>()));
             mock.As<ILeagueRepository>().Setup(m => m.isLeagueNameExist(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<int>()))
                 .Returns(Task.FromResult(true));
 
             var mockSeasonRepo = new Mock<ISeasonRepository>(MockBehavior.Strict);
-            mockSeasonRepo.As<ICRUDRepository<Season, int>>().Setup(m => m.Get(It.IsAny<int>()))
+            mockSeasonRepo.As<ICRUDRepository<Season, int, SeasonFilter>>().Setup(m => m.Get(It.IsAny<int>()))
                 .Returns<int>(id => Task.FromResult(new Season()));
 
             // Creating the controller which we want to create
@@ -454,11 +454,11 @@ namespace FIFATests.ControllerTests
             var mock = new Mock<ILeagueRepository>(MockBehavior.Strict);
 
             // Creating the rules for mock, always send true in this case
-            mock.As<ICRUDRepository<League, int>>().Setup(m => m.Remove(It.IsAny<int>()))
+            mock.As<ICRUDRepository<League, int, LeagueFilter>>().Setup(m => m.Remove(It.IsAny<int>()))
                 .Returns(Task.FromResult(true));
 
             var mockSeasonRepo = new Mock<ISeasonRepository>(MockBehavior.Strict);
-            mockSeasonRepo.As<ICRUDRepository<Season, int>>().Setup(m => m.Get(It.IsAny<int>()))
+            mockSeasonRepo.As<ICRUDRepository<Season, int, SeasonFilter>>().Setup(m => m.Get(It.IsAny<int>()))
                 .Returns<int>(id => Task.FromResult(new Season()));
 
             // Creating the controller which we want to create
@@ -479,11 +479,11 @@ namespace FIFATests.ControllerTests
             var mock = new Mock<ILeagueRepository>(MockBehavior.Strict);
 
             // Creating the rules for mock, always send true in this case
-            mock.As<ICRUDRepository<League, int>>().Setup(m => m.Remove(It.IsAny<int>()))
+            mock.As<ICRUDRepository<League, int, LeagueFilter>>().Setup(m => m.Remove(It.IsAny<int>()))
                 .Returns(Task.FromResult(false));
 
             var mockSeasonRepo = new Mock<ISeasonRepository>(MockBehavior.Strict);
-            mockSeasonRepo.As<ICRUDRepository<Season, int>>().Setup(m => m.Get(It.IsAny<int>()))
+            mockSeasonRepo.As<ICRUDRepository<Season, int, SeasonFilter>>().Setup(m => m.Get(It.IsAny<int>()))
                 .Returns<int>(id => Task.FromResult(new Season()));
 
             // Creating the controller which we want to create
