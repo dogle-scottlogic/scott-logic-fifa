@@ -3,7 +3,7 @@ namespace FIFA.Server.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class playerArchive : DbMigration
+    public partial class update : DbMigration
     {
         public override void Up()
         {

@@ -27,8 +27,8 @@ namespace FIFATests.ControllerTests {
             
             var teams = new List<Team>
             {
-                new Team {Id = 1, Name = "Hamburger SV"},
-                new Team {Id = 2, Name = "Borussia Dortmund"}
+                new Team {Id = 1, Name = "Hamburger SV", CountryId = 1},
+                new Team {Id = 2, Name = "Borussia Dortmund", CountryId = 1}
             };
 
             return teams;
@@ -42,11 +42,11 @@ namespace FIFATests.ControllerTests {
 
             var mock = new Mock<ITeamRepository>(MockBehavior.Strict);
             // Filling mock with data
-            mock.As<ICRUDRepository<Team, int>>().Setup(m => m.Get(It.IsAny<int>()))
+            mock.As<ICRUDRepository<Team, int, TeamFilter>>().Setup(m => m.Get(It.IsAny<int>()))
                 .Returns<int>(id => Task.FromResult(teams.FirstOrDefault(c => c.Id == id)));
 
             var mockCountryRepo = new Mock<ICountryRepository>(MockBehavior.Strict);
-            mockCountryRepo.As<ICRUDRepository<Country, int>>().Setup(m => m.Get(It.IsAny<int>()))
+            mockCountryRepo.As<ICRUDRepository<Country, int, TeamFilter>>().Setup(m => m.Get(It.IsAny<int>()))
                 .Returns<int>(id => Task.FromResult(new Country()));
 
             // Creating the controller which we want to create
@@ -70,11 +70,11 @@ namespace FIFATests.ControllerTests {
             var mock = new Mock<ITeamRepository>(MockBehavior.Strict);
 
             // Filling mock with data
-            mock.As<ICRUDRepository<Team, int>>().Setup(m => m.Get(It.IsAny<int>()))
+            mock.As<ICRUDRepository<Team, int, TeamFilter>>().Setup(m => m.Get(It.IsAny<int>()))
                 .Returns<int?>(id => Task.FromResult(Teams.FirstOrDefault(c => false)));
 
             var mockCountryRepo = new Mock<ICountryRepository>(MockBehavior.Strict);
-            mockCountryRepo.As<ICRUDRepository<Country, int>>().Setup(m => m.Get(It.IsAny<int>()))
+            mockCountryRepo.As<ICRUDRepository<Country, int, TeamFilter>>().Setup(m => m.Get(It.IsAny<int>()))
                 .Returns<int>(id => Task.FromResult(new Country()));
 
             // Creating the controller which we want to create
@@ -96,11 +96,11 @@ namespace FIFATests.ControllerTests {
             var mock = new Mock<ITeamRepository>(MockBehavior.Strict);
 
             // Filling mock with data
-            mock.As<ICRUDRepository<Team, int>>().Setup(m => m.GetAll())
+            mock.As<ICRUDRepository<Team, int, TeamFilter>>().Setup(m => m.GetAll())
                 .Returns(Task.FromResult(Teams));
 
             var mockCountryRepo = new Mock<ICountryRepository>(MockBehavior.Strict);
-            mockCountryRepo.As<ICRUDRepository<Country, int>>().Setup(m => m.Get(It.IsAny<int>()))
+            mockCountryRepo.As<ICRUDRepository<Country, int, TeamFilter>>().Setup(m => m.Get(It.IsAny<int>()))
                 .Returns<int>(id => Task.FromResult(new Country()));
 
             // Creating the controller which we want to create
@@ -124,14 +124,14 @@ namespace FIFATests.ControllerTests {
             var mock = new Mock<ITeamRepository>(MockBehavior.Strict);
 
             // Filling mock with data
-            mock.As<ICRUDRepository<Team, int>>().Setup(m => m.Add(It.IsAny<Team>()))
+            mock.As<ICRUDRepository<Team, int, TeamFilter>>().Setup(m => m.Add(It.IsAny<Team>()))
                 .Returns(Task.FromResult(teams.FirstOrDefault()))
                 .Callback<Team>(c => added.Add(c));
             mock.As<ITeamRepository>().Setup(m => m.teamNameExists(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>()))
                 .Returns(Task.FromResult(false));
 
             var mockCountryRepo = new Mock<ICountryRepository>(MockBehavior.Strict);
-            mockCountryRepo.As<ICRUDRepository<Country, int>>().Setup(m => m.Get(It.IsAny<int>()))
+            mockCountryRepo.As<ICRUDRepository<Country, int, CountryFilter>>().Setup(m => m.Get(It.IsAny<int>()))
                 .Returns<int>(id => Task.FromResult(new Country()));
 
             // Creating the controller which we want to create
@@ -159,12 +159,12 @@ namespace FIFATests.ControllerTests {
             var mock = new Mock<ITeamRepository>(MockBehavior.Strict);
 
             // Filling mock rull with repository
-            mock.As<ICRUDRepository<Team, int>>().Setup(m => m.Add(It.IsAny<Team>()));
+            mock.As<ICRUDRepository<Team, int, TeamFilter>>().Setup(m => m.Add(It.IsAny<Team>()));
             mock.As<ITeamRepository>().Setup(m => m.teamNameExists(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>()))
                 .Returns(Task.FromResult(false));
 
             var mockCountryRepo = new Mock<ICountryRepository>(MockBehavior.Strict);
-            mockCountryRepo.As<ICRUDRepository<Country, int>>().Setup(m => m.Get(It.IsAny<int>()))
+            mockCountryRepo.As<ICRUDRepository<Country, int, CountryFilter>>().Setup(m => m.Get(It.IsAny<int>()))
                 .Returns<int>(id => Task.FromResult(new Country()));
 
             // Creating the controller which we want to create
@@ -188,12 +188,12 @@ namespace FIFATests.ControllerTests {
             var mock = new Mock<ITeamRepository>(MockBehavior.Strict);
 
             // Filling mock rull with repository
-            mock.As<ICRUDRepository<Team, int>>().Setup(m => m.Add(It.IsAny<Team>()));
+            mock.As<ICRUDRepository<Team, int, TeamFilter>>().Setup(m => m.Add(It.IsAny<Team>()));
             mock.As<ITeamRepository>().Setup(m => m.teamNameExists(It.IsAny<string>(), It.IsAny<int>(), null))
                 .Returns(Task.FromResult(false));
 
             var mockCountryRepo = new Mock<ICountryRepository>(MockBehavior.Strict);
-            mockCountryRepo.As<ICRUDRepository<Country, int>>().Setup(m => m.Get(It.IsAny<int>()))
+            mockCountryRepo.As<ICRUDRepository<Country, int, TeamFilter>>().Setup(m => m.Get(It.IsAny<int>()))
                 .Returns<int>(id => Task.FromResult(new Country()));
 
             // Creating the controller which we want to create
@@ -217,12 +217,12 @@ namespace FIFATests.ControllerTests {
             var mock = new Mock<ITeamRepository>(MockBehavior.Strict);
 
             // Filling mock rull with repository
-            mock.As<ICRUDRepository<Team, int>>().Setup(m => m.Add(It.IsAny<Team>()));
+            mock.As<ICRUDRepository<Team, int, TeamFilter>>().Setup(m => m.Add(It.IsAny<Team>()));
             mock.As<ITeamRepository>().Setup(m => m.teamNameExists(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>()))
                 .Returns(Task.FromResult(true));
 
             var mockCountryRepo = new Mock<ICountryRepository>(MockBehavior.Strict);
-            mockCountryRepo.As<ICRUDRepository<Country, int>>().Setup(m => m.Get(It.IsAny<int>()))
+            mockCountryRepo.As<ICRUDRepository<Country, int, CountryFilter>>().Setup(m => m.Get(It.IsAny<int>()))
                 .Returns<int>(id => Task.FromResult(new Country()));
 
             // Creating the controller which we want to create
@@ -242,12 +242,12 @@ namespace FIFATests.ControllerTests {
             Team Team = new Team();
             var mock = new Mock<ITeamRepository>(MockBehavior.Strict);
             // Filling mock with data
-            mock.As<ICRUDRepository<Team, int>>().Setup(m => m.Add(It.IsAny<Team>()));
+            mock.As<ICRUDRepository<Team, int, TeamFilter>>().Setup(m => m.Add(It.IsAny<Team>()));
             mock.As<ITeamRepository>().Setup(m => m.teamNameExists(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>()))
                 .Returns(Task.FromResult(false));
 
             var mockCountryRepo = new Mock<ICountryRepository>(MockBehavior.Strict);
-            mockCountryRepo.As<ICRUDRepository<Country, int>>().Setup(m => m.Get(It.IsAny<int>()))
+            mockCountryRepo.As<ICRUDRepository<Country, int, CountryFilter>>().Setup(m => m.Get(It.IsAny<int>()))
                 .Returns<int>(id => Task.FromResult((Country)null));
 
             // Creating the controller which we want to create
@@ -270,13 +270,13 @@ namespace FIFATests.ControllerTests {
             var mock = new Mock<ITeamRepository>(MockBehavior.Strict);
 
             // Creating the rules for mock, always send true in this case
-            mock.As<ICRUDRepository<Team, int>>().Setup(m => m.Update(It.IsAny<int>(), It.IsAny<Team>()))
+            mock.As<ICRUDRepository<Team, int, TeamFilter>>().Setup(m => m.Update(It.IsAny<int>(), It.IsAny<Team>()))
                 .Returns(Task.FromResult(true));
             mock.As<ITeamRepository>().Setup(m => m.teamNameExists(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>()))
                 .Returns(Task.FromResult(false));
 
             var mockCountryRepo = new Mock<ICountryRepository>(MockBehavior.Strict);
-            mockCountryRepo.As<ICRUDRepository<Country, int>>().Setup(m => m.Get(It.IsAny<int>()))
+            mockCountryRepo.As<ICRUDRepository<Country, int, CountryFilter>>().Setup(m => m.Get(It.IsAny<int>()))
                 .Returns<int>(id => Task.FromResult(new Country()));
 
             // Creating the controller which we want to create
@@ -305,13 +305,13 @@ namespace FIFATests.ControllerTests {
             var mock = new Mock<ITeamRepository>(MockBehavior.Strict);
 
             // Creating the rules for mock, always send true in this case
-            mock.As<ICRUDRepository<Team, int>>().Setup(m => m.Update(It.IsAny<int>(), It.IsAny<Team>()))
+            mock.As<ICRUDRepository<Team, int, TeamFilter>>().Setup(m => m.Update(It.IsAny<int>(), It.IsAny<Team>()))
                 .Returns(Task.FromResult(true));
             mock.As<ITeamRepository>().Setup(m => m.teamNameExists(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>()))
                 .Returns(Task.FromResult(false));
 
             var mockCountryRepo = new Mock<ICountryRepository>(MockBehavior.Strict);
-            mockCountryRepo.As<ICRUDRepository<Country, int>>().Setup(m => m.Get(It.IsAny<int>()))
+            mockCountryRepo.As<ICRUDRepository<Country, int, CountryFilter>>().Setup(m => m.Get(It.IsAny<int>()))
                 .Returns<int>(id => Task.FromResult(new Country()));
 
             // Creating the controller which we want to create
@@ -336,13 +336,13 @@ namespace FIFATests.ControllerTests {
             var mock = new Mock<ITeamRepository>(MockBehavior.Strict);
 
             // Creating the rules for mock, always send true in this case
-            mock.As<ICRUDRepository<Team, int>>().Setup(m => m.Update(It.IsAny<int>(), It.IsAny<Team>()))
+            mock.As<ICRUDRepository<Team, int, TeamFilter>>().Setup(m => m.Update(It.IsAny<int>(), It.IsAny<Team>()))
                 .Returns(Task.FromResult(true));
             mock.As<ITeamRepository>().Setup(m => m.teamNameExists(It.IsAny<string>(), It.IsAny<int>(), null))
                 .Returns(Task.FromResult(false));
 
             var mockCountryRepo = new Mock<ICountryRepository>(MockBehavior.Strict);
-            mockCountryRepo.As<ICRUDRepository<Country, int>>().Setup(m => m.Get(It.IsAny<int>()))
+            mockCountryRepo.As<ICRUDRepository<Country, int, TeamFilter>>().Setup(m => m.Get(It.IsAny<int>()))
                 .Returns<int>(id => Task.FromResult(new Country()));
 
             // Creating the controller which we want to create
@@ -365,12 +365,12 @@ namespace FIFATests.ControllerTests {
             var mock = new Mock<ITeamRepository>(MockBehavior.Strict);
 
             // Filling mock rull with repository
-            mock.As<ICRUDRepository<Team, int>>().Setup(m => m.Add(It.IsAny<Team>()));
+            mock.As<ICRUDRepository<Team, int, TeamFilter>>().Setup(m => m.Add(It.IsAny<Team>()));
             mock.As<ITeamRepository>().Setup(m => m.teamNameExists(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>()))
                 .Returns(Task.FromResult(true));
 
             var mockCountryRepo = new Mock<ICountryRepository>(MockBehavior.Strict);
-            mockCountryRepo.As<ICRUDRepository<Country, int>>().Setup(m => m.Get(It.IsAny<int>()))
+            mockCountryRepo.As<ICRUDRepository<Country, int, CountryFilter>>().Setup(m => m.Get(It.IsAny<int>()))
                 .Returns<int>(id => Task.FromResult(new Country()));
 
             // Creating the controller which we want to create
@@ -391,12 +391,12 @@ namespace FIFATests.ControllerTests {
             Team Team = new Team();
             var mock = new Mock<ITeamRepository>(MockBehavior.Strict);
             // Filling mock with data
-            mock.As<ICRUDRepository<Team, int>>().Setup(m => m.Add(It.IsAny<Team>()));
+            mock.As<ICRUDRepository<Team, int, TeamFilter>>().Setup(m => m.Add(It.IsAny<Team>()));
             mock.As<ITeamRepository>().Setup(m => m.teamNameExists(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>()))
                 .Returns(Task.FromResult(false));
 
             var mockCountryRepo = new Mock<ICountryRepository>(MockBehavior.Strict);
-            mockCountryRepo.As<ICRUDRepository<Country, int>>().Setup(m => m.Get(It.IsAny<int>()))
+            mockCountryRepo.As<ICRUDRepository<Country, int, CountryFilter>>().Setup(m => m.Get(It.IsAny<int>()))
                 .Returns<int>(id => Task.FromResult((Country)null));
 
             // Creating the controller which we want to create
@@ -417,11 +417,11 @@ namespace FIFATests.ControllerTests {
             var mock = new Mock<ITeamRepository>(MockBehavior.Strict);
 
             // Creating the rules for mock, always send true in this case
-            mock.As<ICRUDRepository<Team, int>>().Setup(m => m.Remove(It.IsAny<int>()))
+            mock.As<ICRUDRepository<Team, int, TeamFilter>>().Setup(m => m.Remove(It.IsAny<int>()))
                 .Returns(Task.FromResult(true));
 
             var mockCountryRepo = new Mock<ICountryRepository>(MockBehavior.Strict);
-            mockCountryRepo.As<ICRUDRepository<Country, int>>().Setup(m => m.Get(It.IsAny<int>()))
+            mockCountryRepo.As<ICRUDRepository<Country, int, TeamFilter>>().Setup(m => m.Get(It.IsAny<int>()))
                 .Returns<int>(id => Task.FromResult(new Country()));
 
             // Creating the controller which we want to create
@@ -442,11 +442,11 @@ namespace FIFATests.ControllerTests {
             var mock = new Mock<ITeamRepository>(MockBehavior.Strict);
 
             // Creating the rules for mock, always send true in this case
-            mock.As<ICRUDRepository<Team, int>>().Setup(m => m.Remove(It.IsAny<int>()))
+            mock.As<ICRUDRepository<Team, int, TeamFilter>>().Setup(m => m.Remove(It.IsAny<int>()))
                 .Returns(Task.FromResult(false));
 
             var mockCountryRepo = new Mock<ICountryRepository>(MockBehavior.Strict);
-            mockCountryRepo.As<ICRUDRepository<Country, int>>().Setup(m => m.Get(It.IsAny<int>()))
+            mockCountryRepo.As<ICRUDRepository<Country, int, TeamFilter>>().Setup(m => m.Get(It.IsAny<int>()))
                 .Returns<int>(id => Task.FromResult(new Country()));
 
             // Creating the controller which we want to create

@@ -15,7 +15,7 @@ using FIFA.Server.Infrastructure;
 namespace FIFA.Server.Controllers
 {
     [ConfigurableCorsPolicy("localhost")]
-    public class TeamController : AbstractCRUDAPIController<Team, int>
+    public class TeamController : AbstractCRUDAPIController<Team, int, TeamFilter>
     {
         ICountryRepository countryRepository;
 
