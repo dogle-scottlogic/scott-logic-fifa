@@ -20,6 +20,7 @@ module.exports = function(config) {
       'lib/angular-mocks/angular-mocks.js',
       'lib/angular-bootstrap/ui-bootstrap-tpls.js',
       'lib/angular-busy/angular-busy.js',
+      'lib/angular-wizard/dist/angular-wizard.js',
       'app/leagueManager.js',
       'test/*.js',
       // Loading the html files

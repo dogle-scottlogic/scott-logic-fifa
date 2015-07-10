@@ -15,10 +15,18 @@ module FifaLeagueClient.Module.Country.Directives {
             },
             controller: CountryController,
             controllerAs: "vm",
-            templateUrl: 'views/partials/country-show.html'
+            templateUrl: 'views/partials/country-show.html',
+            link: function (scope:IMyScope, $elm, $attr)
+            {
+              // Reload the country if its ID changed
+              scope.$watch('countryid', function(newcountryid, oldcountryid) {
+                        if (newcountryid !== oldcountryid) {
+                          scope.vm.loadCountry(newcountryid);
+                        }
+              }, true);
+            }
         }
     }
 
 
 }
-

@@ -1,25 +1,34 @@
 <div>
   <wizard on-finish="finishedWizard()">
-    <wz-step title="Starting">
+    <wz-step title="Selecting a country">
         <h1>Selecting a country</h1>
         <p>Please choose the country for the league</p>
-        <countryselect selectedcountry="countryId"></countryselect>
-        <input type="submit" wz-next value="Continue" />
+        <form class="simple-form" ng-submit="vm.validateCountrySelectionStep()">
+          <countryselect selectedcountry="vm.countryId" required='true'></countryselect>
+          <input type="submit" value="Continue" />
+        </form>
     </wz-step>
     <wz-step title="Selecting a season" canexit="controlseason">
         <h1>Selecting a season</h1>
         <p>Please choose a season for the league</p>
-        <seasonselect selectedseason="vm.league.SeasonId"></seasonselect>
-        <input type="submit" wz-next value="Go on" />
-    </wz-step>
-    <wz-step title="Selecting teams">
-        <h1>Selecting teams</h1>
-        <p>Please select the teams </p>
-        <input type="submit" wz-next value="Go on2" />
+        <countryshow countryid='vm.countryId' parentcontroller="vm"></countryshow>
+        <form class="simple-form" ng-submit="vm.validateSeasonSelectionStep()">
+          <seasonselect selectedseason="vm.league.SeasonId" required='true' parentcontroller="vm"></seasonselect>
+          <input type="submit" value="Continue" />
+        </form>
     </wz-step>
     <wz-step title="Selecting players">
         <h1>Selecting players</h1>
         <p>Please select the players </p>
-        <input type="submit" wz-next value="Finish now" />
+        <form class="simple-form" ng-submit="vm.validatePlayerSelectionStep()">
+          <div class="alert alert-danger" role="alert" ng-repeat="value in vm.errors['item.Global']">{{value}}</div>
+          <playerselectlist players="vm.playerSelection"></playerselectlist>
+          <input type="submit" value="Generate league" />
+        </form>
+    </wz-step>
+    <wz-step title="Generate the league">
+        <h1>Generate the league</h1>
+        <p>Please wait... </p>
+        <input type="submit" wz-next value="Done" />
     </wz-step>
 </wizard>

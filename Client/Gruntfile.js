@@ -95,6 +95,12 @@ module.exports = function(grunt) {
                        cwd: '<%= paths.bowerAssets %>/underscore/',
                        src: ['underscore-min.js'],
                        dest: 'app/lib/underscore/'
+                   },
+                   {
+                       expand: true,
+                       cwd: '<%= paths.bowerAssets %>/angular-wizard/',
+                       src: ['angular-wizard.js'],
+                       dest: 'app/lib/angular-wizard/'
                    }
                 ]
             }
