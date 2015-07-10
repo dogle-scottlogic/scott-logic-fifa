@@ -12,9 +12,7 @@ namespace FIFA.Server.Models
     {
         private FIFAServerContext db = new FIFAServerContext();
 
-        public CountryRepository(){
-
-        }
+        public CountryRepository() { }
         
         // Get all the countries ordered by name / seasons
         public async Task<IEnumerable<Country>> GetAll()
@@ -22,12 +20,34 @@ namespace FIFA.Server.Models
             return await db.Countries.ToListAsync();
         }
 
+        public async Task<IEnumerable<Country>> GetAllWithFilter(CountryFilter filter)
+        {
+            return await FilterCountries(db.Countries, filter).ToListAsync();
+        }
+
+        private IQueryable<Country> FilterCountries(IQueryable<Country> query, CountryFilter filter)
+        {
+            if (filter != null)
+            {
+                if (filter.Id != 0)
+                {
+                    query = query.Where(m => m.Id == filter.Id);
+                }
+
+                if (!String.IsNullOrEmpty(filter.Name))
+                {
+                    query = query.Where(m => m.Name.Contains(filter.Name));
+                }
+            }
+
+            return query;
+        }
+
         // Get one country by its ID
         public async Task<Country> Get(int id)
         {
             return await db.Countries.FindAsync(id);
         }
-
 
         // Add one country
         public async Task<Country> Add(Country item){

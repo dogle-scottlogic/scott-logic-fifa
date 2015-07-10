@@ -16,8 +16,9 @@ namespace FIFA.Server.Controllers
 {
 
     [ConfigurableCorsPolicy("localhost")]
-    public class SeasonController : AbstractCRUDAPIController<Season, int>
+    public class SeasonController : AbstractCRUDAPIController<Season, int, SeasonFilter>
     {
+        private FIFAServerContext db = new FIFAServerContext();
 
         ICountryRepository countryRepository;
 
@@ -38,9 +39,20 @@ namespace FIFA.Server.Controllers
         /// 
         // GET api/Season
         [ResponseType(typeof(IEnumerable<Season>))]
-        public async Task<HttpResponseMessage> GetAll()
+        public async Task<HttpResponseMessage> GetAll([FromUri] SeasonFilter seasonFilter = null)
         {
-            return await base.GetAll();
+            IEnumerable<Season> list;
+
+            if (seasonFilter == null)
+            {
+                list = await base.repository.GetAll();
+            }
+            else
+            {
+                list = await base.repository.GetAllWithFilter(seasonFilter);
+            }
+
+            return Request.CreateResponse(HttpStatusCode.OK, list);
         }
 
         /// <summary>

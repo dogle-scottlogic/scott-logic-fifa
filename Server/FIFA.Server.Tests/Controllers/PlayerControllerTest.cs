@@ -62,7 +62,7 @@ namespace FIFATests.ControllerTests
             var mock = new Mock<IPlayerRepository>(MockBehavior.Strict);
 
             // Filling mock with data
-            mock.As<ICRUDRepository<Player, int>>().Setup(m => m.Get(It.IsAny<int>()))
+            mock.As<ICRUDRepository<Player, int, PlayerFilter>>().Setup(m => m.Get(It.IsAny<int>()))
                 .Returns<int>(id => Task.FromResult(players.FirstOrDefault(c => c.Id == id)));
 
             // Creating the controller which we want to create
@@ -88,7 +88,7 @@ namespace FIFATests.ControllerTests
             var mock = new Mock<IPlayerRepository>(MockBehavior.Strict);
 
             // Filling mock with data
-            mock.As<ICRUDRepository<Player, int>>().Setup(m => m.Get(It.IsAny<int>()))
+            mock.As<ICRUDRepository<Player, int, PlayerFilter>>().Setup(m => m.Get(It.IsAny<int>()))
                 .Returns<int?>(id => Task.FromResult(players.FirstOrDefault(c => false)));
 
             // Creating the controller which we want to create
@@ -111,7 +111,7 @@ namespace FIFATests.ControllerTests
             var mock = new Mock<IPlayerRepository>(MockBehavior.Strict);
 
             // Filling mock with data
-            mock.As<ICRUDRepository<Player, int>>().Setup(m => m.GetAll())
+            mock.As<ICRUDRepository<Player, int, PlayerFilter>>().Setup(m => m.GetAll())
                 .Returns(Task.FromResult(players));
 
             // Creating the controller which we want to create
@@ -136,7 +136,7 @@ namespace FIFATests.ControllerTests
             var mock = new Mock<IPlayerRepository>(MockBehavior.Strict);
 
             // Filling mock with data
-            mock.As<ICRUDRepository<Player, int>>().Setup(m => m.Add(It.IsAny<Player>()))
+            mock.As<ICRUDRepository<Player, int, PlayerFilter>>().Setup(m => m.Add(It.IsAny<Player>()))
                 .Returns(Task.FromResult(players.FirstOrDefault()))
                 .Callback<Player>(c => added.Add(c));
 
@@ -162,13 +162,13 @@ namespace FIFATests.ControllerTests
 
         // Verifying the Add failure method
         [TestMethod]
-        public void AddFailurePLayerInTheRepo()
+        public void AddFailurePlayerInTheRepo()
         {
             Player player = new Player();
             var mock = new Mock<IPlayerRepository>(MockBehavior.Strict);
 
             // Filling mock rull with repository
-            mock.As<ICRUDRepository<Player, int>>().Setup(m => m.Add(It.IsAny<Player>()));
+            mock.As<ICRUDRepository<Player, int, PlayerFilter>>().Setup(m => m.Add(It.IsAny<Player>()));
 
             mock.As<IPlayerRepository>().Setup(m => m.isPlayerNameExist(It.IsAny<string>(), null))
                 .Returns(Task.FromResult(false));
@@ -195,7 +195,7 @@ namespace FIFATests.ControllerTests
             var mock = new Mock<IPlayerRepository>(MockBehavior.Strict);
 
             // Filling mock rull with repository
-            mock.As<ICRUDRepository<Player, int>>().Setup(m => m.Add(It.IsAny<Player>()));
+            mock.As<ICRUDRepository<Player, int, PlayerFilter>>().Setup(m => m.Add(It.IsAny<Player>()));
             // Setting up that the player name already exist
             mock.As<IPlayerRepository>().Setup(m => m.isPlayerNameExist(null, null))
                 .Returns(Task.FromResult(true));
@@ -220,7 +220,7 @@ namespace FIFATests.ControllerTests
             var mock = new Mock<IPlayerRepository>(MockBehavior.Strict);
 
             // Filling mock rull with repository
-            mock.As<ICRUDRepository<Player, int>>().Setup(m => m.Add(It.IsAny<Player>()));
+            mock.As<ICRUDRepository<Player, int, PlayerFilter>>().Setup(m => m.Add(It.IsAny<Player>()));
 
             mock.As<IPlayerRepository>().Setup(m => m.isPlayerNameExist(It.IsAny<string>(), null))
                 .Returns(Task.FromResult(false));
@@ -248,7 +248,7 @@ namespace FIFATests.ControllerTests
             var mock = new Mock<IPlayerRepository>(MockBehavior.Strict);
 
             // Creating the rules for mock, always send true in this case
-            mock.As<ICRUDRepository<Player, int>>().Setup(m => m.Update(It.IsAny<int>(), It.IsAny<Player>()))
+            mock.As<ICRUDRepository<Player, int, PlayerFilter>>().Setup(m => m.Update(It.IsAny<int>(), It.IsAny<Player>()))
                 .Returns(Task.FromResult(true));
 
             mock.As<IPlayerRepository>().Setup(m => m.isPlayerNameExist(It.IsAny<string>(), It.IsAny<int>()))
@@ -281,7 +281,7 @@ namespace FIFATests.ControllerTests
             var mock = new Mock<IPlayerRepository>(MockBehavior.Strict);
 
             // Creating the rules for mock, always send true in this case
-            mock.As<ICRUDRepository<Player, int>>().Setup(m => m.Update(It.IsAny<int>(), It.IsAny<Player>()))
+            mock.As<ICRUDRepository<Player, int, PlayerFilter>>().Setup(m => m.Update(It.IsAny<int>(), It.IsAny<Player>()))
                 .Returns(Task.FromResult(true));
             mock.As<IPlayerRepository>().Setup(m => m.isPlayerNameExist(null, null))
                 .Returns(Task.FromResult(false));
@@ -308,7 +308,7 @@ namespace FIFATests.ControllerTests
             var mock = new Mock<IPlayerRepository>(MockBehavior.Strict);
 
             // Creating the rules for mock, always send true in this case
-            mock.As<ICRUDRepository<Player, int>>().Setup(m => m.Update(It.IsAny<int>(), It.IsAny<Player>()))
+            mock.As<ICRUDRepository<Player, int, PlayerFilter>>().Setup(m => m.Update(It.IsAny<int>(), It.IsAny<Player>()))
                 .Returns(Task.FromResult(true));
             mock.As<IPlayerRepository>().Setup(m => m.isPlayerNameExist(It.IsAny<string>(), It.IsAny<int>()))
                 .Returns(Task.FromResult(false));
@@ -333,7 +333,7 @@ namespace FIFATests.ControllerTests
             var mock = new Mock<IPlayerRepository>(MockBehavior.Strict);
 
             // Creating the rules for mock, always send true in this case
-            mock.As<ICRUDRepository<Player, int>>().Setup(m => m.Update(It.IsAny<int>(), It.IsAny<Player>()))
+            mock.As<ICRUDRepository<Player, int, PlayerFilter>>().Setup(m => m.Update(It.IsAny<int>(), It.IsAny<Player>()))
                 .Returns(Task.FromResult(true));
             mock.As<IPlayerRepository>().Setup(m => m.isPlayerNameExist(null, null))
                 .Returns(Task.FromResult(true));
@@ -357,7 +357,7 @@ namespace FIFATests.ControllerTests
             var mock = new Mock<IPlayerRepository>(MockBehavior.Strict);
 
             // Creating the rules for mock, always send true in this case
-            mock.As<ICRUDRepository<Player, int>>().Setup(m => m.Remove(It.IsAny<int>()))
+            mock.As<ICRUDRepository<Player, int, PlayerFilter>>().Setup(m => m.Remove(It.IsAny<int>()))
                 .Returns(Task.FromResult(true));
 
             // Creating the controller which we want to create
@@ -378,7 +378,7 @@ namespace FIFATests.ControllerTests
             var mock = new Mock<IPlayerRepository>(MockBehavior.Strict);
 
             // Creating the rules for mock, always send true in this case
-            mock.As<ICRUDRepository<Player, int>>().Setup(m => m.Remove(It.IsAny<int>()))
+            mock.As<ICRUDRepository<Player, int, PlayerFilter>>().Setup(m => m.Remove(It.IsAny<int>()))
                 .Returns(Task.FromResult(false));
 
             // Creating the controller which we want to create

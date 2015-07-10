@@ -13,12 +13,12 @@ using Newtonsoft.Json;
 using System.Reflection;
 using FIFA.Server.Models;
 using System.Net.Http.Headers;
+using System.Data.Entity;
 
 namespace FIFA.Server
 {
     public class WebApiApplication : NinjectHttpApplication
     {
-
         protected override void OnApplicationStarted()
         {
             base.OnApplicationStarted();

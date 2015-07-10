@@ -146,6 +146,9 @@
     <EmbeddedResource Include="Migrations\201507091003092_UploadTable.resx">
       <DependentUpon>201507091003092_UploadTable.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201507100900276_update.resx">
+      <DependentUpon>201507100900276_update.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
@@ -197,20 +200,28 @@
     <Compile Include="Migrations\201507091003092_UploadTable.Designer.cs">
       <DependentUpon>201507091003092_UploadTable.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201507100900276_update.cs" />
+    <Compile Include="Migrations\201507100900276_update.Designer.cs">
+      <DependentUpon>201507100900276_update.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\Country\CountryFilter.cs" />
     <Compile Include="Models\Country\Country.cs" />
     <Compile Include="Models\Country\CountryRepository.cs" />
     <Compile Include="Models\Country\ICountryRepository.cs" />
     <Compile Include="Models\FIFAServerContext.cs" />
     <Compile Include="Models\ICRUDRepository.cs" />
+    <Compile Include="Models\Players\PlayerFilter.cs" />
     <Compile Include="Models\Players\Player.cs" />
     <Compile Include="Models\Players\PlayerRepository.cs" />
     <Compile Include="Models\Players\IPlayerRepository.cs" />
     <Compile Include="Models\Score.cs" />
     <Compile Include="Models\Match.cs" />
     <Compile Include="Models\League.cs" />
+    <Compile Include="Models\Season\SeasonFilter.cs" />
     <Compile Include="Models\Season\SeasonRepository.cs" />
     <Compile Include="Models\Season\ISeasonRepository.cs" />
+    <Compile Include="Models\Team\TeamFilter.cs" />
     <Compile Include="Models\Upload\Upload.cs" />
     <Compile Include="Models\Team\ITeamRepository.cs" />
     <Compile Include="Models\Team\Team.cs" />
