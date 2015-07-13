@@ -7,15 +7,15 @@ module FifaLeagueClient.Module.League {
       countryId: number;
       playerSelection:Player.Directives.SelectablePlayerModel;
       league: LeagueModel;
-      mainService : LeagueService;
+      mainService : GenerateLeagueService;
       wizardHandler:angular.mgoAngularWizard.WizardHandler;
 
-    static $inject = ["$scope", 'leagueService', 'WizardHandler'];
+    static $inject = ["$scope", 'generateLeagueService', 'WizardHandler'];
 
-    constructor(scope, leagueService : LeagueService, wizardHandler:angular.mgoAngularWizard.WizardHandler){
+    constructor(scope, generateLeagueService : GenerateLeagueService, wizardHandler:angular.mgoAngularWizard.WizardHandler){
         super(scope);
         this.wizardHandler= wizardHandler;
-        this.mainService = leagueService;
+        this.mainService = generateLeagueService;
         this.league = new LeagueModel(null);
     }
 
@@ -41,7 +41,7 @@ module FifaLeagueClient.Module.League {
         this.league.Players = selectedPlayers;
 
         // Pushing the datas on the server
-        this.mainService.addLeague(this.league)
+        this.mainService.generateLeague(this.league)
           .then(this.handleAddLeadSuccess)
           .catch(this.handleAddLeadErrors);
     }

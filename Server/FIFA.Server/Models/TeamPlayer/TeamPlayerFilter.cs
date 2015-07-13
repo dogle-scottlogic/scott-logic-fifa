@@ -5,12 +5,10 @@ using System.Web;
 
 namespace FIFA.Server.Models
 {
-    public class TeamFilter
+    public class TeamPlayerFilter
     {
         public int Id { get; set; }
-
-        public string Name { get; set; }
-
-        public int CountryId { get; set; }
+        public int TeamId { get; set; }
+        public int PlayerId { get; set; }
     }
 }

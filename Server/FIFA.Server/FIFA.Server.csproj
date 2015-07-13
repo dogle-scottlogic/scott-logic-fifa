@@ -172,6 +172,7 @@
     <Compile Include="Controllers\AbstractCRUDAPIController.cs" />
     <Compile Include="Controllers\CountryController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\GenerateLeagueController.cs" />
     <Compile Include="Controllers\LeagueController.cs" />
     <Compile Include="Controllers\MatchController.cs" />
     <Compile Include="Controllers\PlayerController.cs" />
@@ -224,12 +225,15 @@
     <Compile Include="Models\Season\SeasonFilter.cs" />
     <Compile Include="Models\Season\SeasonRepository.cs" />
     <Compile Include="Models\Season\ISeasonRepository.cs" />
+    <Compile Include="Models\TeamPlayer\ITeamPlayerRepository.cs" />
+    <Compile Include="Models\TeamPlayer\TeamPlayerFilter.cs" />
+    <Compile Include="Models\TeamPlayer\TeamPlayerRepository.cs" />
     <Compile Include="Models\Team\TeamFilter.cs" />
     <Compile Include="Models\Upload\Upload.cs" />
     <Compile Include="Models\Team\ITeamRepository.cs" />
     <Compile Include="Models\Team\Team.cs" />
     <Compile Include="Models\Season\Season.cs" />
-    <Compile Include="Models\TeamPlayer.cs" />
+    <Compile Include="Models\TeamPlayer\TeamPlayer.cs" />
     <Compile Include="Models\Team\TeamRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
