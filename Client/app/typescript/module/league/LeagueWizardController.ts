@@ -9,6 +9,7 @@ module FifaLeagueClient.Module.League {
       league: LeagueModel;
       mainService : GenerateLeagueService;
       wizardHandler:angular.mgoAngularWizard.WizardHandler;
+      showWizard:boolean;
 
     static $inject = ["$scope", 'generateLeagueService', 'WizardHandler'];
 
@@ -17,6 +18,12 @@ module FifaLeagueClient.Module.League {
         this.wizardHandler= wizardHandler;
         this.mainService = generateLeagueService;
         this.league = new LeagueModel(null);
+        this.showWizard = true;
+    }
+
+    // Hide the wizard, show the result
+    public finishedWizard():void{
+      this.showWizard = false;
     }
 
     public selectCountry():boolean{
@@ -42,19 +49,19 @@ module FifaLeagueClient.Module.League {
 
         // Pushing the datas on the server
         this.mainService.generateLeague(this.league)
-          .then(this.handleAddLeadSuccess)
-          .catch(this.handleAddLeadErrors);
+          .then(this.handleGenerateLeagueSuccess)
+          .catch(this.handleGenerateLeagueErrors);
     }
 
 
     // Go to the next step if the add was a success
-    protected handleAddLeadSuccess = (data:LeagueModel) => {
+    protected handleGenerateLeagueSuccess = (data:LeagueModel) => {
         this.league = data;
         this.wizardHandler.wizard().next();
     }
 
     // Method adding add lead errors in errors list
-    protected handleAddLeadErrors = (config) => {
+    protected handleGenerateLeagueErrors = (config) => {
       this.errors = config.errors;
     }
 

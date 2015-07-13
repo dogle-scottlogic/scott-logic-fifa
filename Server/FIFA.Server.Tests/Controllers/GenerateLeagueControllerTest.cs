@@ -319,9 +319,9 @@ namespace FIFATests.ControllerTests
             Assert.AreEqual(errorMessage, "{\"Message\":\"The request is invalid.\",\"ModelState\":{\"key\":[\"errorMessage\"]}}");
         }
 
-        // Verifying the Generate valide if all is ok
+        // Verifying the Generate valide if all is ok - Case players without team
         [TestMethod]
-        public void GenerateLeagueValid()
+        public void GenerateLeagueValidPlayersWithoutTeam()
         {
             IEnumerable<League> leagues = CreateLeagueList();
             League league = new League();
@@ -367,11 +367,12 @@ namespace FIFATests.ControllerTests
             
             var mockTeamPlayerRepo = new Mock<ITeamPlayerRepository>(MockBehavior.Strict);
             var teamPlayer = new TeamPlayer();
-            // Mocking the createTeamAttachedToSeason
+            // Mocking the createTeamAttachedToSeason : Players don't have any team for the moment
             mockTeamPlayerRepo.As<ICRUDRepository<TeamPlayer, int, TeamPlayerFilter>>().Setup(l => l.GetAllWithFilter(It.IsAny<TeamPlayerFilter>()))
                 .Returns(Task.FromResult((IEnumerable<TeamPlayer>)null));
             mockTeamPlayerRepo.As<ICRUDRepository<TeamPlayer, int, TeamPlayerFilter>>().Setup(l => l.Add(It.IsAny<TeamPlayer>()))
                 .Returns(Task.FromResult(teamPlayer));
+            
             mockSeasonRepo.As<ICRUDRepository<Season, int, SeasonFilter>>().Setup(s => s.Update(It.IsAny<int>(), It.IsAny<Season>()))
                 .Returns(Task.FromResult(true));
             
@@ -384,7 +385,78 @@ namespace FIFATests.ControllerTests
             fakeContext(controller);
 
             HttpResponseMessage response = controller.Post(league).Result;
-            // the result should say "HttpStatusCode.BadRequest"
+            // the result should say "HttpStatusCode.Created"
+            Assert.AreEqual(response.StatusCode, HttpStatusCode.Created);
+        }
+
+        // Verifying the Generate valide if all is ok - Case players with existing team
+        [TestMethod]
+        public void GenerateLeagueValidPlayersWithTeam()
+        {
+            IEnumerable<League> leagues = CreateLeagueList();
+            League league = new League();
+            league.Players = new List<Player>();
+            for (int i = 0; i < 4; i++)
+            {
+                league.Players.Add(new Player());
+            }
+
+            List<Team> teams = new List<Team>();
+            for (int i = 0; i < 8; i++)
+            {
+                teams.Add(new Team());
+            }
+            
+            Season season = new Season();
+            Player player = new Player();
+
+            // Filling mock rull with repository
+            var mock = new Mock<ILeagueRepository>(MockBehavior.Strict);
+            mock.As<ICRUDRepository<League, int, LeagueFilter>>().Setup(l => l.GetAllWithFilter(It.IsAny<LeagueFilter>()))
+                .Returns(Task.FromResult((IEnumerable<League>)null));
+
+            var mockSeasonRepo = new Mock<ISeasonRepository>(MockBehavior.Strict);
+            // Setting up that the country name already exist
+            mockSeasonRepo.As<ICRUDRepository<Season, int, SeasonFilter>>().Setup(s => s.Get(It.IsAny<int>()))
+                .Returns(Task.FromResult(new Season()));
+
+
+            var mockTeamRepo = new Mock<ITeamRepository>(MockBehavior.Strict);
+            // Setting up that the teams
+            mockTeamRepo.As<ICRUDRepository<Team, int, TeamFilter>>().Setup(s => s.GetAllWithFilter(It.IsAny<TeamFilter>()))
+                .Returns(Task.FromResult((IEnumerable<Team>)teams));
+
+            // Mocking the creation of the league createLeagueAttachedToPlayers
+            mock.As<ICRUDRepository<League, int, LeagueFilter>>().Setup(l => l.Add(It.IsAny<League>()))
+                .Returns(Task.FromResult(league));
+            var mockPlayerRepo = new Mock<IPlayerRepository>(MockBehavior.Strict);
+            mockPlayerRepo.As<ICRUDRepository<Player, int, PlayerFilter>>().Setup(l => l.Get(It.IsAny<int>()))
+                .Returns(Task.FromResult(player));
+            mockPlayerRepo.As<ICRUDRepository<Player, int, PlayerFilter>>().Setup(l => l.Update(It.IsAny<int>(), It.IsAny<Player>()))
+                .Returns(Task.FromResult(true));
+
+            var mockTeamPlayerRepo = new Mock<ITeamPlayerRepository>(MockBehavior.Strict);
+            // Mocking the createTeamAttachedToSeason : Players don't have any team for the moment
+            List<TeamPlayer> teamPlayers = new List<TeamPlayer>();
+            teamPlayers.Add(new TeamPlayer());
+            mockTeamPlayerRepo.As<ICRUDRepository<TeamPlayer, int, TeamPlayerFilter>>().Setup(l => l.GetAllWithFilter(It.IsAny<TeamPlayerFilter>()))
+                .Returns(Task.FromResult((IEnumerable<TeamPlayer>)teamPlayers));
+            mockTeamPlayerRepo.As<ICRUDRepository<TeamPlayer, int, TeamPlayerFilter>>().Setup(l => l.Add(It.IsAny<TeamPlayer>()))
+                .Returns(Task.FromResult(teamPlayers.First()));
+
+            mockSeasonRepo.As<ICRUDRepository<Season, int, SeasonFilter>>().Setup(s => s.Update(It.IsAny<int>(), It.IsAny<Season>()))
+                .Returns(Task.FromResult(true));
+
+            // Creating the controller which we want to create
+            GenerateLeagueController controller = new GenerateLeagueController(mock.Object, mockSeasonRepo.Object,
+                mockTeamRepo.Object, mockTeamPlayerRepo.Object, mockPlayerRepo.Object);
+
+
+            // configuring the context for the controler
+            fakeContext(controller);
+
+            HttpResponseMessage response = controller.Post(league).Result;
+            // the result should say "HttpStatusCode.Created"
             Assert.AreEqual(response.StatusCode, HttpStatusCode.Created);
         }
 

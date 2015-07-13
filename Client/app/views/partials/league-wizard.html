@@ -1,5 +1,5 @@
-<div>
-  <wizard on-finish="finishedWizard()">
+<div ng-show="vm.showWizard">
+  <wizard on-finish="vm.finishedWizard()">
     <wz-step title="Selecting a country">
         <h1>Selecting a country</h1>
         <p>Please choose the country for the league</p>
@@ -8,12 +8,12 @@
           <input type="submit" value="Continue" />
         </form>
     </wz-step>
-    <wz-step title="Selecting a season" canexit="controlseason">
+    <wz-step title="Selecting a season">
         <h1>Selecting a season</h1>
         <p>Please choose a season for the league</p>
         <countryshow countryid='vm.countryId' parentcontroller="vm"></countryshow>
         <form class="simple-form" ng-submit="vm.validateSeasonSelectionStep()">
-          <seasonselect selectedseason="vm.league.SeasonId" required='true' parentcontroller="vm"></seasonselect>
+          <seasonselect selectedseason="vm.league.SeasonId" filtercountry='vm.countryId' required='true' parentcontroller="vm"></seasonselect>
           <input type="submit" value="Continue" />
         </form>
     </wz-step>
@@ -26,9 +26,11 @@
           <input type="submit" value="Generate league" />
         </form>
     </wz-step>
-    <wz-step title="Generate the league">
-        <h1>Generate the league</h1>
-        <p>Please wait... </p>
-        <input type="submit" wz-next value="Done" />
-    </wz-step>
-</wizard>
+  </wizard>
+</div>
+
+<div ng-hide="vm.showWizard">
+        <h1>League successfully generated</h1>
+        <p>Below the teams for each players of the league :</p>
+        TODO : SHOWING THE LEAGUE(s)
+</div>

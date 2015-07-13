@@ -150,8 +150,13 @@ module FifaLeagueClient.Module.Season {
         // call the service in order to get the list of seasons
         public fillSeasons = () => {
             this.errors = {};
+            // if we have a filter, we use it
+            var seasonFilter:SeasonFilter = new SeasonFilter();
+            if(this.scope.filtercountry != null){
+              seasonFilter.CountryId = this.scope.filtercountry;
+            }
             this.loadingPromise =
-                this.mainService.getSeasonList()
+                this.mainService.getSeasonFilteredList(seasonFilter)
                     .then(this.fillSeasonsSuccessCallBack)
                     .catch(this.fillSeasonsErrorCallBack);
         }

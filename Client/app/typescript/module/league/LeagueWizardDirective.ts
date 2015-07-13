@@ -12,14 +12,7 @@ module FifaLeagueClient.Module.League.Directives {
             restrict: "E",
             controller: LeagueWizardController,
             controllerAs: "vm",
-            templateUrl: 'views/partials/league-wizard.html',
-            link: function(scope:IMyScope, element, attrs) {
-                scope.controlseason = function() {
-                     // control that the season match with the country
-                     //@todo to implement
-                     return true;
-                }
-            }
+            templateUrl: 'views/partials/league-wizard.html'
         }
     }
 
