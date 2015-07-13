@@ -18,6 +18,7 @@ namespace FIFA.Server.Controllers
     [ConfigurableCorsPolicy("localhost")]
     public class GenerateLeagueController : ApiController
     {
+        public const int minNumberOfPlayers = 4;
 
         ILeagueRepository repository;
         ISeasonRepository seasonRepository;
@@ -37,7 +38,7 @@ namespace FIFA.Server.Controllers
             this.teamPlayerRepository = teamPlayerRepository;
             this.playerRepository = playerRepository;
         }
-
+        
 
         /// <summary>
         ///     Generate the league(s)
@@ -47,7 +48,7 @@ namespace FIFA.Server.Controllers
         /// 
         // POST api/League
         [ResponseType(typeof(League))]
-        public async Task<HttpResponseMessage> Post(League item)
+        public async Task<HttpResponseMessage> Post(GenerateLeagueDTO item)
         {
             // try to get the season, if it returns null, send an error
             if (item == null)
@@ -55,7 +56,7 @@ namespace FIFA.Server.Controllers
                 return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Item is empty");
 
             } 
-            else if (!await this.isSeasonExist(item))
+            else if (!await this.isSeasonExist(item.SeasonId))
             {
                 return this.createErrorResponseSeasonDoesntExists();
             }
@@ -70,8 +71,8 @@ namespace FIFA.Server.Controllers
                 // retrieving the teams associated to the country
                 List<Team> teams = new List<Team>(await this.getTeamsAssociatedToTheCountry(season.CountryId));
 
-                // Their will be at least 4 players
-                if (item.Players.Count() < 4)
+                // Their will be at least <minNumberOfPlayers> players
+                if (item.Players.Count() < minNumberOfPlayers)
                 {
                     return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "You must choose at least 4 players.");
                 }
@@ -104,10 +105,10 @@ namespace FIFA.Server.Controllers
 
             Random rand = new Random();
             // First we create the league attached to the players
-            League createdLeague = await createLeagueAttachedToPlayers(season.Id, "", players);
+            League createdLeague = await createLeagueAttachedToPlayers(season.Id, "League 1", players);
 
             // Second we create the league attached to the players
-            createdLeague.Season = await createTeamAttachedToSeason(season, teams, players, rand);
+            createdLeague = await createTeamAttachedToLeague(createdLeague, teams, players, rand);
 
             var response = Request.CreateResponse<League>(HttpStatusCode.Created, createdLeague);
 
@@ -122,37 +123,19 @@ namespace FIFA.Server.Controllers
         private async Task<League> createLeagueAttachedToPlayers(int seasonId, string leagueName, IEnumerable<Player> players)
         {
             League leagueInCreation = new League();
-            // if the name is not created, we fill it
-            if (leagueName == "")
-            {
-                leagueName = "League 1";
-            }
             leagueInCreation.Name = leagueName;
             leagueInCreation.SeasonId = seasonId;
 
             // Create the league in the database
             leagueInCreation = await this.repository.Add(leagueInCreation);
-
-            // for each players, we attach him to the league
-            foreach (Player player in players)
-            {
-                // retrieving the player and adding the season
-                Player playerToUpdate = await this.playerRepository.Get(player.Id);
-                if (playerToUpdate.Leagues == null)
-                {
-                    playerToUpdate.Leagues = new List<League>();
-                }
-                playerToUpdate.Leagues.Add(leagueInCreation);
-                await this.playerRepository.Update(playerToUpdate.Id, playerToUpdate);
-            }
-
+            
             return leagueInCreation;
         }
 
         /**
-         * Create teamPlayers attached to the season
+         * Create teamPlayers attached to the league
          */
-        private async Task<Season> createTeamAttachedToSeason(Season season, List<Team> teams, IEnumerable<Player> players, Random rand)
+        private async Task<League> createTeamAttachedToLeague(League league, List<Team> teams, IEnumerable<Player> players, Random rand)
         {
             List<TeamPlayer> teamPlayers = new List<TeamPlayer>();
 
@@ -181,21 +164,25 @@ namespace FIFA.Server.Controllers
                 }
 
                 // If the list of teamPlayers is empty, we create a list
-                if (season.TeamPlayers == null)
+                if (league.TeamPlayers == null)
                 {
-                    season.TeamPlayers = new List<TeamPlayer>();
+                    league.TeamPlayers = new List<TeamPlayer>();
                 }
 
                 // Add the team players to the season
-                season.TeamPlayers.Add(tp);
+                league.TeamPlayers.Add(tp);
             }
 
             // Adding the teamplayers to the season
-            await this.seasonRepository.Update(season.Id, season);
+            await this.repository.Update(league.Id, league);
 
-
-            return season;
+            return league;
         }
+
+        /**
+         * Create Matches and scores attached to leagues / players
+         */
+
         
         // Get the list of the teams associated to the country Id
         private async Task<IEnumerable<Team>> getTeamsAssociatedToTheCountry(int countryId){
@@ -207,18 +194,10 @@ namespace FIFA.Server.Controllers
         /**
          * Method verifying if a season exist in the item
          **/
-        private async Task<bool> isSeasonExist(League item)
+        private async Task<bool> isSeasonExist(int seasonId)
         {
-            if (item == null)
-            {
-                return false;
-            }
-            else
-            {
-                Season season = await this.seasonRepository.Get(item.SeasonId);
-                return (season != null);
-
-            }
+            Season season = await this.seasonRepository.Get(seasonId);
+            return (season != null);
         }
 
         /**

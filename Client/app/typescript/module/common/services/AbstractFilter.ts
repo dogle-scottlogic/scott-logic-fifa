@@ -2,25 +2,29 @@ module FifaLeagueClient.Module.Common.Services {
 
     export class AbstractFilter {
 
-        protected addRequestParameter(query:string, name:string, value:string):string{
+        query:string;
+
+        public addRequestParameter(name:string, value:string):AbstractFilter{
             if(value!=null){
-                if(query != ""){
-                    query = query.concat("&");
-                }
-                query = query.concat(name).concat("=").concat(value);
+                this.chainQuery();
+                this.query = this.query.concat(name).concat("=").concat(value);
             }
-            return query;
+            return this;
         }
 
 
-        protected addRequestNumberParameter(query:string, name:string, value:number):string{
+        public addRequestNumberParameter(name:string, value:number):AbstractFilter{
             if(value!=null){
-                if(query != ""){
-                    query = query.concat("&");
-                }
-                query = query.concat(name).concat("=").concat(value.toString());
+                this.chainQuery();
+                this.query = this.query.concat(name).concat("=").concat(value.toString());
             }
-            return query;
+            return this;
+        }
+
+        private chainQuery():void{
+            if(this.query != ""){
+                this.query = this.query.concat("&");
+            }
         }
 
     }

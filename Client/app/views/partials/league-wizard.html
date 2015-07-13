@@ -1,11 +1,11 @@
-<div ng-show="vm.showWizard">
+<div class="gridview" ng-show="vm.showWizard">
   <wizard on-finish="vm.finishedWizard()">
     <wz-step title="Selecting a country">
         <h1>Selecting a country</h1>
         <p>Please choose the country for the league</p>
         <form class="simple-form" ng-submit="vm.validateCountrySelectionStep()">
           <countryselect selectedcountry="vm.countryId" required='true'></countryselect>
-          <input type="submit" value="Continue" />
+          <input type="submit" class="btn btn-primary" value="Continue" />
         </form>
     </wz-step>
     <wz-step title="Selecting a season">
@@ -14,7 +14,7 @@
         <countryshow countryid='vm.countryId' parentcontroller="vm"></countryshow>
         <form class="simple-form" ng-submit="vm.validateSeasonSelectionStep()">
           <seasonselect selectedseason="vm.league.SeasonId" filtercountry='vm.countryId' required='true' parentcontroller="vm"></seasonselect>
-          <input type="submit" value="Continue" />
+          <input type="submit" class="btn btn-primary" value="Continue" />
         </form>
     </wz-step>
     <wz-step title="Selecting players">
@@ -23,13 +23,13 @@
         <form class="simple-form" ng-submit="vm.validatePlayerSelectionStep()">
           <div class="alert alert-danger" role="alert" ng-repeat="value in vm.errors['item.Global']">{{value}}</div>
           <playerselectlist players="vm.playerSelection"></playerselectlist>
-          <input type="submit" value="Generate league" />
+          <input type="submit" class="btn btn-primary" value="Generate league" />
         </form>
     </wz-step>
   </wizard>
 </div>
 
-<div ng-hide="vm.showWizard">
+<div class="gridview" ng-hide="vm.showWizard">
         <h1>League successfully generated</h1>
         <p>Below the teams for each players of the league :</p>
         TODO : SHOWING THE LEAGUE(s)

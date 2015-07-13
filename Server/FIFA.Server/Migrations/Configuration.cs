@@ -23,6 +23,7 @@ namespace FIFA.Server.Migrations
                 c => c.Id,
                 new Country { Id = 1, Name = "Scotland" }
             );
+            context.SaveChanges();
 
             var season = new Season { Id = 1, Name = "Scottish season", CountryId = 1 };
             // Populating the seasons
@@ -30,6 +31,7 @@ namespace FIFA.Server.Migrations
                 s => s.Id,
                 season
             );
+            context.SaveChanges();
 
             var allPlayers = new List<Player> { 
                 new Player { Id = 1, Name = "Tony" },
@@ -50,6 +52,7 @@ namespace FIFA.Server.Migrations
             var playersLeague1 = allPlayers.GetRange(0, 6);
             var playersLeague2 = allPlayers.GetRange(6, 6);
 
+
             // Populating the players
             foreach (Player player in allPlayers) {
                 context.Players.AddOrUpdate(
@@ -57,6 +60,7 @@ namespace FIFA.Server.Migrations
                     player
                 );
             }
+            context.SaveChanges();
 
             var allTeams = new List<Team> {
                 new Team { Id = 1, Name = "Rangers", CountryId = 1},
@@ -79,37 +83,72 @@ namespace FIFA.Server.Migrations
                     team
                 );
             }
+            context.SaveChanges();
+
 
             // team & player combo
-            var seasons = new List<Season> { season };
-            context.TeamPlayers.AddOrUpdate(
-                tp => tp.Id,
-                new TeamPlayer { Id = 1, PlayerId = 3, TeamId = 1, Seasons =  seasons},
-                new TeamPlayer { Id = 2, PlayerId = 5, TeamId = 2, Seasons = seasons },
-                new TeamPlayer { Id = 3, PlayerId = 7, TeamId = 3, Seasons = seasons },
-                new TeamPlayer { Id = 4, PlayerId = 2, TeamId = 4, Seasons = seasons },
-                new TeamPlayer { Id = 5, PlayerId = 9, TeamId = 5, Seasons = seasons },
-                new TeamPlayer { Id = 6, PlayerId = 11, TeamId = 6, Seasons = seasons },
-                new TeamPlayer { Id = 7, PlayerId = 10, TeamId = 7, Seasons = seasons },
-                new TeamPlayer { Id = 8, PlayerId = 10, TeamId = 8, Seasons = seasons },
-                new TeamPlayer { Id = 9, PlayerId = 1, TeamId = 9, Seasons = seasons },
-                new TeamPlayer { Id = 10, PlayerId = 4, TeamId = 10, Seasons = seasons },
-                new TeamPlayer { Id = 11, PlayerId = 6, TeamId = 11, Seasons = seasons },
-                new TeamPlayer { Id = 12, PlayerId = 6, TeamId = 12, Seasons = seasons }
-            );
+            var allTeamPlayers = new List<TeamPlayer>
+            {
+                // League 1
+                new TeamPlayer { Id = 1, PlayerId = 1, TeamId = 5},
+                new TeamPlayer { Id = 2, PlayerId = 2, TeamId = 3},
+                new TeamPlayer { Id = 3, PlayerId = 3, TeamId = 2},
+                new TeamPlayer { Id = 4, PlayerId = 4, TeamId = 1},
+                new TeamPlayer { Id = 5, PlayerId = 5, TeamId = 4},
+                new TeamPlayer { Id = 6, PlayerId = 6, TeamId = 6},
+                // League 2
+                new TeamPlayer { Id = 7, PlayerId = 7, TeamId = 8},
+                new TeamPlayer { Id = 8, PlayerId = 8, TeamId = 7},
+                new TeamPlayer { Id = 9, PlayerId = 9, TeamId = 10},
+                new TeamPlayer { Id = 10, PlayerId = 10, TeamId = 11},
+                new TeamPlayer { Id = 11, PlayerId = 11, TeamId = 9},
+                new TeamPlayer { Id = 12, PlayerId = 12, TeamId = 12}
+            };
 
-            context.Leagues.AddOrUpdate(
-                l => l.Id,
-                new League { Id = 1, Name = "League 1", SeasonId = 1, Players = playersLeague1 },
-                new League { Id = 2, Name = "League 2", SeasonId = 1, Players = playersLeague2 }
-            );
 
-            seedMatchesScores(context, playersLeague1);
-            seedMatchesScores(context, playersLeague2);
+
+            foreach (TeamPlayer teamPlayer in allTeamPlayers)
+            {
+                context.TeamPlayers.AddOrUpdate(
+                    tp => tp.Id,
+                    teamPlayer
+                );
+            }
+            context.SaveChanges();
+
+            // half the players in League 1, half in 2
+            var teamPlayersLeague1 = allTeamPlayers.GetRange(0, 6);
+            var teamPlayersLeague2 = allTeamPlayers.GetRange(6, 6);
+
+            int scoreId = 1;
+            int matchId = 1;
+
+            var league1Matches = seedMatchesScores(context, playersLeague1, scoreId, matchId);
+
+            matchId = 31;
+            scoreId = 61;
+            var league2Matches = seedMatchesScores(context, playersLeague2, scoreId, matchId);
+
+            var leagues = new List<League> { 
+                new League { Id = 1, Name = "League 1", SeasonId = 1, TeamPlayers = teamPlayersLeague1, Matches = league1Matches },
+                new League { Id = 2, Name = "League 2", SeasonId = 1, TeamPlayers = teamPlayersLeague2, Matches = league2Matches }
+            };
+
+            foreach (League league in leagues)
+            {
+                context.Leagues.AddOrUpdate(
+                    l => l.Id,
+                    league
+                );
+            }
+            context.SaveChanges();
         }
-
+        
         // Generates matches and scores for a list of players
-        private void seedMatchesScores(FIFAServerContext context, List<Player> players){
+        private List<Match> seedMatchesScores(FIFAServerContext context, List<Player> players, Int32 scoreId, Int32 matchId)
+        {
+            List<Match> createdMatches = new List<Match>();
+
             // generate League 1 games
             foreach (Player p1 in players)
             {
@@ -119,23 +158,26 @@ namespace FIFA.Server.Migrations
                     if (p1.Id != p2.Id)
                     {
                         //add match & score
-                        var match = new Match();
+                        Match match = new Match { Id = matchId++};
                         context.Matches.AddOrUpdate(
                             m => m.Id,
                             match
                         );
+                        context.SaveChanges();
+                        createdMatches.Add(match);
 
-                        var scoreHomePlayer1 = new Score { Match = match, Location = Location.Home, Player = p1 };
-                        var scoreAwayPlayer2 = new Score { Match = match, Location = Location.Away, Player = p2 };
-
+                        var scoreHomePlayer1 = new Score { Id = scoreId++, MatchId = match.Id, Location = Location.Home, PlayerId = p1.Id };
+                        var scoreAwayPlayer2 = new Score { Id = scoreId++, MatchId = match.Id, Location = Location.Away, PlayerId = p2.Id };
                         context.Scores.AddOrUpdate(
                             s => s.Id,
                             scoreHomePlayer1, scoreAwayPlayer2
                         );
+                        context.SaveChanges();
                     }
                 }
 
             }
+            return createdMatches;
         }
     }
 }

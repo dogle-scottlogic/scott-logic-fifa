@@ -19,11 +19,11 @@ module FifaLeagueClient.Module.League {
         }
 
         // generate a league in the database
-        public generateLeague(league:LeagueModel): ng.IPromise<LeagueModel>{
+        public generateLeague(generateLeague:GenerateLeagueDTOModel): ng.IPromise<LeagueModel>{
             var deferred = this.qService.defer();
             var self = this;
 
-            this.httpService.post(this.apiURL, league).success(function (data, status, headers, config) {
+            this.httpService.post(this.apiURL, generateLeague).success(function (data, status, headers, config) {
                 var league = self.convertDataToLeague(data);
                 deferred.resolve(league);
             }).error(function (data, status, headers, config) {

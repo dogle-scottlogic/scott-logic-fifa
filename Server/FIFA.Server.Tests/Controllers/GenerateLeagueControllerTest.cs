@@ -65,7 +65,7 @@ namespace FIFATests.ControllerTests
         [TestMethod]
         public void GenerateFailureSeasonDoesntExistsInTheRepo()
         {
-            League league = CreateLeagueList()[0];
+            GenerateLeagueDTO generateLeagueDTO = new GenerateLeagueDTO();
             // Filling mock rull with repository
             var mock = new Mock<ILeagueRepository>(MockBehavior.Strict);
             var mockSeasonRepo = new Mock<ISeasonRepository>(MockBehavior.Strict);
@@ -84,9 +84,10 @@ namespace FIFATests.ControllerTests
             // configuring the context for the controler
             fakeContext(controller);
 
-            HttpResponseMessage response = controller.Post(league).Result;
-            // the result should say "HttpStatusCode.BadRequest"
+            HttpResponseMessage response = controller.Post(generateLeagueDTO).Result;
+            String errorMessage = response.Content.ReadAsStringAsync().Result;
             Assert.AreEqual(response.StatusCode, HttpStatusCode.BadRequest);
+            Assert.AreEqual(errorMessage, "{\"Message\":\"The season doesn't exist\"}");
         }
 
         // Verifying the Generate failure if the league already exists
@@ -94,7 +95,7 @@ namespace FIFATests.ControllerTests
         public void GenerateFailureLeagueExistsInTheRepo()
         {
             IEnumerable<League> leagues = CreateLeagueList();
-            League league = leagues.ElementAt(0);
+            GenerateLeagueDTO generateLeagueDTO = new GenerateLeagueDTO();
 
             // Filling mock rull with repository
             var mock = new Mock<ILeagueRepository>(MockBehavior.Strict);
@@ -117,7 +118,7 @@ namespace FIFATests.ControllerTests
             // configuring the context for the controler
             fakeContext(controller);
 
-            HttpResponseMessage response = controller.Post(league).Result; 
+            HttpResponseMessage response = controller.Post(generateLeagueDTO).Result; 
             String errorMessage = response.Content.ReadAsStringAsync().Result;
             Assert.AreEqual(response.StatusCode, HttpStatusCode.BadRequest);
             Assert.AreEqual(errorMessage, "{\"Message\":\"Creation impossible some leagues already exists for this season\"}");
@@ -128,12 +129,11 @@ namespace FIFATests.ControllerTests
         [TestMethod]
         public void GenerateFailureLeagueLessThanFourPlayers()
         {
-            IEnumerable<League> leagues = CreateLeagueList();
-            League league = new League();
-            league.Players = new List<Player>();
+            GenerateLeagueDTO generateLeagueDTO = new GenerateLeagueDTO();
+            generateLeagueDTO.Players = new List<Player>();
             for (int i = 0; i < 3; i++)
             {
-                league.Players.Add(new Player());
+                generateLeagueDTO.Players.Add(new Player());
             }
 
             // Filling mock rull with repository
@@ -162,7 +162,7 @@ namespace FIFATests.ControllerTests
             // configuring the context for the controler
             fakeContext(controller);
 
-            HttpResponseMessage response = controller.Post(league).Result; 
+            HttpResponseMessage response = controller.Post(generateLeagueDTO).Result; 
             
             String errorMessage = response.Content.ReadAsStringAsync().Result;
             Assert.AreEqual(response.StatusCode, HttpStatusCode.BadRequest);
@@ -174,12 +174,11 @@ namespace FIFATests.ControllerTests
         [TestMethod]
         public void GenerateFailureLeagueNotEvenPlayers()
         {
-            IEnumerable<League> leagues = CreateLeagueList();
-            League league = new League();
-            league.Players = new List<Player>();
+            GenerateLeagueDTO generateLeagueDTO = new GenerateLeagueDTO();
+            generateLeagueDTO.Players = new List<Player>();
             for (int i = 0; i < 5; i++)
             {
-                league.Players.Add(new Player());
+                generateLeagueDTO.Players.Add(new Player());
             }
 
             // Filling mock rull with repository
@@ -208,7 +207,7 @@ namespace FIFATests.ControllerTests
             // configuring the context for the controler
             fakeContext(controller);
 
-            HttpResponseMessage response = controller.Post(league).Result;
+            HttpResponseMessage response = controller.Post(generateLeagueDTO).Result;
             String errorMessage = response.Content.ReadAsStringAsync().Result;
             Assert.AreEqual(response.StatusCode, HttpStatusCode.BadRequest);
             Assert.AreEqual(errorMessage, "{\"Message\":\"You must choose an even number of players.\"}");
@@ -219,12 +218,11 @@ namespace FIFATests.ControllerTests
         [TestMethod]
         public void GenerateFailureNotEnoughTeamForPlayers()
         {
-            IEnumerable<League> leagues = CreateLeagueList();
-            League league = new League();
-            league.Players = new List<Player>();
+            GenerateLeagueDTO generateLeagueDTO = new GenerateLeagueDTO();
+            generateLeagueDTO.Players = new List<Player>();
             for (int i = 0; i < 4; i++)
             {
-                league.Players.Add(new Player());
+                generateLeagueDTO.Players.Add(new Player());
             }
 
             List<Team> teams = new List<Team>();
@@ -259,7 +257,7 @@ namespace FIFATests.ControllerTests
             // configuring the context for the controler
             fakeContext(controller);
 
-            HttpResponseMessage response = controller.Post(league).Result;
+            HttpResponseMessage response = controller.Post(generateLeagueDTO).Result;
             String errorMessage = response.Content.ReadAsStringAsync().Result;
             Assert.AreEqual(response.StatusCode, HttpStatusCode.BadRequest);
             Assert.AreEqual(errorMessage, "{\"Message\":\"Not enough team exists for this country.\"}");
@@ -269,12 +267,11 @@ namespace FIFATests.ControllerTests
         [TestMethod]
         public void GenerateFailureIfModelStateNotValid()
         {
-            IEnumerable<League> leagues = CreateLeagueList();
-            League league = new League();
-            league.Players = new List<Player>();
+            GenerateLeagueDTO generateLeagueDTO = new GenerateLeagueDTO();
+            generateLeagueDTO.Players = new List<Player>();
             for (int i = 0; i < 4; i++)
             {
-                league.Players.Add(new Player());
+                generateLeagueDTO.Players.Add(new Player());
             }
 
             List<Team> teams = new List<Team>();
@@ -312,7 +309,7 @@ namespace FIFATests.ControllerTests
             // Facking a model error
             controller.ModelState.AddModelError("key", "errorMessage");
 
-            HttpResponseMessage response = controller.Post(league).Result;
+            HttpResponseMessage response = controller.Post(generateLeagueDTO).Result;
             String errorMessage = response.Content.ReadAsStringAsync().Result;
             // the result should say "HttpStatusCode.BadRequest"
             Assert.AreEqual(response.StatusCode, HttpStatusCode.BadRequest);
@@ -323,14 +320,14 @@ namespace FIFATests.ControllerTests
         [TestMethod]
         public void GenerateLeagueValidPlayersWithoutTeam()
         {
-            IEnumerable<League> leagues = CreateLeagueList();
             League league = new League();
-            league.Players = new List<Player>();
+
+            GenerateLeagueDTO generateLeagueDTO = new GenerateLeagueDTO();
+            generateLeagueDTO.Players = new List<Player>();
             for (int i = 0; i < 4; i++)
             {
-                league.Players.Add(new Player());
+                generateLeagueDTO.Players.Add(new Player());
             }
-
             List<Team> teams = new List<Team>();
             for (int i = 0; i < 8; i++)
             {
@@ -359,11 +356,12 @@ namespace FIFATests.ControllerTests
             // Mocking the creation of the league createLeagueAttachedToPlayers
             mock.As<ICRUDRepository<League, int, LeagueFilter>>().Setup(l => l.Add(It.IsAny<League>()))
                 .Returns(Task.FromResult(league));
+            mock.As<ICRUDRepository<League, int, LeagueFilter>>().Setup(l => l.Update(It.IsAny<int>(), It.IsAny<League>()))
+                .Returns(Task.FromResult(true));
+
             var mockPlayerRepo = new Mock<IPlayerRepository>(MockBehavior.Strict);
             mockPlayerRepo.As<ICRUDRepository<Player, int, PlayerFilter>>().Setup(l => l.Get(It.IsAny<int>()))
                 .Returns(Task.FromResult(player));
-            mockPlayerRepo.As<ICRUDRepository<Player, int, PlayerFilter>>().Setup(l => l.Update(It.IsAny<int>(), It.IsAny<Player>()))
-                .Returns(Task.FromResult(true));
             
             var mockTeamPlayerRepo = new Mock<ITeamPlayerRepository>(MockBehavior.Strict);
             var teamPlayer = new TeamPlayer();
@@ -373,8 +371,6 @@ namespace FIFATests.ControllerTests
             mockTeamPlayerRepo.As<ICRUDRepository<TeamPlayer, int, TeamPlayerFilter>>().Setup(l => l.Add(It.IsAny<TeamPlayer>()))
                 .Returns(Task.FromResult(teamPlayer));
             
-            mockSeasonRepo.As<ICRUDRepository<Season, int, SeasonFilter>>().Setup(s => s.Update(It.IsAny<int>(), It.IsAny<Season>()))
-                .Returns(Task.FromResult(true));
             
             // Creating the controller which we want to create
             GenerateLeagueController controller = new GenerateLeagueController(mock.Object, mockSeasonRepo.Object,
@@ -384,7 +380,7 @@ namespace FIFATests.ControllerTests
             // configuring the context for the controler
             fakeContext(controller);
 
-            HttpResponseMessage response = controller.Post(league).Result;
+            HttpResponseMessage response = controller.Post(generateLeagueDTO).Result;
             // the result should say "HttpStatusCode.Created"
             Assert.AreEqual(response.StatusCode, HttpStatusCode.Created);
         }
@@ -393,19 +389,20 @@ namespace FIFATests.ControllerTests
         [TestMethod]
         public void GenerateLeagueValidPlayersWithTeam()
         {
-            IEnumerable<League> leagues = CreateLeagueList();
             League league = new League();
-            league.Players = new List<Player>();
+
+            GenerateLeagueDTO generateLeagueDTO = new GenerateLeagueDTO();
+            generateLeagueDTO.Players = new List<Player>();
             for (int i = 0; i < 4; i++)
             {
-                league.Players.Add(new Player());
+                generateLeagueDTO.Players.Add(new Player());
             }
-
             List<Team> teams = new List<Team>();
             for (int i = 0; i < 8; i++)
             {
                 teams.Add(new Team());
             }
+
             
             Season season = new Season();
             Player player = new Player();
@@ -414,6 +411,8 @@ namespace FIFATests.ControllerTests
             var mock = new Mock<ILeagueRepository>(MockBehavior.Strict);
             mock.As<ICRUDRepository<League, int, LeagueFilter>>().Setup(l => l.GetAllWithFilter(It.IsAny<LeagueFilter>()))
                 .Returns(Task.FromResult((IEnumerable<League>)null));
+            mock.As<ICRUDRepository<League, int, LeagueFilter>>().Setup(l => l.Update(It.IsAny<int>(), It.IsAny<League>()))
+                .Returns(Task.FromResult(true));
 
             var mockSeasonRepo = new Mock<ISeasonRepository>(MockBehavior.Strict);
             // Setting up that the country name already exist
@@ -432,8 +431,6 @@ namespace FIFATests.ControllerTests
             var mockPlayerRepo = new Mock<IPlayerRepository>(MockBehavior.Strict);
             mockPlayerRepo.As<ICRUDRepository<Player, int, PlayerFilter>>().Setup(l => l.Get(It.IsAny<int>()))
                 .Returns(Task.FromResult(player));
-            mockPlayerRepo.As<ICRUDRepository<Player, int, PlayerFilter>>().Setup(l => l.Update(It.IsAny<int>(), It.IsAny<Player>()))
-                .Returns(Task.FromResult(true));
 
             var mockTeamPlayerRepo = new Mock<ITeamPlayerRepository>(MockBehavior.Strict);
             // Mocking the createTeamAttachedToSeason : Players don't have any team for the moment
@@ -444,8 +441,6 @@ namespace FIFATests.ControllerTests
             mockTeamPlayerRepo.As<ICRUDRepository<TeamPlayer, int, TeamPlayerFilter>>().Setup(l => l.Add(It.IsAny<TeamPlayer>()))
                 .Returns(Task.FromResult(teamPlayers.First()));
 
-            mockSeasonRepo.As<ICRUDRepository<Season, int, SeasonFilter>>().Setup(s => s.Update(It.IsAny<int>(), It.IsAny<Season>()))
-                .Returns(Task.FromResult(true));
 
             // Creating the controller which we want to create
             GenerateLeagueController controller = new GenerateLeagueController(mock.Object, mockSeasonRepo.Object,
@@ -455,7 +450,7 @@ namespace FIFATests.ControllerTests
             // configuring the context for the controler
             fakeContext(controller);
 
-            HttpResponseMessage response = controller.Post(league).Result;
+            HttpResponseMessage response = controller.Post(generateLeagueDTO).Result;
             // the result should say "HttpStatusCode.Created"
             Assert.AreEqual(response.StatusCode, HttpStatusCode.Created);
         }

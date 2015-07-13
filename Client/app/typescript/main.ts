@@ -45,7 +45,7 @@ module FifaLeagueClient {
           controllerAs: 'vm'
         })
         .when('/leaguewizard', {
-          template: '<leaguewizard></leaguewizard'
+          template: '<leaguewizard></leaguewizard>'
         });
     }]);
 

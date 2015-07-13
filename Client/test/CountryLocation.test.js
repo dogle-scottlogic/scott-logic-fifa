@@ -1,6 +1,5 @@
 describe('Testing the country locations', function() {
   beforeEach(module('FifaLeagueApp'));
-  beforeEach(module('country'));
   // load the template
   beforeEach(module('templates'));
 

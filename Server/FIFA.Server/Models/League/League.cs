@@ -9,10 +9,6 @@ namespace FIFA.Server.Models
 {
     public class League
     {
-        public League()
-        {
-            this.Players = new HashSet<Player>();
-        }
 
         [Key]
         public int Id { get; set; }
@@ -23,6 +19,7 @@ namespace FIFA.Server.Models
 
         public Season Season { get; set; }
 
-        public virtual ICollection<Player> Players { get; set; }
+        public virtual ICollection<TeamPlayer> TeamPlayers { get; set; }
+        public virtual ICollection<Match> Matches { get; set; }
     }
 }

@@ -152,6 +152,9 @@
     <EmbeddedResource Include="Migrations\201507101440297_nullable_match_date.resx">
       <DependentUpon>201507101440297_nullable_match_date.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201507131249287_TeamPlayerLeagueAndMatchLeague.resx">
+      <DependentUpon>201507131249287_TeamPlayerLeagueAndMatchLeague.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
@@ -212,6 +215,10 @@
     <Compile Include="Migrations\201507101440297_nullable_match_date.Designer.cs">
       <DependentUpon>201507101440297_nullable_match_date.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201507131249287_TeamPlayerLeagueAndMatchLeague.cs" />
+    <Compile Include="Migrations\201507131249287_TeamPlayerLeagueAndMatchLeague.Designer.cs">
+      <DependentUpon>201507131249287_TeamPlayerLeagueAndMatchLeague.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Country\CountryFilter.cs" />
     <Compile Include="Models\Country\Country.cs" />
@@ -219,15 +226,22 @@
     <Compile Include="Models\Country\ICountryRepository.cs" />
     <Compile Include="Models\FIFAServerContext.cs" />
     <Compile Include="Models\ICRUDRepository.cs" />
+    <Compile Include="Models\League\GenerateLeagueDTO.cs" />
     <Compile Include="Models\League\LeagueFilter.cs" />
+    <Compile Include="Models\Match\IMatchRepository.cs" />
+    <Compile Include="Models\Match\MatchFilter.cs" />
+    <Compile Include="Models\Match\MatchRepository.cs" />
     <Compile Include="Models\Players\PlayerFilter.cs" />
     <Compile Include="Models\League\ILeagueRepository.cs" />
     <Compile Include="Models\League\LeagueRepository.cs" />
     <Compile Include="Models\Players\Player.cs" />
     <Compile Include="Models\Players\PlayerRepository.cs" />
     <Compile Include="Models\Players\IPlayerRepository.cs" />
-    <Compile Include="Models\Score.cs" />
-    <Compile Include="Models\Match.cs" />
+    <Compile Include="Models\Score\IScoreRepository.cs" />
+    <Compile Include="Models\Score\ScoreRepository.cs" />
+    <Compile Include="Models\Score\ScoreFilter.cs" />
+    <Compile Include="Models\Score\Score.cs" />
+    <Compile Include="Models\Match\Match.cs" />
     <Compile Include="Models\League\League.cs" />
     <Compile Include="Models\Season\SeasonFilter.cs" />
     <Compile Include="Models\Season\SeasonRepository.cs" />

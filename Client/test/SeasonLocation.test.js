@@ -1,6 +1,5 @@
 describe('Testing the season locations', function() {
   beforeEach(module('FifaLeagueApp'));
-  beforeEach(module('season'));
   // load the template
   beforeEach(module('templates'));
 

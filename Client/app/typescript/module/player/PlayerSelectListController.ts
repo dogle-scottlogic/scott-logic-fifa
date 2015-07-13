@@ -73,13 +73,15 @@ module FifaLeagueClient.Module.Player {
     public existAtLeast(selectParam:boolean):boolean{
       var self = this;
       var exist:boolean = false;
-      angular.forEach(self.scope.players, function(value: Directives.SelectablePlayerModel, key) {
-        if(value.selected == selectParam){
+      for(var key in self.scope.players){
+        if(self.scope.players[key].selected == selectParam){
           exist = true;
+          break;
         }
-      });
+      }
       return exist;
     }
 
   }
+
 }

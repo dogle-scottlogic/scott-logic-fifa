@@ -21,23 +21,8 @@ using FIFA.Server.Controllers;
 namespace FIFATests.ControllerTests
 {
     [TestClass]
-    public class leagueControllerTests
+    public class leagueControllerTests : AbstractControllerTest
     {
-
-        public static void fakeContext(ApiController controller)
-        {
-            // arrange
-            var config = new HttpConfiguration();
-            config.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
-            var request = new HttpRequestMessage(HttpMethod.Post, "http://localhost/api/League");
-            var route = config.Routes.MapHttpRoute("defaultAPI", "api/{controller}/{id}");
-            var routeData = new HttpRouteData(route, new HttpRouteValueDictionary(new { controller = "product" }));
-            controller.ControllerContext = new HttpControllerContext(config, routeData, request);
-            controller.Request = request;
-            controller.Url = new UrlHelper(request);
-            controller.Request.Properties[HttpPropertyKeys.HttpConfigurationKey] = config;
-            controller.Request.Properties[HttpPropertyKeys.HttpRouteDataKey] = routeData;
-        }
 
         // Method used to generate a league list
         public List<League> CreateLeagueList()

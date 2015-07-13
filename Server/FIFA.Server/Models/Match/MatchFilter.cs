@@ -7,13 +7,12 @@ using System.Web;
 
 namespace FIFA.Server.Models
 {
-
-    public class Match
+    public class MatchFilter
     {
-        [Key]
         public int Id { get; set; }
 
         public DateTime? Date { get; set; }
 
+        public int LeagueId;
     }
 }

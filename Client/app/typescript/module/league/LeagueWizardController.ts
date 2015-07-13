@@ -6,6 +6,7 @@ module FifaLeagueClient.Module.League {
       // variable shown
       countryId: number;
       playerSelection:Player.Directives.SelectablePlayerModel;
+      generateLeague: GenerateLeagueDTOModel;
       league: LeagueModel;
       mainService : GenerateLeagueService;
       wizardHandler:angular.mgoAngularWizard.WizardHandler;
@@ -17,7 +18,7 @@ module FifaLeagueClient.Module.League {
         super(scope);
         this.wizardHandler= wizardHandler;
         this.mainService = generateLeagueService;
-        this.league = new LeagueModel(null);
+        this.generateLeague = new GenerateLeagueDTOModel(null);
         this.showWizard = true;
     }
 
@@ -45,10 +46,10 @@ module FifaLeagueClient.Module.League {
     public validatePlayerSelectionStep():void{
         this.errors = {};
         var selectedPlayers = this.getListPlayers(true);
-        this.league.Players = selectedPlayers;
+        this.generateLeague.Players = selectedPlayers;
 
         // Pushing the datas on the server
-        this.mainService.generateLeague(this.league)
+        this.mainService.generateLeague(this.generateLeague)
           .then(this.handleGenerateLeagueSuccess)
           .catch(this.handleGenerateLeagueErrors);
     }

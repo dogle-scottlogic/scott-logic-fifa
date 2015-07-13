@@ -1,4 +1,4 @@
-<div ng-init="vm.fillCountries()">
+<div ng-init="vm.fillCountries()" cg-busy="vm.loadingPromise">
     <select class="form-control" ng-model="selectedcountry" ng-change="vm.select()"
             ng-options="country.Id as country.Name for country in vm.countries"
             ng-required='required'>

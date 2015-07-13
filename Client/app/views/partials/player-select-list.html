@@ -1,4 +1,4 @@
-<div>
+<div class="gridview" cg-busy="vm.loadingPromise">
     <table class="table table-striped table-bordered">
       <thead>
         <tr>
@@ -8,7 +8,7 @@
       </thead>
       <tbody>
         <tr ng-repeat="playerselection in players">
-          <td><div ng-hide="playerselection.selected">
+          <td width="50%"><div ng-hide="playerselection.selected">
             {{playerselection.player.Name}}
             <button ng-click="vm.selectPlayer(playerselection.player.Id)" type="button" class="btn btn-primary right btn-custom">Select</button>
           </div></td>

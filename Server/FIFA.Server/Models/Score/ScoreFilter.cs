@@ -7,19 +7,17 @@ using System.Web;
 
 namespace FIFA.Server.Models
 {
-    public class TeamPlayer
+    public class ScoreFilter
     {
-        [Key]
+
         public int Id { get; set; }
-        public int TeamId { get; set; }
+
+        public int MatchId { get; set; }
         public int PlayerId { get; set; }
 
-        [ForeignKey("TeamId")]
-        public Team Team { get; set; }
+        public int Goals { get; set; }
 
-        [ForeignKey("PlayerId")]
-        public Player Player { get; set; }
+        public Location Location { get; set; }
 
-        public virtual ICollection<League> Leagues { get; set; }
     }
 }

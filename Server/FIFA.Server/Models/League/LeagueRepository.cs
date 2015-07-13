@@ -50,7 +50,7 @@ namespace FIFA.Server.Models
 
         public async Task<League> Get(int id)
         {
-            League league = await db.Leagues.Where(l => l.Id == id).Include(s => s.Season).Include(p => p.Players).FirstAsync();
+            League league = await db.Leagues.Where(l => l.Id == id).Include(s => s.Season).FirstAsync();
             return league;
         }
 

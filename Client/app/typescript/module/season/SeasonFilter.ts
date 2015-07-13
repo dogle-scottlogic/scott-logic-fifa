@@ -19,12 +19,13 @@ module FifaLeagueClient.Module.Season {
 
         // Add the request with the names
         public getParameters(query:string):string{
+           this.query = query;
 
-            query = this.addRequestNumberParameter(query, "Id", this.Id);
-            query = this.addRequestParameter(query, "Name", this.Name);
-            query = this.addRequestNumberParameter(query, "CountryId", this.CountryId);
+           this.addRequestNumberParameter("Id", this.Id)
+              .addRequestParameter("Name", this.Name)
+              .addRequestNumberParameter("CountryId", this.CountryId);
 
-            return query;
+            return this.query;
         }
 
     }
