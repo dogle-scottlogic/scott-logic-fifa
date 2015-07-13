@@ -15,7 +15,10 @@ namespace FIFA.Server.Models
         // Get all the TeamPlayers
         public async Task<IEnumerable<TeamPlayer>> GetAll()
         {
-            return await db.TeamPlayers.ToListAsync();
+            IEnumerable<TeamPlayer> teamPlayers = await db.TeamPlayers
+                                                            .Include(tp => tp.Player)
+                                                            .Include(tp => tp.Team).ToListAsync();
+            return teamPlayers;
         }
 
         // Get one TeamPlayer by its ID
@@ -90,6 +93,23 @@ namespace FIFA.Server.Models
             }
 
             return query;
+        }
+
+        public async Task<IEnumerable<TeamPlayer>> GetAllWithUnplayedMatches(Location location) {
+            return await db.TeamPlayers.Where(tp => tp.Scores.Any(s => s.Match.Played == false && s.Location == location))
+                                       .Include(tp => tp.Player)
+                                       .Include(tp => tp.Team).ToListAsync();
+        }
+
+        public async Task<IEnumerable<TeamPlayer>> GetAvailableAwayOpponents(int id)
+        { 
+            // Get all teamPlayers which is id not <id> that have at least one unplayed match with the player with <id>
+           return await db.TeamPlayers.Where(tp => tp.Id != id && 
+                                                tp.Scores.Any(sc => sc.Match.Played == false 
+                                                    && sc.Location == Location.Away
+                                                    && sc.Match.Scores.Any(sc2 => sc2.TeamPlayerId == id)))
+                                                    .Include(tp => tp.Player)
+                                                    .Include(tp => tp.Team).ToListAsync();
         }
 
         public void Dispose(bool disposing)

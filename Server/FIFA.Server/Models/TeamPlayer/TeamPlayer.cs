@@ -21,5 +21,6 @@ namespace FIFA.Server.Models
         public Player Player { get; set; }
 
         public virtual ICollection<League> Leagues { get; set; }
+        public virtual ICollection<Score> Scores { get; set; }
     }
 }

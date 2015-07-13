@@ -21,13 +21,13 @@ namespace FIFA.Server.Models
         [ForeignKey("Match")]
         public int MatchId { get; set; }
 
-        [ForeignKey("Player")]
-        public int PlayerId { get; set; }
+        [ForeignKey("TeamPlayer")]
+        public int TeamPlayerId { get; set; }
         
         public int Goals { get; set; }
 
         public virtual Match Match { get; set; }
-        public virtual Player Player { get; set; }
+        public virtual TeamPlayer TeamPlayer { get; set; }
 
         [Range(1, 2), Display(Name = "Location")]
         public Location Location { get; set; }

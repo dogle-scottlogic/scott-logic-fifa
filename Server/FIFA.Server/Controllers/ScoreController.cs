@@ -13,92 +13,103 @@ using FIFA.Server.Models;
 
 namespace FIFA.Server.Controllers
 {
-    public class ScoreController : ApiController
+    public class ScoreController : AbstractCRUDAPIController<Score, int, ScoreFilter>
     {
         private FIFAServerContext db = new FIFAServerContext();
 
+        public ScoreController(IScoreRepository repository) : base(repository) { }
+
+        /// <summary>
+        ///     Retrieve a list of scores
+        /// </summary>
+        /// <returns>Return a list of score models</returns>
+        /// 
         // GET api/Score
-        public IQueryable<Score> GetScores()
+        [ResponseType(typeof(IEnumerable<Score>))]
+        public async Task<HttpResponseMessage> GetAll([FromUri] ScoreFilter filter = null)
         {
-            return db.Scores;
+            IEnumerable<Score> list;
+
+            if (filter == null)
+            {
+                list = await base.repository.GetAll();
+            }
+            else
+            {
+                list = await base.repository.GetAllWithFilter(filter);
+            }
+
+            return Request.CreateResponse(HttpStatusCode.OK, list);
         }
 
+        /// <summary>
+        ///     Retrieves a specific score by its ID
+        /// </summary>
+        /// <param name="id">The ID of the score.</param>
+        /// <returns>Return a score model if found</returns>
+        /// 
         // GET api/Score/5
         [ResponseType(typeof(Score))]
-        public async Task<IHttpActionResult> GetScore(int id)
+        public async Task<HttpResponseMessage> Get(int id)
         {
-            Score score = await db.Scores.FindAsync(id);
-            if (score == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(score);
+            return await base.Get(id);
         }
 
-        // PUT api/Score/5
-        public async Task<IHttpActionResult> PutScore(int id, Score score)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            if (id != score.Id)
-            {
-                return BadRequest();
-            }
-
-            db.Entry(score).State = EntityState.Modified;
-
-            try
-            {
-                await db.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ScoreExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return StatusCode(HttpStatusCode.NoContent);
-        }
-
+        /// <summary>
+        ///     Create a new score
+        /// </summary>
+        /// <param name="item">The score to add without id</param>
+        /// <returns>Return a Score model if created and its uri to retrieve it</returns>
+        /// 
         // POST api/Score
         [ResponseType(typeof(Score))]
-        public async Task<IHttpActionResult> PostScore(Score score)
+        public async Task<HttpResponseMessage> Post(Score item)
         {
-            if (!ModelState.IsValid)
+            if (item != null && ScoreExists(item.Id))
             {
-                return BadRequest(ModelState);
+                return this.createErrorScoreExists();
             }
-
-            db.Scores.Add(score);
-            await db.SaveChangesAsync();
-
-            return CreatedAtRoute("DefaultApi", new { id = score.Id }, score);
+            else
+            {
+                return await base.Post(item);
+            }
         }
 
+        /// <summary>
+        ///     Update a Score by its ID
+        /// </summary>
+        /// <param name="id">The ID of the Score.</param>
+        /// <param name="item">The modified Score</param>
+        /// <returns>Return the modified Score if no error</returns>
+        /// 
+        // PUT api/Score/5
+        [ResponseType(typeof(Score))]
+        public async Task<HttpResponseMessage> Put(int id, Score item)
+        {
+            if (item != null && ScoreExists(item.Id))
+            {
+                return this.createErrorScoreExists();
+            }
+            else
+            {
+                return await base.Put(id, item);
+            }
+        }
+
+        /// <summary>
+        ///     Delete a Score by its ID
+        /// </summary>
+        /// <param name="id">The ID of the Score.</param>
+        /// <returns>
+        /// Status 200 if deleted correctly
+        /// Status 404 if not (with Score not found message)
+        /// </returns>
+        /// 
         // DELETE api/Score/5
         [ResponseType(typeof(Score))]
-        public async Task<IHttpActionResult> DeleteScore(int id)
+        public async Task<HttpResponseMessage> Delete(int id)
         {
-            Score score = await db.Scores.FindAsync(id);
-            if (score == null)
-            {
-                return NotFound();
-            }
-
-            db.Scores.Remove(score);
-            await db.SaveChangesAsync();
-
-            return Ok(score);
+            return await base.Delete(id);
         }
 
         protected override void Dispose(bool disposing)
@@ -113,6 +124,15 @@ namespace FIFA.Server.Controllers
         private bool ScoreExists(int id)
         {
             return db.Scores.Count(e => e.Id == id) > 0;
+        }
+
+        /**
+         * Creating an error message indicating that the Score with the id already exists in DB
+         **/
+        private const string scoreExistsError = "The score id already exists";
+        private HttpResponseMessage createErrorScoreExists()
+        {
+            return Request.CreateErrorResponse(HttpStatusCode.BadRequest, scoreExistsError);
         }
     }
 }

@@ -14,5 +14,7 @@ namespace FIFA.Server.Models
         public DateTime? Date { get; set; }
 
         public int LeagueId;
+        
+        public bool Played { get; set; }
     }
 }

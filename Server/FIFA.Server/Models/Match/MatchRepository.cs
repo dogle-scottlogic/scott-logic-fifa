@@ -98,7 +98,16 @@ namespace FIFA.Server.Models
 
             return true;
         }
-        
+
+        // Get the match corresponding to first TeamPlayerId being the home
+        // and the second one being the away
+        public async Task<Match> GetMatchByPlayers(int homePlayerId, int awayPlayerId) {
+            Match result = await db.Matches.Where(m => m.Scores.Any(s => s.TeamPlayerId == homePlayerId && s.Location == Location.Home) &&
+                                            m.Scores.Any(s => s.TeamPlayerId == awayPlayerId && s.Location == Location.Away)).FirstOrDefaultAsync();
+
+            return result;
+        }
+
         public void Dispose(bool disposing)
         {
             if (disposing)
