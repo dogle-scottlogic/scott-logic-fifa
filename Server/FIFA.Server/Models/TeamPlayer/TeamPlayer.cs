@@ -20,6 +20,6 @@ namespace FIFA.Server.Models
         [ForeignKey("PlayerId")]
         public Player Player { get; set; }
 
-        public virtual ICollection<Season> Seasons { get; set; }
+        public virtual ICollection<League> Leagues { get; set; }
     }
 }

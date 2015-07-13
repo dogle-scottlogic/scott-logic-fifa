@@ -20,10 +20,21 @@ module FifaLeagueClient.Module.Season {
 
         // Get a season list, execute successCallBack if it is a success and errorCallBack if it is a failure
         public getSeasonList(): ng.IPromise<SeasonModel[]> {
-            var deferred = this.qService.defer();
+            return this.getSeasonFilteredList(null);
+        }
 
+        // Get a filtered season list, execute successCallBack if it is a success and errorCallBack if it is a failure
+        public getSeasonFilteredList(seasonFilter:SeasonFilter): ng.IPromise<SeasonModel[]> {
+            var deferred = this.qService.defer();
+            var getParams = "";
+            if(seasonFilter!= null){
+                getParams = seasonFilter.getParameters(getParams);
+                if(getParams!= ""){
+                    getParams = "?"+getParams;
+                }
+            }
             var self = this;
-            this.httpService.get(this.apiURL)
+            this.httpService.get(this.apiURL+getParams)
                 .success(function (data:[String], status, headers, config) {
                     var seasonList =  [];
                     for(var i = 0; i<data.length; i++){
@@ -37,6 +48,7 @@ module FifaLeagueClient.Module.Season {
 
             return deferred.promise;
         }
+
 
         // Get the detail of a season by its ID
         public getSeason(ID): ng.IPromise<SeasonModel>{

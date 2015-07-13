@@ -6,113 +6,169 @@ using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 using FIFA.Server.Models;
+using System.Threading.Tasks;
+using FIFA.Server.Infrastructure;
 
 namespace FIFA.Server.Controllers
 {
-    public class LeagueController : ApiController
-    {
-        private FIFAServerContext db = new FIFAServerContext();
 
-        // GET api/League
-        public IQueryable<League> GetLeagues()
+    [ConfigurableCorsPolicy("localhost")]
+    public class LeagueController : AbstractCRUDAPIController<League, int, LeagueFilter>
+    {
+
+        ISeasonRepository seasonRepository;
+
+        /// <summary>
+        ///     Constructor
+        /// </summary>
+        /// <returns></returns>
+        public LeagueController(ILeagueRepository leagueRepository, ISeasonRepository seasonRepository)
+            : base(leagueRepository)
         {
-            return db.Leagues.Include(s => s.Season).Include(p => p.Players);
+            this.seasonRepository = seasonRepository;
         }
 
+        /// <summary>
+        ///     Retrieve a list of leagues
+        /// </summary>
+        /// <returns>Return a list of leagueModel</returns>
+        /// 
+        // GET api/League
+        [ResponseType(typeof(IEnumerable<League>))]
+        public async Task<HttpResponseMessage> GetAll([FromUri] LeagueFilter leagueFilter = null)
+        {
+            IEnumerable<League> list;
+
+            if (leagueFilter == null)
+            {
+                list = await base.repository.GetAll();
+            }
+            else
+            {
+                list = await base.repository.GetAllWithFilter(leagueFilter);
+            }
+
+            return Request.CreateResponse(HttpStatusCode.OK, list);
+        }
+
+        /// <summary>
+        ///     Retrieves a specific league by it's ID
+        /// </summary>
+        /// <param name="id">The ID of the league.</param>
+        /// <returns>Return a leagueModel if found</returns>
+        /// 
         // GET api/League/5
         [ResponseType(typeof(League))]
-        public async Task<IHttpActionResult> GetLeague(int id)
+        public async Task<HttpResponseMessage> Get(int id)
         {
-            League league = await db.Leagues.Where(l => l.Id == id).Include(s => s.Season).Include(p => p.Players).FirstAsync();
-            if (league == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(league);
+            return await base.Get(id);
         }
 
-        // PUT api/League/5
-        public async Task<IHttpActionResult> PutLeague(int id, League league)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            if (id != league.Id)
-            {
-                return BadRequest();
-            }
-
-            db.Entry(league).State = EntityState.Modified;
-
-            try
-            {
-                await db.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!LeagueExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return StatusCode(HttpStatusCode.NoContent);
-        }
-
+        /// <summary>
+        ///     Create a new league
+        /// </summary>
+        /// <param name="item">The league to add without id</param>
+        /// <returns>Return a leagueModel if created and its uri to retrieve it</returns>
+        /// 
         // POST api/League
         [ResponseType(typeof(League))]
-        public async Task<IHttpActionResult> PostLeague(League league)
+        public async Task<HttpResponseMessage> Post(League item)
         {
-            if (!ModelState.IsValid)
+            // try to get the season, if it returns null, send an error
+            if (!await this.isSeasonExist(item))
             {
-                return BadRequest(ModelState);
+                return this.createErrorResponseSeasonDoesntExists();
             }
-
-            db.Leagues.Add(league);
-            await db.SaveChangesAsync();
-
-            return CreatedAtRoute("DefaultApi", new { id = league.Id }, league);
+            else if (await ((ILeagueRepository)repository).isLeagueNameExist(item.SeasonId, item.Name, null))
+            {
+                return this.createErrorResponseLeagueNameExists();
+            }
+            else
+            {
+                return await base.Post(item);
+            }
         }
 
+        /// <summary>
+        ///     Update a league by its ID
+        /// </summary>
+        /// <param name="id">The ID of the league.</param>
+        /// <param name="item">The modified league</param>
+        /// <returns>Return the modified leagueModel if no error</returns>
+        /// 
+        // PUT api/League/5
+        [ResponseType(typeof(League))]
+        public async Task<HttpResponseMessage> Put(int id, League item)
+        {
+            // try to get the season, if it returns null, send an error
+            if (!await this.isSeasonExist(item))
+            {
+                return this.createErrorResponseSeasonDoesntExists();
+            }
+            else if (await ((ILeagueRepository)repository).isLeagueNameExist(item.SeasonId, item.Name, id))
+            {
+                return this.createErrorResponseLeagueNameExists();
+            }
+            else
+            {
+                return await base.Put(id, item);
+            }
+        }
+
+        /// <summary>
+        ///     Delete a league by its ID
+        /// </summary>
+        /// <param name="id">The ID of the league.</param>
+        /// <returns>
+        /// Status 200 if deleted correctly
+        /// Status 404 if not (with league not found message)
+        /// </returns>
+        /// 
         // DELETE api/League/5
         [ResponseType(typeof(League))]
-        public async Task<IHttpActionResult> DeleteLeague(int id)
+        public async Task<HttpResponseMessage> Delete(int id)
         {
-            League league = await db.Leagues.FindAsync(id);
-            if (league == null)
+            return await base.Delete(id);
+        }
+
+        /**
+         * Method verifying if a season exist in the item
+         **/
+        private async Task<bool> isSeasonExist(League item)
+        {
+            if (item == null)
             {
-                return NotFound();
+                return false;
             }
-
-            db.Leagues.Remove(league);
-            await db.SaveChangesAsync();
-
-            return Ok(league);
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
+            else
             {
-                db.Dispose();
+                Season season = await this.seasonRepository.Get(item.SeasonId);
+                return (season != null);
+
             }
-            base.Dispose(disposing);
         }
 
-        private bool LeagueExists(int id)
+        /**
+         * Creating an error message indicating that the season doesn't exist
+         **/
+        private const string seasonDoesntExistsError = "The season doesn't exist";
+        private HttpResponseMessage createErrorResponseSeasonDoesntExists()
         {
-            return db.Leagues.Count(e => e.Id == id) > 0;
+            return Request.CreateErrorResponse(HttpStatusCode.BadRequest, seasonDoesntExistsError);
         }
+
+        /**
+         * Creating an error message indicating that the league name already exists for this season
+         **/
+        private const string leagueNameExistsError = "The league name already exists for this season";
+        private HttpResponseMessage createErrorResponseLeagueNameExists()
+        {
+            return Request.CreateErrorResponse(HttpStatusCode.BadRequest, leagueNameExistsError);
+        }
+
+
     }
 }

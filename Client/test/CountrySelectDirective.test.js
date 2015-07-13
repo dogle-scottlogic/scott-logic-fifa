@@ -3,10 +3,8 @@ describe('Testing the CountrySelectDirective', function() {
       $rootScope,
       selectedcountry;
 
-  // Load the country module, which contains the directive
-  beforeEach(module('country'));
-  // Load the config
-  beforeEach(module(FifaLeagueClient.Module.Common.devConfig));
+  // Load the FifaLeagueApp
+  beforeEach(module('FifaLeagueApp'));
 
   // load the template
   beforeEach(module('templates'));

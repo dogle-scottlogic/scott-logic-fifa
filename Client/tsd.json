@@ -16,6 +16,12 @@
     },
     "angularjs/angular-route.d.ts": {
       "commit": "4ba73ef59f93e38a70573cfc46375de37b004635"
+    },
+    "angular-wizard/angular-wizard.d.ts": {
+      "commit": "be03157bace6e6465e63f13073d7b68e8ea1303c"
+    },
+    "underscore/underscore.d.ts": {
+      "commit": "be03157bace6e6465e63f13073d7b68e8ea1303c"
     }
   }
 }

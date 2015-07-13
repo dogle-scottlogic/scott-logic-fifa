@@ -16,6 +16,5 @@ namespace FIFA.Server.Models
 
         public bool Archived { get; set; }
 
-        public virtual ICollection<League> Leagues { get; set; }
     }
 }

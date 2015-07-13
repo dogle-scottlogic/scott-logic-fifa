@@ -1,6 +1,5 @@
 describe('Testing the season locations', function() {
   beforeEach(module('FifaLeagueApp'));
-  beforeEach(module('season'));
   // load the template
   beforeEach(module('templates'));
 
@@ -19,8 +18,8 @@ describe('Testing the season locations', function() {
             // Fake seasonService Implementation returning a promise
         $provide.value('countryService', countryService);
       });
-      // defining the method getSeasonList for the service used by the controller
-      seasonService.getSeasonList = function(){
+
+      seasonService.getSeasonFilteredList = function(){
       }
 
       countryService.getCountryList = function(){
@@ -58,7 +57,7 @@ describe('Testing the season locations', function() {
     it('Location /seasons shall call seasonService.getSeasonList() in order to init the list', function() {
 
       // Spying the seasonService for the method getSeasonList which will return a promise
-      spyOn(seasonService, 'getSeasonList').and.returnValue(defer.promise);
+      spyOn(seasonService, 'getSeasonFilteredList').and.returnValue(defer.promise);
 
       // Spying the countryService for the method getSeasonList which will return a promise
       spyOn(countryService, 'getCountryList').and.returnValue(defer.promise);
@@ -72,7 +71,7 @@ describe('Testing the season locations', function() {
       rootScope.$digest();
 
       // Verfiying that on init the getSeasonList of the service is called
-      expect(seasonService.getSeasonList).toHaveBeenCalled();
+      expect(seasonService.getSeasonFilteredList).toHaveBeenCalled();
 
       // Verfiying that on init the getCountryList of the service is called
       expect(countryService.getCountryList).toHaveBeenCalled();

@@ -66,7 +66,30 @@ namespace FIFA.Server.Models
 
         public async Task<IEnumerable<Team>> GetAllWithFilter(TeamFilter filter) { 
             // do nothing with filter atm
-            return await db.Teams.Include(t => t.Country).ToListAsync();
+            return await FilterTeams(db.Teams.Include(t => t.Country), filter).ToListAsync();
+        }
+
+        private IQueryable<Team> FilterTeams(IQueryable<Team> query, TeamFilter filter)
+        {
+            if (filter != null)
+            {
+                if (filter.Id != 0)
+                {
+                    query = query.Where(m => m.Id == filter.Id);
+                }
+
+                if (!String.IsNullOrEmpty(filter.Name))
+                {
+                    query = query.Where(m => m.Name.Contains(filter.Name));
+                }
+
+                if (filter.CountryId != null)
+                {
+                    query = query.Where(m => m.CountryId == filter.CountryId);
+                }
+            }
+
+            return query;
         }
 
         public void Dispose(bool disposing)

@@ -45,6 +45,12 @@ namespace FIFA.Server.Models
                 {
                     query = query.Where(m => m.Name.Contains(filter.Name));
                 }
+
+                if (filter.CountryId != 0)
+                {
+                    query = query.Where(m => m.CountryId == filter.CountryId);
+                }
+
             }
 
             return query;
