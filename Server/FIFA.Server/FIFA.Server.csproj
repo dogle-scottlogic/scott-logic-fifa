@@ -149,6 +149,9 @@
     <EmbeddedResource Include="Migrations\201507100900276_update.resx">
       <DependentUpon>201507100900276_update.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201507101440297_nullable_match_date.resx">
+      <DependentUpon>201507101440297_nullable_match_date.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
@@ -204,6 +207,10 @@
     <Compile Include="Migrations\201507100900276_update.cs" />
     <Compile Include="Migrations\201507100900276_update.Designer.cs">
       <DependentUpon>201507100900276_update.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201507101440297_nullable_match_date.cs" />
+    <Compile Include="Migrations\201507101440297_nullable_match_date.Designer.cs">
+      <DependentUpon>201507101440297_nullable_match_date.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Country\CountryFilter.cs" />
