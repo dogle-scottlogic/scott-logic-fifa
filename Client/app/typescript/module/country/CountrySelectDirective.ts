@@ -18,7 +18,7 @@ module FifaLeagueClient.Module.Country.Directives {
             },
             controller: CountrySelectController,
             controllerAs: "vm",
-            templateUrl: 'views/partials/country-select.html'
+            templateUrl: 'views/country/country-select.html'
         }
     }
 

@@ -1,0 +1,25 @@
+<div class="gridview" ng-init="vm.showSeasons()" cg-busy="vm.loadingPromise">
+    <h2>Seasons</h2>
+    <a href="#/seasons/add" class="btn btn-primary right">Add Country</a>
+    <div class="clear"></div>
+    <div class="alert alert-danger" role="alert" ng-repeat="value in vm.errors['item.Global']">{{value}}</div>
+    <table class="table table-striped table-bordered">
+        <thead>
+          <tr>
+              <th>Country</th>
+              <th>Name</th>
+              <th></th>
+          </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="season in vm.seasons">
+            <td>{{season.SeasonCountry.Name}}</td>
+            <td>{{season.Name}}</td>
+            <td align="right">
+                <a ng-href="#/seasons/edit/{{season.Id}}" type="button" class="btn btn-primary middle btn-custom">Edit</a>
+                    <button ng-click="vm.deleteSeason(season.Id)" type="button" class="btn btn-danger right btn-custom">Delete</button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>

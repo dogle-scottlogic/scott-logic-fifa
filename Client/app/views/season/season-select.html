@@ -1,7 +1,11 @@
-<div ng-init="vm.fillSeasons()">
+<div ng-init="vm.getSeasonList()" cg-busy="vm.loadingPromise">
+
+    <div class="clear"></div>
+    <div class="alert alert-danger" role="alert" ng-repeat="value in vm.errors['item.Global']">{{value}}</div>
     <select class="form-control" ng-model="selectedseason" ng-change="vm.select()"
             ng-options="season.Id as season.Name for season in vm.seasons"
             ng-required='required'>
         <option value=""></option>
     </select>
+
 </div>
