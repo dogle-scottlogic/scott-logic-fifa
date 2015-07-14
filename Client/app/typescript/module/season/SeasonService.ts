@@ -7,6 +7,7 @@ module FifaLeagueClient.Module.Season {
 
         // URL used to reach the season API
         apiURL:string;
+        apiURLWithSlash:string;
 
         static $inject = [
             "$httpService", '$q'
@@ -15,7 +16,8 @@ module FifaLeagueClient.Module.Season {
         constructor($http: ng.IHttpService, config: Common.Config, $q: ng.IQService) {
             this.httpService = $http;
             this.qService = $q;
-            this.apiURL = config.backend+"api/Season/";
+            this.apiURL = config.backend+"api/Season";
+            this.apiURLWithSlash = this.apiURL+"/";
         }
 
         // Get a season list, execute successCallBack if it is a success and errorCallBack if it is a failure
@@ -27,14 +29,20 @@ module FifaLeagueClient.Module.Season {
         public getSeasonFilteredList(seasonFilter:SeasonFilter): ng.IPromise<SeasonModel[]> {
             var deferred = this.qService.defer();
             var getParams = "";
+            var url;
             if(seasonFilter!= null){
                 getParams = seasonFilter.getParameters(getParams);
                 if(getParams!= ""){
-                    getParams = "?"+getParams;
+                    url = this.apiURL +"?"+ getParams;
+                }else{
+                  url = this.apiURLWithSlash;
                 }
+            }else{
+              url = this.apiURLWithSlash;
             }
+
             var self = this;
-            this.httpService.get(this.apiURL+getParams)
+            this.httpService.get(url)
                 .success(function (data:[String], status, headers, config) {
                     var seasonList =  [];
                     for(var i = 0; i<data.length; i++){
@@ -54,7 +62,7 @@ module FifaLeagueClient.Module.Season {
         public getSeason(ID): ng.IPromise<SeasonModel>{
             var deferred = this.qService.defer();
             var self = this;
-            this.httpService.get(this.apiURL + ID).success(function (data, status, headers, config) {
+            this.httpService.get(this.apiURLWithSlash + ID).success(function (data, status, headers, config) {
                 var season = self.convertDataToSeason(data);
                 deferred.resolve(season);
             }).error(function (data, status, headers, config) {
@@ -68,7 +76,7 @@ module FifaLeagueClient.Module.Season {
             var deferred = this.qService.defer();
             var self = this;
 
-            this.httpService.post(this.apiURL, season).success(function (data, status, headers, config) {
+            this.httpService.post(this.apiURLWithSlash, season).success(function (data, status, headers, config) {
                 var season = self.convertDataToSeason(data);
                 deferred.resolve(season);
             }).error(function (data, status, headers, config) {
@@ -81,7 +89,7 @@ module FifaLeagueClient.Module.Season {
         public updateSeason(season:SeasonModel): ng.IPromise<SeasonModel> {
             var deferred = this.qService.defer();
             var self = this;
-            this.httpService.put(this.apiURL + season.Id, season).success(function (data, status, headers, config) {
+            this.httpService.put(this.apiURLWithSlash + season.Id, season).success(function (data, status, headers, config) {
                 var season = self.convertDataToSeason(data);
                 deferred.resolve(season);
             }).error(function (data, status, headers, config) {
@@ -94,7 +102,7 @@ module FifaLeagueClient.Module.Season {
         public deleteSeason(Id) : ng.IPromise<boolean> {
             var deferred = this.qService.defer();
             var self = this;
-            this.httpService.delete(this.apiURL + Id).success(function (data, status, headers, config) {
+            this.httpService.delete(this.apiURLWithSlash + Id).success(function (data, status, headers, config) {
                 deferred.resolve(true);
             }).error(function (data, status, headers, config) {
                 deferred.reject(config);

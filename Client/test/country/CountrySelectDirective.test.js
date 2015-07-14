@@ -46,13 +46,13 @@ describe('Testing the CountrySelectDirective', function() {
 
       $rootScope.$digest();
       verifyPromiseAndFlush(element.isolateScope().vm, $httpBackend);
+
       // Check that the compiled element contains the templated content
-      expect(element.html()).toContain(
-          '<option value="" class="" selected="selected"></option>' +
-          '<option value="number:1" label="France">France</option>' +
-          '<option value="number:2" label="Scotland">Scotland</option>' +
-          '<option value="number:3" label="Romania">Romania</option>' +
-          '<option value="number:4" label="Italy">Italy</option>');
+      expect(element.html()).toContain('France');
+      expect(element.html()).toContain('Scotland');
+      expect(element.html()).toContain('Romania');
+      expect(element.html()).toContain('Italy');
+
     });
 
     it('Pre-selected country', function() {
@@ -63,13 +63,8 @@ describe('Testing the CountrySelectDirective', function() {
 
       $rootScope.$digest();
       verifyPromiseAndFlush(element.isolateScope().vm, $httpBackend);
-      // Check that the compiled element contains the templated content
-      expect(element.html()).toContain(
-          '<option value="" class="" selected="selected"></option>' +
-          '<option value="number:1" label="France" selected="selected">France</option>' +
-          '<option value="number:2" label="Scotland">Scotland</option>' +
-          '<option value="number:3" label="Romania">Romania</option>' +
-          '<option value="number:4" label="Italy">Italy</option>');
+
+      expect(element.isolateScope().selectedcountry).toBe(scope.selectedCountry);
     });
 
     it('Selection return scope', function() {
@@ -81,16 +76,10 @@ describe('Testing the CountrySelectDirective', function() {
       $rootScope.$digest();
       verifyPromiseAndFlush(element.isolateScope().vm, $httpBackend);
 
-      expect(element.html()).toContain(
-          '<option value="" class="" selected="selected"></option>' +
-          '<option value="number:1" label="France" selected="selected">France</option>' +
-          '<option value="number:2" label="Scotland">Scotland</option>' +
-          '<option value="number:3" label="Romania">Romania</option>' +
-          '<option value="number:4" label="Italy">Italy</option>');
       element.isolateScope().selectedcountry = 2;
       $rootScope.$digest();
 
-      expect(scope.selectedCountry).toBe(2);
+      expect(scope.selectedCountry).toBe(element.isolateScope().selectedcountry);
 
     });
 
@@ -115,7 +104,7 @@ describe('Testing the CountrySelectDirective', function() {
 
       $rootScope.$digest();
 
-      expect(countrySelected).toBe(2);
+      expect(countrySelected).toBe(element.isolateScope().selectedcountry);
 
     });
 

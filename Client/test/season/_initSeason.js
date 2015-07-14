@@ -51,6 +51,25 @@ season_mockHTTPBackend = function(config, $httpBackend, $q, dataRepository){
 
         });
 
+
+    $httpBackend.whenGET(config.backend+"api/Season?CountryId=1")
+        .respond(function (method, url, data, headers) {
+
+            var splitedURL = url.split("=");
+            var IdToGet = parseInt(splitedURL[splitedURL.length -1]);
+
+            var item = [];
+
+            for(var i=0; i<dataRepository.length;i++)
+            {
+                var season = dataRepository[i];
+                if (season.CountryId == IdToGet) {
+                    item.push(season);
+                }
+            }
+            return [200,item];
+        });
+
     $httpBackend.whenPOST(config.backend+"api/Season/")
         .respond(function (method, url, data, headers) {
 

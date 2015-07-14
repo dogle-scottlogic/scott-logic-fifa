@@ -17,11 +17,6 @@ module FifaLeagueClient {
       $routeProvider.when('/', {
           templateUrl: 'views/partials/dashboard.html'
         })
-        .when('/countries', {
-          templateUrl: 'views/countries.html',
-          controller: Module.Country.CountryController,
-          controllerAs: 'vm'
-        })
         .when('/seasons', {
           templateUrl: 'views/seasons.html',
           controller: Module.Season.SeasonController,

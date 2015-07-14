@@ -22,7 +22,7 @@ module.exports = function(config) {
       'lib/angular-busy/angular-busy.js',
       'lib/angular-wizard/dist/angular-wizard.js',
       'app/leagueManager.js',
-      'test/*.js',
+      'test/**/*.js',
       // Loading the html files
       'app/views/**/*.html'
     ],
