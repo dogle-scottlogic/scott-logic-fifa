@@ -3,14 +3,14 @@
 module FifaLeagueClient.Module.Team {
 	export class TeamController extends Common.Controllers.AbstractController {
 		teamService: TeamService;
-		
+
 		teams: TeamModel[];
 
 		static $inject = ["$scope", 'teamService', '$location'];
 
 		constructor(scope, teamService : TeamService, location: ng.ILocationService){
 			super(scope);
-			this.teamService = teamService;	
+			this.teamService = teamService;
 			this.teams = [];
 		}
 
@@ -20,7 +20,7 @@ module FifaLeagueClient.Module.Team {
 
 		public getTeamList = () =>{
 			this.errors = {};
-			this.loadingPromise = 
+			this.loadingPromise =
 				this.teamService.getTeamList()
 					.then(this.onGetTeamsSuccess)
 					.catch(this.onError);
@@ -29,7 +29,7 @@ module FifaLeagueClient.Module.Team {
 		protected onGetTeamsSuccess = (teams: TeamModel[]) => {
 			this.teams = teams;
 		}
-		
+
 		protected onError = (config) => {
 			this.errors = config.errors;
 		}

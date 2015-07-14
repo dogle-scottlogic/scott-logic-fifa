@@ -1,6 +1,6 @@
-/// <reference path="../common/controllers/AbstractController.ts" />
+/// <reference path="../../common/controllers/AbstractController.ts" />
 
-module FifaLeagueClient.Module.Country {
+module FifaLeagueClient.Module.Country.Deprecated {
   export class CountryController extends Common.Controllers.AbstractController {
 
       scope;

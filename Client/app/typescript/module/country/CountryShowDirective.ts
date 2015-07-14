@@ -3,7 +3,7 @@ module FifaLeagueClient.Module.Country.Directives {
     countryModule.directive("countryshow",countryShowDirective);
 
     interface IMyScope extends ng.IScope {
-        vm : CountryController;
+        vm : CountryShowController;
         countryid:number;
     }
 
@@ -13,7 +13,7 @@ module FifaLeagueClient.Module.Country.Directives {
             scope: {
                 countryid:'='
             },
-            controller: CountryController,
+            controller: CountryShowController,
             controllerAs: "vm",
             templateUrl: 'views/partials/country-show.html',
             link: function (scope:IMyScope, $elm, $attr)
