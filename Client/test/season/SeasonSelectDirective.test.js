@@ -1,8 +1,7 @@
 describe('Testing the SeasonSelectDirective', function() {
   var $compile,
       $rootScope,
-      selectedseason,
-      filtercountry;
+      selectedseason;
 
   // Load the FifaLeagueApp
   beforeEach(module('FifaLeagueApp'));
@@ -14,7 +13,7 @@ describe('Testing the SeasonSelectDirective', function() {
 
   var dataRepository;
 
-  // Mocking the selection service
+  // Mocking the season service
   beforeEach(function() {
 
     dataRepository = season_buildDataRepository();
@@ -47,29 +46,31 @@ describe('Testing the SeasonSelectDirective', function() {
 
       $rootScope.$digest();
       verifyPromiseAndFlush(element.isolateScope().vm, $httpBackend);
+
       // Check that the compiled element contains the templated content
       expect(element.html()).toContain('Ligue 1');
       expect(element.html()).toContain('Ligue 2');
       expect(element.html()).toContain('League 1');
       expect(element.html()).toContain('League 2');
+
     });
 
     it('Pre-selected season', function() {
       var scope = $rootScope.$new();
-      scope.selectedseason = 1;
-      var html = angular.element("<seasonselect selectedseason='selectedseason'></seasonselect>");
+      scope.selectedSeason = 1;
+      var html = angular.element('<seasonselect selectedseason="selectedSeason"></seasonselect>');
       var element = $compile(html)(scope);
 
       $rootScope.$digest();
       verifyPromiseAndFlush(element.isolateScope().vm, $httpBackend);
 
-      expect(element.isolateScope().selectedseason).toBe(scope.selectedseason);
+      expect(element.isolateScope().selectedseason).toBe(scope.selectedSeason);
     });
 
     it('Selection return scope', function() {
       var scope = $rootScope.$new();
-      scope.selectedseason = 1;
-      var html = angular.element("<seasonselect selectedseason='selectedseason'></seasonselect>");
+      scope.selectedSeason = 1;
+      var html = angular.element('<seasonselect selectedseason="selectedSeason"></seasonselect>');
       var element = $compile(html)(scope);
 
       $rootScope.$digest();
@@ -78,10 +79,9 @@ describe('Testing the SeasonSelectDirective', function() {
       element.isolateScope().selectedseason = 2;
       $rootScope.$digest();
 
-      expect(scope.selectedseason).toBe(element.isolateScope().selectedseason);
+      expect(scope.selectedSeason).toBe(element.isolateScope().selectedseason);
 
     });
-
 
     it('Selection callback', function() {
       var scope = $rootScope.$new();
@@ -104,6 +104,29 @@ describe('Testing the SeasonSelectDirective', function() {
       $rootScope.$digest();
 
       expect(seasonSelected).toBe(element.isolateScope().selectedseason);
+
+    });
+
+    it('Country filter after initialized', function() {
+      var scope = $rootScope.$new();
+
+      // defining the directive which call back to scope.triggerselect function
+      var html = angular.element('<seasonselect filtercountry="filtercountry"></seasonselect>');
+      var element = $compile(html)(scope);
+
+      $rootScope.$digest();
+      verifyPromiseAndFlush(element.isolateScope().vm, $httpBackend);
+      expect(element.html()).toContain('Ligue 1');
+      expect(element.html()).toContain('Ligue 2');
+      expect(element.html()).toContain('League 1');
+
+      // After the initialisation, we change the filtercountry so the League 1 shall disappear
+      scope.filtercountry=1;
+      $rootScope.$digest();
+      verifyPromiseAndFlush(element.isolateScope().vm, $httpBackend);
+      expect(element.html()).toContain('Ligue 1');
+      expect(element.html()).toContain('Ligue 2');
+      expect(element.html()).not.toContain('League 1');
 
     });
 

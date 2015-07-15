@@ -16,12 +16,7 @@ module FifaLeagueClient {
     function routes($routeProvider: ng.route.IRouteProvider){
       $routeProvider.when('/', {
           templateUrl: 'views/partials/dashboard.html'
-        })
-        .when('/seasons', {
-          templateUrl: 'views/seasons.html',
-          controller: Module.Season.SeasonController,
-          controllerAs: 'vm'
-          }).when('/teams', {
+        }).when('/teams', {
             templateUrl: 'views/team/teams.html',
             controller: Module.Team.TeamController,
             controllerAs: 'vm'

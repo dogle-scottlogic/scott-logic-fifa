@@ -15,7 +15,7 @@ module FifaLeagueClient.Module.Country.Directives {
             },
             controller: CountryShowController,
             controllerAs: "vm",
-            templateUrl: 'views/partials/country-show.html',
+            templateUrl: 'views/country/country-show.html',
             link: function (scope:IMyScope, $elm, $attr)
             {
               // Reload the country if its ID changed
