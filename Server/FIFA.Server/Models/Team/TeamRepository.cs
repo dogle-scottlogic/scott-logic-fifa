@@ -10,7 +10,12 @@ namespace FIFA.Server.Models
 {
     public class TeamRepository : ITeamRepository
     {
-        private FIFAServerContext db = new FIFAServerContext();
+        private FIFAServerContext db;
+
+        public TeamRepository(FIFAServerContext db)
+        {
+            this.db = db;
+        }
 
         // Get all the Teams
         public async Task<IEnumerable<Team>> GetAll()

@@ -155,6 +155,9 @@
     <EmbeddedResource Include="Migrations\201507131249287_TeamPlayerLeagueAndMatchLeague.resx">
       <DependentUpon>201507131249287_TeamPlayerLeagueAndMatchLeague.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201507151419265_TeamPlayerUnique.resx">
+      <DependentUpon>201507151419265_TeamPlayerUnique.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
@@ -218,6 +221,10 @@
     <Compile Include="Migrations\201507131249287_TeamPlayerLeagueAndMatchLeague.cs" />
     <Compile Include="Migrations\201507131249287_TeamPlayerLeagueAndMatchLeague.Designer.cs">
       <DependentUpon>201507131249287_TeamPlayerLeagueAndMatchLeague.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201507151419265_TeamPlayerUnique.cs" />
+    <Compile Include="Migrations\201507151419265_TeamPlayerUnique.Designer.cs">
+      <DependentUpon>201507151419265_TeamPlayerUnique.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Country\CountryFilter.cs" />

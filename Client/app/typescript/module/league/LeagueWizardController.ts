@@ -7,7 +7,7 @@ module FifaLeagueClient.Module.League {
       countryId: number;
       playerSelection:Player.Directives.SelectablePlayerModel;
       generateLeague: GenerateLeagueDTOModel;
-      generatedLeagueViewModel:LeagueViewModel;
+      generatedLeagueListViewModel:LeagueViewModel[];
       mainService : GenerateLeagueService;
       wizardHandler:angular.mgoAngularWizard.WizardHandler;
       showWizard:boolean;
@@ -20,7 +20,7 @@ module FifaLeagueClient.Module.League {
         this.mainService = generateLeagueService;
         this.generateLeague = new GenerateLeagueDTOModel(null);
         this.showWizard = true;
-        this.generatedLeagueViewModel = null;
+        this.generatedLeagueListViewModel = null;
     }
 
     // Hide the wizard, show the result
@@ -62,8 +62,8 @@ module FifaLeagueClient.Module.League {
 
 
     // Go to the next step if the add was a success
-    protected handleGenerateLeagueSuccess = (data:LeagueViewModel) => {
-        this.generatedLeagueViewModel = data;
+    protected handleGenerateLeagueSuccess = (data:LeagueViewModel[]) => {
+        this.generatedLeagueListViewModel = data;
         if(this.wizardHandler.wizard() != null){
           this.wizardHandler.wizard().next();
         }

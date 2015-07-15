@@ -10,11 +10,11 @@ namespace FIFA.Server.Models
 {
     public class SeasonRepository : ISeasonRepository
     {
-        private FIFAServerContext db = new FIFAServerContext();
+        private FIFAServerContext db;
 
-        public SeasonRepository()
+        public SeasonRepository(FIFAServerContext db)
         {
-
+            this.db = db;
         }
         
         // Get all the Seasons ordered by name / seasons

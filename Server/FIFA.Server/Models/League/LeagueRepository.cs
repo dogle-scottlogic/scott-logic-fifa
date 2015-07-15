@@ -10,18 +10,21 @@ namespace FIFA.Server.Models
 {
     public class LeagueRepository : ILeagueRepository
     {
-        private FIFAServerContext db = new FIFAServerContext();
+        private FIFAServerContext db;
 
-        public LeagueRepository() { }
+        public LeagueRepository(FIFAServerContext db)
+        {
+            this.db = db;
+        }
         
         public async Task<IEnumerable<League>> GetAll()
         {
-            return await db.Leagues.ToListAsync();
+            return await this.db.Leagues.ToListAsync();
         }
 
         public async Task<IEnumerable<League>> GetAllWithFilter(LeagueFilter filter)
         {
-            return await FilterLeagues(db.Leagues, filter).ToListAsync();
+            return await this.FilterLeagues(this.db.Leagues, filter).ToListAsync();
         }
 
         private IQueryable<League> FilterLeagues(IQueryable<League> query, LeagueFilter filter)
@@ -127,6 +130,36 @@ namespace FIFA.Server.Models
 
 
             return lvm;
+        }
+
+        /**
+         * Create teamPlayers attached to the league
+         */
+        public async Task<League> createLeagueWithTeamPlayers(League leagueInCreation, List<TeamPlayer> teamPlayers)
+        {
+
+            // for each team players, we see in database if it already exists, if so, we add it to the leage without creating it before
+            foreach (TeamPlayer tp in teamPlayers)
+            {
+                TeamPlayer dbTeamPlayer = this.db.TeamPlayers.Where(tpWhere => tpWhere.PlayerId == tp.PlayerId 
+                    && tpWhere.TeamId == tp.TeamId).FirstOrDefault();
+                if (dbTeamPlayer != null)
+                {
+                    leagueInCreation.TeamPlayers.Add(dbTeamPlayer);
+                }
+                else
+                {
+                    // Add the team players to the season
+                    leagueInCreation.TeamPlayers.Add(tp);
+                }
+
+            }
+
+            // we update the league then
+            this.db.Leagues.Add(leagueInCreation);
+            await db.SaveChangesAsync();
+
+            return leagueInCreation;
         }
     }
 }

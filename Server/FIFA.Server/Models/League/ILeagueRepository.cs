@@ -10,5 +10,6 @@ namespace FIFA.Server.Models
     {
         Task<bool> isLeagueNameExist(int seasonId, string leagueName, int? Id);
         Task<LeagueViewModel> GetViewModel(int Id);
+        Task<League> createLeagueWithTeamPlayers(League leagueInCreation, List<TeamPlayer> teamPlayers);
     }
 }

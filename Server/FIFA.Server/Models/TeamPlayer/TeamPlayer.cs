@@ -11,7 +11,9 @@ namespace FIFA.Server.Models
     {
         [Key]
         public int Id { get; set; }
+        [Index("TeamPlayerUnique", 1, IsUnique = true)]
         public int TeamId { get; set; }
+        [Index("TeamPlayerUnique", 2, IsUnique = true)]
         public int PlayerId { get; set; }
 
         [ForeignKey("TeamId")]
