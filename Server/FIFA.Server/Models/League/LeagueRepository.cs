@@ -106,5 +106,27 @@ namespace FIFA.Server.Models
         {
             return await db.Leagues.AnyAsync(l => l.Name == leagueName && l.SeasonId == seasonId && (Id == null || l.Id != Id));
         }
+
+        /**
+         * Getting the view Model
+         **/
+        public async Task<LeagueViewModel> GetViewModel(int id)
+        {
+            var lvm = await db.Leagues
+            .Where(l => l.Id == id)
+            .Select(l => new LeagueViewModel
+            {
+                Name = l.Name,
+                TeamPlayers = l.TeamPlayers.Select(tp => new TeamPlayerViewModel
+                {
+                    player = tp.Player,
+                    team = tp.Team
+                })
+            })
+            .SingleOrDefaultAsync();
+
+
+            return lvm;
+        }
     }
 }

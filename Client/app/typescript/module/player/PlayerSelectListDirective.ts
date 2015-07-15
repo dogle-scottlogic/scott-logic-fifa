@@ -18,7 +18,6 @@ module FifaLeagueClient.Module.Player.Directives {
     export interface IPlayerSelectListScope extends ng.IScope {
         vm : PlayerSelectListController;
         players:{[Id: number]:SelectablePlayerModel};
-        nbminplayerrequired: number;
     }
 
     export function playerSelectListDirective(): ng.IDirective {
@@ -29,7 +28,7 @@ module FifaLeagueClient.Module.Player.Directives {
             },
             controller: PlayerSelectListController,
             controllerAs: "vm",
-            templateUrl: 'views/partials/player-select-list.html'
+            templateUrl: 'views/player/player-select-list.html'
         }
     }
 

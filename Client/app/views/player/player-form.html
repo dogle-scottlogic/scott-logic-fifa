@@ -1,0 +1,18 @@
+<div class="form-group">
+
+  <label>Name</label>
+  <input type="text" ng-model="vm.player.Name" class="form-control"
+     placeholder="Player Name"
+     tooltip="Enter the name of the Player"
+     tooltip-placement="top"
+     tooltip-trigger="mouseenter"
+     tooltip-enable="!vm.player.Name"
+     required/>
+  <div class="clear"></div>
+  <div class="alert alert-danger" role="alert" ng-repeat="value in vm.errors['item.Name']">{{value}}</div>
+  <br>
+  <input type="checkbox" ng-model="vm.player.Archived" /><label class="checkbox">Archived</label>
+  <div class="clear"></div>
+  <div class="alert alert-danger" role="alert" ng-repeat="value in vm.errors['item.Archived']">{{value}}</div>
+
+</div>

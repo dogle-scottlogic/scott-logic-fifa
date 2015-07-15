@@ -1,11 +1,10 @@
-/// <reference path="../common/controllers/AbstractController.ts" />
+/// <reference path="../../common/controllers/AbstractController.ts" />
 
 module FifaLeagueClient.Module.Player {
 
   export class PlayerSelectListController extends Common.Controllers.AbstractController {
 
       scope;
-      players:PlayerModel[];
       mainService : PlayerService;
 
     static $inject = ["$scope", 'playerService'];
@@ -13,7 +12,6 @@ module FifaLeagueClient.Module.Player {
     constructor(scope:Directives.IPlayerSelectListScope, playerService : PlayerService){
         super(scope);
         this.mainService = playerService;
-        this.players = [];
         this.fillPlayers();
         this.scope.players = {};
     }
@@ -22,17 +20,22 @@ module FifaLeagueClient.Module.Player {
     public fillPlayers = () => {
       var self = this;
       self.errors = {};
-      self.mainService.getPlayerList()
-          .then(self.fillPlayersSuccessCallBack)
-          .catch(self.fillPlayersErrorCallBack);
+
+      // Get only the none archived players
+      var playerFilter = new PlayerFilter();
+      playerFilter.Archived = false;
+
+      this.loadingPromise =
+        self.mainService.getPlayerFilteredList(playerFilter)
+            .then(self.fillPlayersSuccessCallBack)
+            .catch(self.fillPlayersErrorCallBack);
     }
 
     // fill the players - if the callback is a success
     protected fillPlayersSuccessCallBack = (players:PlayerModel[]) => {
       var self = this;
-      self.players = players;
       // filling the list of the players (all unselected by default)
-      angular.forEach(self.players, function(value: PlayerModel, key) {
+      angular.forEach(players, function(value: PlayerModel, key) {
         self.scope.players[value.Id] = new Directives.SelectablePlayerModel(value);
       });
     }
@@ -69,7 +72,7 @@ module FifaLeagueClient.Module.Player {
     }
 
 
-    // Verify if exists at least one player <selectParam>
+    // Verify if at least exists one player <selectParam>
     public existAtLeast(selectParam:boolean):boolean{
       var self = this;
       var exist:boolean = false;

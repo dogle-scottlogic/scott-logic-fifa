@@ -228,6 +228,7 @@
     <Compile Include="Models\ICRUDRepository.cs" />
     <Compile Include="Models\League\GenerateLeagueDTO.cs" />
     <Compile Include="Models\League\LeagueFilter.cs" />
+    <Compile Include="Models\League\LeagueViewModel.cs" />
     <Compile Include="Models\Match\IMatchRepository.cs" />
     <Compile Include="Models\Match\MatchFilter.cs" />
     <Compile Include="Models\Match\MatchRepository.cs" />

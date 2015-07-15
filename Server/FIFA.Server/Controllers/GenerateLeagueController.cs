@@ -110,7 +110,10 @@ namespace FIFA.Server.Controllers
             // Second we create the league attached to the players
             createdLeague = await createTeamAttachedToLeague(createdLeague, teams, players, rand);
 
-            var response = Request.CreateResponse<League>(HttpStatusCode.Created, createdLeague);
+            // To finish, we load the generated league from the data base
+            LeagueViewModel createdLeagueVM = await this.repository.GetViewModel(createdLeague.Id);
+
+            var response = Request.CreateResponse<LeagueViewModel>(HttpStatusCode.Created, createdLeagueVM);
 
             return response;
 
@@ -180,8 +183,37 @@ namespace FIFA.Server.Controllers
         }
 
         /**
-         * Create Matches and scores attached to leagues / players
+         * Create Matches and scores associated to leagues / players
          */
+        /*private async Task<Match> createMatchAndScore(IEnumerable<TeamPlayer> teamPlayers)
+        {
+            foreach (var homeTeamPlayer in teamPlayers)
+            {
+                foreach (var awayTeamPlayer in teamPlayers)
+                {
+                    // If the Id of teamplayer1 is different of team player 2, we create a match with the scores
+                    if (homeTeamPlayer.Id != awayTeamPlayer.Id)
+                    {
+                        //add match & score
+                        Match match = new Match { };
+
+                       var scoreHomePlayer1 = new Score { Location = Location.Home, TeamPlayerId = p1.Id };
+                        var scoreAwayPlayer2 = new Score { Location = Location.Away, TeamPlayerId = p2.Id };
+                        
+                        match.Scores = {scoreHomePlayer1, scoreAwayPlayer2};
+
+                        context.Scores.AddOrUpdate(
+                            s => s.Id,
+                            scoreHomePlayer1, scoreAwayPlayer2
+                        );
+                        Match match = new Match();
+                        match.Scores = new List<Score>();
+
+                    }
+
+                }
+            }
+        }*/
 
         
         // Get the list of the teams associated to the country Id

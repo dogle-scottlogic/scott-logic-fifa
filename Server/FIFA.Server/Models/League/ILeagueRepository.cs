@@ -9,5 +9,6 @@ namespace FIFA.Server.Models
     public interface ILeagueRepository : ICRUDRepository<League, int, LeagueFilter>
     {
         Task<bool> isLeagueNameExist(int seasonId, string leagueName, int? Id);
+        Task<LeagueViewModel> GetViewModel(int Id);
     }
 }
