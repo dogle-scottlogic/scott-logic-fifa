@@ -10,7 +10,12 @@ namespace FIFA.Server.Models
 {
     public class TeamPlayerRepository : ITeamPlayerRepository
     {
-        private FIFAServerContext db = new FIFAServerContext();
+        private FIFAServerContext db;
+
+        public TeamPlayerRepository(FIFAServerContext db)
+        {
+            this.db = db;
+        }
 
         // Get all the TeamPlayers
         public async Task<IEnumerable<TeamPlayer>> GetAll()
@@ -26,6 +31,7 @@ namespace FIFA.Server.Models
         {
             return await db.TeamPlayers.FindAsync(id);
         }
+
 
         // Add one TeamPlayer
         public async Task<TeamPlayer> Add(TeamPlayer item)

@@ -65,7 +65,7 @@ generateLeague_mockHTTPBackend = function(config, $httpBackend, $q, dataReposito
           // Parsing the data to fack the generation and return what we intended
           var jsonObj = JSON.parse(data);
           var player = jsonObj.Players[0];
-          var createdLeague = new FifaLeagueClient.Module.League.LeagueViewModel(
+          var createdLeague = [new FifaLeagueClient.Module.League.LeagueViewModel(
             {
               Name: 'Ligue 3',
               TeamPlayers: [
@@ -77,7 +77,7 @@ generateLeague_mockHTTPBackend = function(config, $httpBackend, $q, dataReposito
                   }
                 }
               ]
-            });
+            })];
 
           dataRepository.push(createdLeague);
 

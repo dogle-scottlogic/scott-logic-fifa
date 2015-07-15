@@ -46,12 +46,10 @@ namespace FIFATests.ControllerTests
             var mock = new Mock<ILeagueRepository>(MockBehavior.Strict);
             var mockSeasonRepo = new Mock<ISeasonRepository>(MockBehavior.Strict);
             var mockTeamRepo = new Mock<ITeamRepository>(MockBehavior.Strict);
-            var mockTeamPlayerRepo = new Mock<ITeamPlayerRepository>(MockBehavior.Strict);
-            var mockPlayerRepo = new Mock<IPlayerRepository>(MockBehavior.Strict);
 
             // Creating the controller which we want to create
             GenerateLeagueController controller = new GenerateLeagueController(mock.Object, mockSeasonRepo.Object,
-                mockTeamRepo.Object, mockTeamPlayerRepo.Object, mockPlayerRepo.Object);
+                mockTeamRepo.Object);
 
             // configuring the context for the controler
             fakeContext(controller);
@@ -74,12 +72,10 @@ namespace FIFATests.ControllerTests
                 .Returns(Task.FromResult((Season)null));
 
             var mockTeamRepo = new Mock<ITeamRepository>(MockBehavior.Strict);
-            var mockTeamPlayerRepo = new Mock<ITeamPlayerRepository>(MockBehavior.Strict);
-            var mockPlayerRepo = new Mock<IPlayerRepository>(MockBehavior.Strict);
 
             // Creating the controller which we want to create
             GenerateLeagueController controller = new GenerateLeagueController(mock.Object, mockSeasonRepo.Object,
-                mockTeamRepo.Object, mockTeamPlayerRepo.Object, mockPlayerRepo.Object);
+                mockTeamRepo.Object);
 
             // configuring the context for the controler
             fakeContext(controller);
@@ -108,12 +104,10 @@ namespace FIFATests.ControllerTests
                 .Returns(Task.FromResult(new Season()));
             
             var mockTeamRepo = new Mock<ITeamRepository>(MockBehavior.Strict);
-            var mockTeamPlayerRepo = new Mock<ITeamPlayerRepository>(MockBehavior.Strict);
-            var mockPlayerRepo = new Mock<IPlayerRepository>(MockBehavior.Strict);
 
             // Creating the controller which we want to create
             GenerateLeagueController controller = new GenerateLeagueController(mock.Object, mockSeasonRepo.Object,
-                mockTeamRepo.Object, mockTeamPlayerRepo.Object, mockPlayerRepo.Object);
+                mockTeamRepo.Object);
 
             // configuring the context for the controler
             fakeContext(controller);
@@ -151,13 +145,9 @@ namespace FIFATests.ControllerTests
             mockTeamRepo.As<ICRUDRepository<Team, int, TeamFilter>>().Setup(s => s.GetAllWithFilter(It.IsAny<TeamFilter>()))
                 .Returns(Task.FromResult((IEnumerable<Team>)new List<Team>()));
             
-
-            var mockTeamPlayerRepo = new Mock<ITeamPlayerRepository>(MockBehavior.Strict);
-            var mockPlayerRepo = new Mock<IPlayerRepository>(MockBehavior.Strict);
-
             // Creating the controller which we want to create
             GenerateLeagueController controller = new GenerateLeagueController(mock.Object, mockSeasonRepo.Object,
-                mockTeamRepo.Object, mockTeamPlayerRepo.Object, mockPlayerRepo.Object);
+                mockTeamRepo.Object);
 
             // configuring the context for the controler
             fakeContext(controller);
@@ -195,14 +185,10 @@ namespace FIFATests.ControllerTests
             // Setting up that the teams
             mockTeamRepo.As<ICRUDRepository<Team, int, TeamFilter>>().Setup(s => s.GetAllWithFilter(It.IsAny<TeamFilter>()))
                 .Returns(Task.FromResult((IEnumerable<Team>)new List<Team>()));
-
-
-            var mockTeamPlayerRepo = new Mock<ITeamPlayerRepository>(MockBehavior.Strict);
-            var mockPlayerRepo = new Mock<IPlayerRepository>(MockBehavior.Strict);
-
+            
             // Creating the controller which we want to create
             GenerateLeagueController controller = new GenerateLeagueController(mock.Object, mockSeasonRepo.Object,
-                mockTeamRepo.Object, mockTeamPlayerRepo.Object, mockPlayerRepo.Object);
+                mockTeamRepo.Object);
 
             // configuring the context for the controler
             fakeContext(controller);
@@ -247,12 +233,9 @@ namespace FIFATests.ControllerTests
             mockTeamRepo.As<ICRUDRepository<Team, int, TeamFilter>>().Setup(s => s.GetAllWithFilter(It.IsAny<TeamFilter>()))
                 .Returns(Task.FromResult((IEnumerable<Team>)new List<Team>()));
 
-            var mockTeamPlayerRepo = new Mock<ITeamPlayerRepository>(MockBehavior.Strict);
-            var mockPlayerRepo = new Mock<IPlayerRepository>(MockBehavior.Strict);
-
             // Creating the controller which we want to create
             GenerateLeagueController controller = new GenerateLeagueController(mock.Object, mockSeasonRepo.Object,
-                mockTeamRepo.Object, mockTeamPlayerRepo.Object, mockPlayerRepo.Object);
+                mockTeamRepo.Object);
 
             // configuring the context for the controler
             fakeContext(controller);
@@ -296,12 +279,9 @@ namespace FIFATests.ControllerTests
             mockTeamRepo.As<ICRUDRepository<Team, int, TeamFilter>>().Setup(s => s.GetAllWithFilter(It.IsAny<TeamFilter>()))
                 .Returns(Task.FromResult((IEnumerable<Team>)teams));
 
-            var mockTeamPlayerRepo = new Mock<ITeamPlayerRepository>(MockBehavior.Strict);
-            var mockPlayerRepo = new Mock<IPlayerRepository>(MockBehavior.Strict);
-
             // Creating the controller which we want to create
             GenerateLeagueController controller = new GenerateLeagueController(mock.Object, mockSeasonRepo.Object,
-                mockTeamRepo.Object, mockTeamPlayerRepo.Object, mockPlayerRepo.Object);
+                mockTeamRepo.Object);
 
             // configuring the context for the controler
             fakeContext(controller);
@@ -354,22 +334,10 @@ namespace FIFATests.ControllerTests
                 .Returns(Task.FromResult((IEnumerable<Team>)teams));
             
             // Mocking the creation of the league createLeagueAttachedToPlayers
-            mock.As<ICRUDRepository<League, int, LeagueFilter>>().Setup(l => l.Add(It.IsAny<League>()))
+            mock.As<ILeagueRepository>().Setup(l => l.createLeagueWithTeamPlayers(It.IsAny<League>(),
+                It.IsAny<List<TeamPlayer>>()))
                 .Returns(Task.FromResult(league));
-            mock.As<ICRUDRepository<League, int, LeagueFilter>>().Setup(l => l.Update(It.IsAny<int>(), It.IsAny<League>()))
-                .Returns(Task.FromResult(true));
-
-            var mockPlayerRepo = new Mock<IPlayerRepository>(MockBehavior.Strict);
-            mockPlayerRepo.As<ICRUDRepository<Player, int, PlayerFilter>>().Setup(l => l.Get(It.IsAny<int>()))
-                .Returns(Task.FromResult(player));
             
-            var mockTeamPlayerRepo = new Mock<ITeamPlayerRepository>(MockBehavior.Strict);
-            var teamPlayer = new TeamPlayer();
-            // Mocking the createTeamAttachedToSeason : Players don't have any team for the moment
-            mockTeamPlayerRepo.As<ICRUDRepository<TeamPlayer, int, TeamPlayerFilter>>().Setup(l => l.GetAllWithFilter(It.IsAny<TeamPlayerFilter>()))
-                .Returns(Task.FromResult((IEnumerable<TeamPlayer>)null));
-            mockTeamPlayerRepo.As<ICRUDRepository<TeamPlayer, int, TeamPlayerFilter>>().Setup(l => l.Add(It.IsAny<TeamPlayer>()))
-                .Returns(Task.FromResult(teamPlayer));
 
             // mocking the answer
             mock.As<ILeagueRepository>().Setup(l => l.GetViewModel(It.IsAny<int>()))
@@ -378,7 +346,7 @@ namespace FIFATests.ControllerTests
             
             // Creating the controller which we want to create
             GenerateLeagueController controller = new GenerateLeagueController(mock.Object, mockSeasonRepo.Object,
-                mockTeamRepo.Object, mockTeamPlayerRepo.Object, mockPlayerRepo.Object);
+                mockTeamRepo.Object);
 
 
             // configuring the context for the controler
@@ -415,8 +383,11 @@ namespace FIFATests.ControllerTests
             var mock = new Mock<ILeagueRepository>(MockBehavior.Strict);
             mock.As<ICRUDRepository<League, int, LeagueFilter>>().Setup(l => l.GetAllWithFilter(It.IsAny<LeagueFilter>()))
                 .Returns(Task.FromResult((IEnumerable<League>)null));
-            mock.As<ICRUDRepository<League, int, LeagueFilter>>().Setup(l => l.Update(It.IsAny<int>(), It.IsAny<League>()))
-                .Returns(Task.FromResult(true));
+
+            // Mocking the creation of the league createLeagueAttachedToPlayers
+            mock.As<ILeagueRepository>().Setup(l => l.createLeagueWithTeamPlayers(It.IsAny<League>(),
+                It.IsAny<List<TeamPlayer>>()))
+                .Returns(Task.FromResult(league));
 
             var mockSeasonRepo = new Mock<ISeasonRepository>(MockBehavior.Strict);
             // Setting up that the country name already exist
@@ -429,21 +400,6 @@ namespace FIFATests.ControllerTests
             mockTeamRepo.As<ICRUDRepository<Team, int, TeamFilter>>().Setup(s => s.GetAllWithFilter(It.IsAny<TeamFilter>()))
                 .Returns(Task.FromResult((IEnumerable<Team>)teams));
 
-            // Mocking the creation of the league createLeagueAttachedToPlayers
-            mock.As<ICRUDRepository<League, int, LeagueFilter>>().Setup(l => l.Add(It.IsAny<League>()))
-                .Returns(Task.FromResult(league));
-            var mockPlayerRepo = new Mock<IPlayerRepository>(MockBehavior.Strict);
-            mockPlayerRepo.As<ICRUDRepository<Player, int, PlayerFilter>>().Setup(l => l.Get(It.IsAny<int>()))
-                .Returns(Task.FromResult(player));
-
-            var mockTeamPlayerRepo = new Mock<ITeamPlayerRepository>(MockBehavior.Strict);
-            // Mocking the createTeamAttachedToSeason : Players don't have any team for the moment
-            List<TeamPlayer> teamPlayers = new List<TeamPlayer>();
-            teamPlayers.Add(new TeamPlayer());
-            mockTeamPlayerRepo.As<ICRUDRepository<TeamPlayer, int, TeamPlayerFilter>>().Setup(l => l.GetAllWithFilter(It.IsAny<TeamPlayerFilter>()))
-                .Returns(Task.FromResult((IEnumerable<TeamPlayer>)teamPlayers));
-            mockTeamPlayerRepo.As<ICRUDRepository<TeamPlayer, int, TeamPlayerFilter>>().Setup(l => l.Add(It.IsAny<TeamPlayer>()))
-                .Returns(Task.FromResult(teamPlayers.First()));
 
             // mocking the answer
             mock.As<ILeagueRepository>().Setup(l => l.GetViewModel(It.IsAny<int>()))
@@ -451,7 +407,7 @@ namespace FIFATests.ControllerTests
 
             // Creating the controller which we want to create
             GenerateLeagueController controller = new GenerateLeagueController(mock.Object, mockSeasonRepo.Object,
-                mockTeamRepo.Object, mockTeamPlayerRepo.Object, mockPlayerRepo.Object);
+                mockTeamRepo.Object);
 
 
             // configuring the context for the controler
@@ -460,6 +416,83 @@ namespace FIFATests.ControllerTests
             HttpResponseMessage response = controller.Post(generateLeagueDTO).Result;
             // the result should say "HttpStatusCode.Created"
             Assert.AreEqual(response.StatusCode, HttpStatusCode.Created);
+        }
+
+        // Verifying the Generate valide if all is ok - Case we have more players that can fit on only one League
+        [TestMethod]
+        public void GenerateLeagueValidPlayersWithTeamMultipleLeagues()
+        {
+
+            GenerateLeagueDTO generateLeagueDTO = new GenerateLeagueDTO();
+            generateLeagueDTO.Players = new List<Player>();
+            for (int i = 0; i < 14; i++)
+            {
+                generateLeagueDTO.Players.Add(new Player());
+            }
+            List<Team> teams = new List<Team>();
+            for (int i = 0; i < 14; i++)
+            {
+                teams.Add(new Team());
+            }
+
+
+            Season season = new Season();
+            Player player = new Player();
+
+            // Filling mock rull with repository
+            var mock = new Mock<ILeagueRepository>(MockBehavior.Strict);
+            mock.As<ICRUDRepository<League, int, LeagueFilter>>().Setup(l => l.GetAllWithFilter(It.IsAny<LeagueFilter>()))
+                .Returns(Task.FromResult((IEnumerable<League>)null));
+
+            // Mocking the creation of the league createLeagueAttachedToPlayers
+            List<League> createdLeagues = new List<League>();
+
+            // Mocking the creation of the league createLeagueAttachedToPlayers
+
+            mock.As<ILeagueRepository>().Setup(l => l.createLeagueWithTeamPlayers(It.IsAny<League>(),
+                It.IsAny<List<TeamPlayer>>()))
+                .Callback((League l, List<TeamPlayer> tp) =>
+                {
+                    l.TeamPlayers = tp;
+                    createdLeagues.Add(l);
+                })
+                .Returns(Task.FromResult(new League()));
+
+
+            var mockSeasonRepo = new Mock<ISeasonRepository>(MockBehavior.Strict);
+            // Setting up that the country name already exist
+            mockSeasonRepo.As<ICRUDRepository<Season, int, SeasonFilter>>().Setup(s => s.Get(It.IsAny<int>()))
+                .Returns(Task.FromResult(new Season()));
+
+
+            var mockTeamRepo = new Mock<ITeamRepository>(MockBehavior.Strict);
+            // Setting up that the teams
+            mockTeamRepo.As<ICRUDRepository<Team, int, TeamFilter>>().Setup(s => s.GetAllWithFilter(It.IsAny<TeamFilter>()))
+                .Returns(Task.FromResult((IEnumerable<Team>)teams));
+
+
+            // mocking the answer
+            mock.As<ILeagueRepository>().Setup(l => l.GetViewModel(It.IsAny<int>()))
+                .Returns(Task.FromResult(new LeagueViewModel()));
+
+            // Creating the controller which we want to create
+            GenerateLeagueController controller = new GenerateLeagueController(mock.Object, mockSeasonRepo.Object,
+                mockTeamRepo.Object);
+
+
+            // configuring the context for the controler
+            fakeContext(controller);
+
+            HttpResponseMessage response = controller.Post(generateLeagueDTO).Result;
+            // the result should say "HttpStatusCode.Created"
+            Assert.AreEqual(response.StatusCode, HttpStatusCode.Created);
+            // We expect 3 leagues to be created
+            Assert.AreEqual(createdLeagues.Count(), 3);
+            // With the two first with 4 players
+            Assert.AreEqual(createdLeagues.ElementAt(0).TeamPlayers.Count(), 4);
+            Assert.AreEqual(createdLeagues.ElementAt(1).TeamPlayers.Count(), 4);
+            // and the last with 6 players
+            Assert.AreEqual(createdLeagues.ElementAt(2).TeamPlayers.Count(), 6);
         }
 
 

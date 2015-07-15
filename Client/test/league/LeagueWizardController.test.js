@@ -50,10 +50,10 @@ describe('Testing the LeagueWizardController', function() {
         leagueWizardController.validatePlayerSelectionStep();
         verifyPromiseAndFlush(leagueWizardController, $httpBackend);
         // The last array shall be what we have in leagueWizardController.generatedLeagueViewModel
-        expect(leagueWizardController.generatedLeagueViewModel).toEqual(dataRepository[dataRepository.length - 1]);
+        expect(leagueWizardController.generatedLeagueListViewModel).toEqual(dataRepository[dataRepository.length - 1]);
         // Expect to have Roger in the return but not robert
-        expect(leagueWizardController.generatedLeagueViewModel.TeamPlayers[0].player.Name).toContain(player1.Name);
-        expect(leagueWizardController.generatedLeagueViewModel.TeamPlayers[0].player.Name).not.toContain(player2.Name);
+        expect(leagueWizardController.generatedLeagueListViewModel[0].TeamPlayers[0].player.Name).toContain(player1.Name);
+        expect(leagueWizardController.generatedLeagueListViewModel[0].TeamPlayers[0].player.Name).not.toContain(player2.Name);
 
     });
 
