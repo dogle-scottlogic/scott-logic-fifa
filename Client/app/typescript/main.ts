@@ -29,11 +29,6 @@ module FifaLeagueClient {
             controller: Module.Team.EditTeamController,
             controllerAs: 'vm'
         })
-        .when('/players', {
-          templateUrl: 'views/players.html',
-          controller: Module.Player.PlayerController,
-          controllerAs: 'vm'
-        })
         .when('/leaguewizard', {
           template: '<leaguewizard></leaguewizard>'
         });

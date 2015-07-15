@@ -1,19 +1,32 @@
 module FifaLeagueClient.Module.League {
-    export class LeagueModel {
 
-        public Id:number;
-        public Name: string;
-        public SeasonId:number;
-        public Players:Player.PlayerModel[];
+    /** VIEW MODEL **/
+    export class TeamPlayerViewModel
+    {
+        public player:Player.PlayerModel;
+        public team:Team.TeamModel;
+
+        constructor(data){
+            if(data != null){
+                this.player = data.player;
+                this.team = data.team;
+            }
+        }
+    }
+
+    // Class showing a league with all the players and the teams
+    export class LeagueViewModel
+    {
+         public Name:string;
+         public TeamPlayers:TeamPlayerViewModel[];
 
         // build the model directly from the data returned by the service
         constructor(data){
             if(data != null){
-                this.Id = data.Id;
                 this.Name = data.Name;
-                this.SeasonId = data.SeasonId;
-                this.Players = data.Players;
+                this.TeamPlayers = data.TeamPlayers;
             }
         }
     }
+
 }

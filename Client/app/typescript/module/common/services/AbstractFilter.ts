@@ -21,6 +21,15 @@ module FifaLeagueClient.Module.Common.Services {
             return this;
         }
 
+
+        public addRequestBooleanParameter(name:string, value:boolean):AbstractFilter{
+            if(value!=null){
+                this.chainQuery();
+                this.query = this.query.concat(name).concat("=").concat(value.toString());
+            }
+            return this;
+        }
+
         private chainQuery():void{
             if(this.query != ""){
                 this.query = this.query.concat("&");

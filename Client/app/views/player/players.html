@@ -1,0 +1,23 @@
+<div class="gridview" ng-init="vm.showPlayers()" cg-busy="vm.loadingPromise">
+    <h2>Players</h2>
+    <a href="#/players/add" class="btn btn-primary right">Add Player</a>
+    <div class="clear"></div>
+    <div class="alert alert-danger" role="alert" ng-repeat="value in vm.errors['item.Global']">{{value}}</div>
+    <table class="table table-striped table-bordered">
+        <thead>
+          <tr>
+              <th>Name</th>
+              <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="player in vm.players">
+              <td>{{player.Name}}</td>
+              <td align="right">
+                  <a ng-href="#/players/edit/{{player.Id}}" type="button" class="btn btn-primary middle btn-custom">Edit</a>
+                  <button ng-click="vm.deletePlayer(player.Id)" type="button" class="btn btn-danger right btn-custom">Delete</button>
+              </td>
+          </tr>
+        </tbody>
+    </table>
+</div>

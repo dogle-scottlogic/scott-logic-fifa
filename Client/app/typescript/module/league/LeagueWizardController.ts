@@ -7,7 +7,7 @@ module FifaLeagueClient.Module.League {
       countryId: number;
       playerSelection:Player.Directives.SelectablePlayerModel;
       generateLeague: GenerateLeagueDTOModel;
-      league: LeagueModel;
+      generatedLeagueViewModel:LeagueViewModel;
       mainService : GenerateLeagueService;
       wizardHandler:angular.mgoAngularWizard.WizardHandler;
       showWizard:boolean;
@@ -20,6 +20,7 @@ module FifaLeagueClient.Module.League {
         this.mainService = generateLeagueService;
         this.generateLeague = new GenerateLeagueDTOModel(null);
         this.showWizard = true;
+        this.generatedLeagueViewModel = null;
     }
 
     // Hide the wizard, show the result
@@ -33,13 +34,17 @@ module FifaLeagueClient.Module.League {
 
     // Validating the country select step
     public validateCountrySelectionStep():void{
+      if(this.wizardHandler.wizard() != null){
         this.wizardHandler.wizard().next();
+      }
     }
 
 
     // Validating the season select step
     public validateSeasonSelectionStep():void{
-        this.wizardHandler.wizard().next();
+        if(this.wizardHandler.wizard() != null){
+          this.wizardHandler.wizard().next();
+        }
     }
 
     // Validating the selection of players
@@ -49,16 +54,19 @@ module FifaLeagueClient.Module.League {
         this.generateLeague.Players = selectedPlayers;
 
         // Pushing the datas on the server
-        this.mainService.generateLeague(this.generateLeague)
-          .then(this.handleGenerateLeagueSuccess)
-          .catch(this.handleGenerateLeagueErrors);
+        this.loadingPromise =
+            this.mainService.generateLeague(this.generateLeague)
+              .then(this.handleGenerateLeagueSuccess)
+              .catch(this.handleGenerateLeagueErrors);
     }
 
 
     // Go to the next step if the add was a success
-    protected handleGenerateLeagueSuccess = (data:LeagueModel) => {
-        this.league = data;
-        this.wizardHandler.wizard().next();
+    protected handleGenerateLeagueSuccess = (data:LeagueViewModel) => {
+        this.generatedLeagueViewModel = data;
+        if(this.wizardHandler.wizard() != null){
+          this.wizardHandler.wizard().next();
+        }
     }
 
     // Method adding add lead errors in errors list
@@ -67,7 +75,7 @@ module FifaLeagueClient.Module.League {
     }
 
     // Get a list of <selectParam> players
-    public getListPlayers = (selectParam:boolean):Player.PlayerModel[] => {
+    private getListPlayers = (selectParam:boolean):Player.PlayerModel[] => {
       var self = this;
       var listOfPlayers:Player.PlayerModel[] = [];
       angular.forEach(self.playerSelection, function(value: Player.Directives.SelectablePlayerModel, key) {

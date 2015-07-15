@@ -370,6 +370,10 @@ namespace FIFATests.ControllerTests
                 .Returns(Task.FromResult((IEnumerable<TeamPlayer>)null));
             mockTeamPlayerRepo.As<ICRUDRepository<TeamPlayer, int, TeamPlayerFilter>>().Setup(l => l.Add(It.IsAny<TeamPlayer>()))
                 .Returns(Task.FromResult(teamPlayer));
+
+            // mocking the answer
+            mock.As<ILeagueRepository>().Setup(l => l.GetViewModel(It.IsAny<int>()))
+                .Returns(Task.FromResult(new LeagueViewModel()));
             
             
             // Creating the controller which we want to create
@@ -441,6 +445,9 @@ namespace FIFATests.ControllerTests
             mockTeamPlayerRepo.As<ICRUDRepository<TeamPlayer, int, TeamPlayerFilter>>().Setup(l => l.Add(It.IsAny<TeamPlayer>()))
                 .Returns(Task.FromResult(teamPlayers.First()));
 
+            // mocking the answer
+            mock.As<ILeagueRepository>().Setup(l => l.GetViewModel(It.IsAny<int>()))
+                .Returns(Task.FromResult(new LeagueViewModel()));
 
             // Creating the controller which we want to create
             GenerateLeagueController controller = new GenerateLeagueController(mock.Object, mockSeasonRepo.Object,
