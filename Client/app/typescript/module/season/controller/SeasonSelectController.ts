@@ -21,6 +21,9 @@ module FifaLeagueClient.Module.Season {
 			if(this.scope.filtercountry != null){
 				seasonFilter.CountryId = this.scope.filtercountry;
 			}
+			if(this.scope.filterhavingleague != null){
+				seasonFilter.HavingLeague = this.scope.filterhavingleague;
+			}
 			this.loadingPromise =
 					this.mainService.getSeasonFilteredList(seasonFilter)
 						.then(this.onGetSeasonsSuccess)
@@ -29,6 +32,10 @@ module FifaLeagueClient.Module.Season {
 
 		protected onGetSeasonsSuccess = (seasons: SeasonModel[]) => {
 			this.seasons = seasons;
+			// if their is only one season we select it automatically
+			if(this.seasons.length == 1){
+					this.scope.selectedseason = this.seasons[0].Id;
+			}
 		}
 
 		protected onError = (config) => {

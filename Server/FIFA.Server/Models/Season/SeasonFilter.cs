@@ -14,5 +14,7 @@ namespace FIFA.Server.Models
         public string Name { get; set; }
 
         public int CountryId { get; set; }
+
+        public bool? HavingLeague { get; set; }
     }
 }

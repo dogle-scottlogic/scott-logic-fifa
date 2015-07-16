@@ -25,7 +25,7 @@ country_buildDataRepository = function() {
 // mocking the backend in normal case
 country_mockHTTPBackend = function(config, $httpBackend, $q, dataRepository){
 
-    $httpBackend.whenGET(config.backend+"api/Country/")
+    var mockedCountryGetList = $httpBackend.whenGET(config.backend+"api/Country/")
         .respond(function (method, url, data, headers) {
             return [200,dataRepository];
         });
@@ -108,6 +108,8 @@ country_mockHTTPBackend = function(config, $httpBackend, $q, dataRepository){
 
             return [200,true];
         });
+
+    return mockedCountryGetList;
 
 }
 

@@ -24,6 +24,10 @@ module FifaLeagueClient.Module.Country {
 
 		protected onGetCountriesSuccess = (countries: CountryModel[]) => {
 			this.countries = countries;
+			// if their is only one country we select it automatically
+			if(this.countries.length == 1){
+					this.scope.selectedcountry = this.countries[0].Id;
+			}
 		}
 
 		protected onError = (config) => {
