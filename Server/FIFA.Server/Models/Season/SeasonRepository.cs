@@ -51,6 +51,11 @@ namespace FIFA.Server.Models
                     query = query.Where(m => m.CountryId == filter.CountryId);
                 }
 
+                if (filter.HavingLeague != null)
+                {
+                    query = query.Where(m => (m.Leagues.Count() > 0) == filter.HavingLeague);
+                }
+
             }
 
             return query;

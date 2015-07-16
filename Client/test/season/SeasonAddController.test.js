@@ -38,7 +38,7 @@ describe('Testing the SeasonAddController', function() {
 
     it('Should create new season', function () {
       // We simulate we entered a new Season
-      seasonAddController.season.Name = "Spain";
+      seasonAddController.season.Name = "Season 1";
 
       // And that we clicked a button or something
       seasonAddController.addSeason();

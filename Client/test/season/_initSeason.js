@@ -6,22 +6,22 @@ season_buildDataRepository = function() {
         {
             Id: 1,
             CountryId: 1,
-            Name: 'Ligue 1'
+            Name: 'Season 1'
         }),
         new FifaLeagueClient.Module.Season.SeasonModel({
             Id: 2,
             CountryId: 1,
-            Name: 'Ligue 2'
+            Name: 'Season 2'
         }),
         new FifaLeagueClient.Module.Season.SeasonModel({
             Id: 3,
             CountryId: 2,
-            Name: 'League 1'
+            Name: 'Saison 1'
         }),
         new FifaLeagueClient.Module.Season.SeasonModel({
             Id: 4,
             CountryId: 2,
-            Name: 'League 2'
+            Name: 'Saison 2'
         })
     ];
 }
@@ -29,7 +29,7 @@ season_buildDataRepository = function() {
 // mocking the backend
 season_mockHTTPBackend = function(config, $httpBackend, $q, dataRepository){
 
-    $httpBackend.whenGET(config.backend+"api/Season/")
+    var mockedSeasonGetList = $httpBackend.whenGET(config.backend+"api/Season/")
         .respond(function (method, url, data, headers) {
             return [200,dataRepository];
         });
@@ -64,6 +64,24 @@ season_mockHTTPBackend = function(config, $httpBackend, $q, dataRepository){
             {
                 var season = dataRepository[i];
                 if (season.CountryId == IdToGet) {
+                    item.push(season);
+                }
+            }
+            return [200,item];
+        });
+
+    $httpBackend.whenGET(config.backend+"api/Season?HavingLeague=false")
+        .respond(function (method, url, data, headers) {
+
+            var splitedURL = url.split("=");
+            var havingLeague = Boolean(splitedURL[splitedURL.length -1]);
+
+            var item = [];
+
+            for(var i=0; i<dataRepository.length;i++)
+            {
+                var season = dataRepository[i];
+                if (i % 2 == 0) {
                     item.push(season);
                 }
             }
@@ -136,6 +154,8 @@ season_mockHTTPBackend = function(config, $httpBackend, $q, dataRepository){
 
             return [200,true];
         });
+
+    return mockedSeasonGetList;
 
 }
 
