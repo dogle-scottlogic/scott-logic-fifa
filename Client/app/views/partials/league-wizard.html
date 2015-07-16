@@ -29,12 +29,12 @@
   </wizard>
 </div>
 
-<div class="gridview" ng-hide="vm.showWizard">
-    <h1>League successfully generated</h1>
-
+<div ng-hide="vm.showWizard">
     <div ng-show="vm.countBeforeResult > 0">
+      <h1>League successfully generated</h1>
       <p>Time before result :</p>
       <h2>{{vm.countBeforeResult}}</h2>
+      <img src="views/partials/img/loading.gif"></img>
     </div>
 
     <div ng-hide="vm.countBeforeResult > 0">
