@@ -8,5 +8,6 @@ namespace FIFA.Server.Models
 {
     public interface IMatchRepository : ICRUDRepository<Match, int, MatchFilter>
     {
+        Task<Match> GetMatchByPlayers(int homePlayerId, int awayPlayerId);
     }
 }

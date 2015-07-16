@@ -7,13 +7,13 @@ namespace FIFA.Server.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class TeamPlayerLeagueAndMatchLeague : IMigrationMetadata
+    public sealed partial class League_changes : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(TeamPlayerLeagueAndMatchLeague));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(League_changes));
         
         string IMigrationMetadata.Id
         {
-            get { return "201507131249287_TeamPlayerLeagueAndMatchLeague"; }
+            get { return "201507131601582_League_changes"; }
         }
         
         string IMigrationMetadata.Source

@@ -98,7 +98,7 @@ module.exports = function(grunt) {
                    },
                    {
                        expand: true,
-                       cwd: '<%= paths.bowerAssets %>/angular-wizard/',
+                       cwd: '<%= paths.bowerAssets %>/angular-wizard/dist/',
                        src: ['angular-wizard.js'],
                        dest: 'app/lib/angular-wizard/'
                    }

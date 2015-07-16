@@ -18,6 +18,6 @@ namespace FIFA.Server.Models
         public int Goals { get; set; }
 
         public Location Location { get; set; }
-
+        public bool? MatchPlayed { get; set; }
     }
 }

@@ -18,8 +18,6 @@ namespace FIFA.Server.Controllers
     [ConfigurableCorsPolicy("localhost")]
     public class CountryController : AbstractCRUDAPIController<Country, int, CountryFilter>
     {
-
-
         /// <summary>
         ///     Constructor
         /// </summary>

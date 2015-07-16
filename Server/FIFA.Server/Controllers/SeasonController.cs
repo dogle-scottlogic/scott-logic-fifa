@@ -56,7 +56,7 @@ namespace FIFA.Server.Controllers
         }
 
         /// <summary>
-        ///     Retrieves a specific season by it's ID
+        ///     Retrieves a specific season by its ID
         /// </summary>
         /// <param name="id">The ID of the season.</param>
         /// <returns>Return a seasonModel if found</returns>

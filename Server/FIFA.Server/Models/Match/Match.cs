@@ -15,6 +15,8 @@ namespace FIFA.Server.Models
 
         public DateTime? Date { get; set; }
 
+        public bool Played { get; set; }
+
         [ForeignKey("League")]
         public int LeagueId;
 

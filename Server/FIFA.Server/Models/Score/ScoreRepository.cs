@@ -12,15 +12,11 @@ namespace FIFA.Server.Models
     {
         private FIFAServerContext db = new FIFAServerContext();
 
-        public ScoreRepository()
-        {
+        public ScoreRepository(){ }
 
-        }
-        
-        // Get all the Scores ordered by name / scores
-        public async Task<IEnumerable<Score>> GetAll()
-        {
+        public async Task<IEnumerable<Score>> GetAll() {
             IEnumerable<Score> scores = await db.Scores
+                .Include(s => s.Match).Include(s => s.TeamPlayer)
                 .ToListAsync();
 
             return scores;
@@ -28,7 +24,7 @@ namespace FIFA.Server.Models
 
         public async Task<IEnumerable<Score>> GetAllWithFilter(ScoreFilter filter)
         {
-            return await FilterScores(db.Scores, filter).ToListAsync();
+            return await FilterScores(db.Scores, filter).Include(s => s.Match).Include(s => s.TeamPlayer).ToListAsync();
         }
 
         private IQueryable<Score> FilterScores(IQueryable<Score> query, ScoreFilter filter)
@@ -47,9 +43,8 @@ namespace FIFA.Server.Models
                 
                 if (filter.PlayerId != 0)
                 {
-                    query = query.Where(m => m.PlayerId == filter.PlayerId);
+                    query = query.Where(m => m.TeamPlayer.PlayerId == filter.PlayerId);
                 }
-                
                 
                 if (filter.Goals != 0)
                 {
@@ -60,7 +55,10 @@ namespace FIFA.Server.Models
                 {
                     query = query.Where(m => m.Location == filter.Location);
                 }
-                
+
+                if (filter.MatchPlayed != null) {
+                    query = query.Where(m => m.Match.Played == filter.MatchPlayed);
+                }
             }
 
             return query;
@@ -108,6 +106,26 @@ namespace FIFA.Server.Models
             await db.SaveChangesAsync();
 
             return true;
+        }
+
+        /// <summary>
+        /// Update the score when we know its match ID, player and location
+        /// </summary>
+        /// <param name="score"></param>
+        /// <returns>true if successful, false otherwise</returns>
+        public async Task<bool> UpdateFromMatchResult(Score score)
+        { 
+            // we know the match ID and teamPlayer ID
+            // we can retrieve the score and update it  
+            // the 'AsNoTracking' function to avoid the situation when 
+            // the retrieved model is in Detached state and then we want to modify it
+            // => that would lead to an exception
+            Score existing = db.Scores.AsNoTracking().Where(s => s.MatchId == score.MatchId && s.TeamPlayerId == score.TeamPlayerId 
+                                                && s.Location == score.Location).FirstOrDefault();
+            score.Id = existing.Id;
+            // once we have the existing score, we update it with our argument
+            // if we haven't found a score, the update fails
+            return existing != null ? await Update(score.Id, score) : false;
         }
         
         public void Dispose(bool disposing)

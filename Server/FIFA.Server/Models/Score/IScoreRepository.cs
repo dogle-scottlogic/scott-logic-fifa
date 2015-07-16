@@ -8,5 +8,6 @@ namespace FIFA.Server.Models
 {
     public interface IScoreRepository : ICRUDRepository<Score, int, ScoreFilter>
     {
+        Task<bool> UpdateFromMatchResult(Score score);
     }
 }

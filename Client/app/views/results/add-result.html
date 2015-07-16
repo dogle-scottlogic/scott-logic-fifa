@@ -1,0 +1,56 @@
+<form ng-submit="vm.saveResult()">
+<div class="alert alert-dismissible alert-success" ng-show="vm.displaySuccess">
+  <button type="button" class="close" data-dismiss="alert">×</button>
+  Score added!
+</div>
+<div class="clear"></div>
+<div class="alert alert-danger" role="alert" ng-repeat="value in vm.errors['item.Global']">{{value}}</div>
+<div class="form-group" ng-init="vm.initFields()" cg-busy="vm.loadingPromise">
+	<div class="row">
+		<div class="col-md-2" >
+			<h3>Home</h3> 
+			<select ng-model="vm.selectedHomePlayerId"
+					ng-options="tp.Id as tp.DisplayName for tp in vm.homePlayers"
+					ng-change="vm.retrieveOpponents()"
+					required>
+				<option value=""></option>
+			</select>			
+		</div>
+
+		<div class="col-md-1">
+			<h3>Away</h3> 
+
+			<select ng-model="vm.selectedAwayPlayerId"
+					ng-options="tp.Id as tp.DisplayName for tp in vm.awayPlayers"
+					required>
+				<option value=""></option>
+			</select>
+		</div>
+	</div>
+	
+	<div class="row">
+		<div class="col-md-2">
+			<h3>Score</h3> 
+			<div>
+				<input type="text" style="width: 2em" ng-model="vm.goalsHome"/> - <input type="text" style="width: 2em" ng-model="vm.goalsAway"/>
+			</div>
+		</div>
+
+		<div class="col-md-1">
+			<h3>Date</h3> 
+			<div>
+				<input type="date" ng-model="vm.matchDate" required />
+			</div>
+		</div>
+	</div>
+
+	<div class="row" style="margin-top: 20px">
+		<div class="col-md-1">
+			<input type="submit" class="btn btn-primary" value="Add"/>
+		</div>
+	</div>
+</div>
+</form>
+
+
+

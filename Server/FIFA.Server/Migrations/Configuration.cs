@@ -33,13 +33,15 @@ namespace FIFA.Server.Migrations
             );
             context.SaveChanges();
 
-            var allPlayers = new List<Player> { 
+            var allPlayers = new List<Player> {
+                // League 1
                 new Player { Id = 1, Name = "Tony" },
                 new Player { Id = 2, Name = "Jack"},
                 new Player { Id = 3, Name = "Pete"},
                 new Player { Id = 4, Name = "Will" },
                 new Player { Id = 5, Name = "Ian" },
                 new Player { Id = 6, Name = "Craig" },
+                // League 2
                 new Player { Id = 7, Name = "Stevie" },
                 new Player { Id = 8, Name = "Graham" },
                 new Player { Id = 9, Name = "Murray" },
@@ -123,11 +125,11 @@ namespace FIFA.Server.Migrations
             int scoreId = 1;
             int matchId = 1;
 
-            var league1Matches = seedMatchesScores(context, playersLeague1, scoreId, matchId);
+            var league1Matches = seedMatchesScores(context, teamPlayersLeague1, scoreId, matchId);
 
             matchId = 31;
             scoreId = 61;
-            var league2Matches = seedMatchesScores(context, playersLeague2, scoreId, matchId);
+            var league2Matches = seedMatchesScores(context, teamPlayersLeague2, scoreId, matchId);
 
             var leagues = new List<League> { 
                 new League { Id = 1, Name = "League 1", SeasonId = 1, TeamPlayers = teamPlayersLeague1, Matches = league1Matches },
@@ -145,14 +147,14 @@ namespace FIFA.Server.Migrations
         }
         
         // Generates matches and scores for a list of players
-        private List<Match> seedMatchesScores(FIFAServerContext context, List<Player> players, Int32 scoreId, Int32 matchId)
+        private List<Match> seedMatchesScores(FIFAServerContext context, List<TeamPlayer> players, Int32 scoreId, Int32 matchId)
         {
             List<Match> createdMatches = new List<Match>();
 
             // generate League 1 games
-            foreach (Player p1 in players)
+            foreach (TeamPlayer p1 in players)
             {
-                foreach (Player p2 in players)
+                foreach (TeamPlayer p2 in players)
                 {
                     // avoid adding match for player against himself
                     if (p1.Id != p2.Id)
@@ -166,8 +168,8 @@ namespace FIFA.Server.Migrations
                         context.SaveChanges();
                         createdMatches.Add(match);
 
-                        var scoreHomePlayer1 = new Score { Id = scoreId++, MatchId = match.Id, Location = Location.Home, PlayerId = p1.Id };
-                        var scoreAwayPlayer2 = new Score { Id = scoreId++, MatchId = match.Id, Location = Location.Away, PlayerId = p2.Id };
+                        var scoreHomePlayer1 = new Score { Id = scoreId++, MatchId = match.Id, Location = Location.Home, TeamPlayer = p1 };
+                        var scoreAwayPlayer2 = new Score { Id = scoreId++, MatchId = match.Id, Location = Location.Away, TeamPlayer = p2 };
                         context.Scores.AddOrUpdate(
                             s => s.Id,
                             scoreHomePlayer1, scoreAwayPlayer2
