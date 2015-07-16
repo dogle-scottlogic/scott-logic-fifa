@@ -51,6 +51,22 @@ describe('Testing the CountryShowDirective', function() {
         expect(element.html()).toContain('Scotland');
     });
 
+    it('Change the country Id', function() {
+        var scope = $rootScope.$new();
+        scope.selectedCountry = 2;
+        var html = angular.element('<countryshow countryid="selectedCountry"></seasonviewshow>');
+        var element = $compile(html)(scope);
+
+        $rootScope.$digest();
+        verifyPromiseAndFlush(element.isolateScope().vm, $httpBackend);
+
+
+        scope.selectedCountry = 3;
+        $rootScope.$digest();
+        verifyPromiseAndFlush(element.isolateScope().vm, $httpBackend);
+        expect(element.html()).toContain('Romania');
+    });
+
   });
 
 });
