@@ -123,8 +123,13 @@ namespace FIFA.Server.Controllers
                 string leagueName = "League " + leagueNumber;
 
                 List<Player> playerToAddInThisLeague = new List<Player>();
-                // if the list of remaining player is > maxNumberOfPlayersByLeague, we extract the min number of players
-                if (playerListRemaining.Count() > maxNumberOfPlayersByLeague)
+                // If the list of remaining player / maxNumberOfPlayersByLeague > 2, we extract the max number of players
+                if ((playerListRemaining.Count() / maxNumberOfPlayersByLeague) >= 2)
+                {
+                    playerToAddInThisLeague.AddRange(playerListRemaining.GetRange(0, maxNumberOfPlayersByLeague));
+                    playerListRemaining.RemoveRange(0, maxNumberOfPlayersByLeague);
+                }
+                else if (playerListRemaining.Count() > maxNumberOfPlayersByLeague)
                 {
                     playerToAddInThisLeague.AddRange(playerListRemaining.GetRange(0, minNumberOfPlayers));
                     playerListRemaining.RemoveRange(0, minNumberOfPlayers);

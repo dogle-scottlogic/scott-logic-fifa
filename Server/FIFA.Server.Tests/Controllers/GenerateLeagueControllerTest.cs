@@ -418,19 +418,17 @@ namespace FIFATests.ControllerTests
             Assert.AreEqual(response.StatusCode, HttpStatusCode.Created);
         }
 
-        // Verifying the Generate valide if all is ok - Case we have more players that can fit on only one League
-        [TestMethod]
-        public void GenerateLeagueValidPlayersWithTeamMultipleLeagues()
+        // Mocking the valide generation for a determined number of players (return the created leagues)
+        private List<League> _initGenerateLeagueValidPlayers(int nbPlayers)
         {
-
             GenerateLeagueDTO generateLeagueDTO = new GenerateLeagueDTO();
             generateLeagueDTO.Players = new List<Player>();
-            for (int i = 0; i < 14; i++)
+            for (int i = 0; i < nbPlayers; i++)
             {
                 generateLeagueDTO.Players.Add(new Player());
             }
             List<Team> teams = new List<Team>();
-            for (int i = 0; i < 14; i++)
+            for (int i = 0; i < nbPlayers; i++)
             {
                 teams.Add(new Team());
             }
@@ -479,20 +477,78 @@ namespace FIFATests.ControllerTests
             GenerateLeagueController controller = new GenerateLeagueController(mock.Object, mockSeasonRepo.Object,
                 mockTeamRepo.Object);
 
-
             // configuring the context for the controler
             fakeContext(controller);
 
             HttpResponseMessage response = controller.Post(generateLeagueDTO).Result;
-            // the result should say "HttpStatusCode.Created"
-            Assert.AreEqual(response.StatusCode, HttpStatusCode.Created);
+
+            return createdLeagues;
+        }
+
+        // Verifying the Generate valide if all is ok - Case we have more players that can fit on only one League
+        [TestMethod]
+        public void GenerateLeagueValidPlayersWithTeamMultipleLeagues14()
+        {
+            List<League> createdLeagues = _initGenerateLeagueValidPlayers(14);
+            // We expect 3 leagues to be created
+            Assert.AreEqual(createdLeagues.Count(), 3);
+            // With the first with 6 players
+            Assert.AreEqual(createdLeagues.ElementAt(0).TeamPlayers.Count(), 6);
+
+            // With the nexts with 4 players
+            Assert.AreEqual(createdLeagues.ElementAt(1).TeamPlayers.Count(), 4);
+            Assert.AreEqual(createdLeagues.ElementAt(2).TeamPlayers.Count(), 4);
+        }
+
+        // Verifying the Generate valide if all is ok - Case we have 18 players which means 3 teams of 6 players(not 4)
+        [TestMethod]
+        public void GenerateLeagueValidPlayersMaxWithTeamMultipleLeagues18()
+        {
+
+            List<League> createdLeagues = _initGenerateLeagueValidPlayers(18);
             // We expect 3 leagues to be created
             Assert.AreEqual(createdLeagues.Count(), 3);
             // With the two first with 4 players
-            Assert.AreEqual(createdLeagues.ElementAt(0).TeamPlayers.Count(), 4);
-            Assert.AreEqual(createdLeagues.ElementAt(1).TeamPlayers.Count(), 4);
+            Assert.AreEqual(createdLeagues.ElementAt(0).TeamPlayers.Count(), 6);
+            Assert.AreEqual(createdLeagues.ElementAt(1).TeamPlayers.Count(), 6);
             // and the last with 6 players
             Assert.AreEqual(createdLeagues.ElementAt(2).TeamPlayers.Count(), 6);
+        }
+
+        // Verifying the Generate valide if all is ok - Case we have 20 players which means 4 teams of 2*6 and 2*4 players
+        [TestMethod]
+        public void GenerateLeagueValidPlayersMaxWithTeamMultipleLeagues20()
+        {
+            List<League> createdLeagues = _initGenerateLeagueValidPlayers(20);
+            // We expect 3 leagues to be created
+            Assert.AreEqual(createdLeagues.Count(), 4);
+            // With the two first with 6 players
+            Assert.AreEqual(createdLeagues.ElementAt(0).TeamPlayers.Count(), 6);
+            Assert.AreEqual(createdLeagues.ElementAt(1).TeamPlayers.Count(), 6);
+            // and the lasts with 4 players
+            Assert.AreEqual(createdLeagues.ElementAt(2).TeamPlayers.Count(), 4);
+            Assert.AreEqual(createdLeagues.ElementAt(2).TeamPlayers.Count(), 4);
+        }
+
+        // Verifying the Generate valide if all is ok - Case we have 60 players which means 4 teams of 2*6 and 2*4 players
+        [TestMethod]
+        public void GenerateLeagueValidPlayersMaxWithTeamMultipleLeagues60()
+        {
+            List<League> createdLeagues = _initGenerateLeagueValidPlayers(64);
+            // We expect 3 leagues to be created
+            Assert.AreEqual(createdLeagues.Count(), 11);
+            // With the 9 first and the last with 6 players
+            for (int i = 0; i < 11; i++)
+            {
+                if (i != 9)
+                {
+                    Assert.AreEqual(createdLeagues.ElementAt(i).TeamPlayers.Count(), 6);
+                }
+                else
+                {
+                    Assert.AreEqual(createdLeagues.ElementAt(i).TeamPlayers.Count(), 4);
+                }
+            }
         }
 
 
