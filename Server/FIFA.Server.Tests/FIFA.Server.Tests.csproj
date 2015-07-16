@@ -98,6 +98,7 @@
     <Compile Include="Controllers\GenerateLeagueControllerTest.cs" />
     <Compile Include="Controllers\PlayerControllerTest.cs" />
     <Compile Include="Controllers\LeagueControllerTest.cs" />
+    <Compile Include="Controllers\SeasonViewControllerTest.cs" />
     <Compile Include="Controllers\SeasonControllerTest.cs" />
     <Compile Include="Controllers\CountryControllerTest.cs" />
     <Compile Include="Controllers\TeamControllerTest.cs" />

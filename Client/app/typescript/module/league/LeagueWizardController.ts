@@ -3,18 +3,24 @@
 module FifaLeagueClient.Module.League {
   export class LeagueWizardController extends Common.Controllers.AbstractController {
 
+
+      mainService : GenerateLeagueService;
+      wizardHandler:angular.mgoAngularWizard.WizardHandler;
+
+      // interval service use to show the result after a defined time
+      intervalService;
+
       // variable shown
       countryId: number;
       playerSelection:Player.Directives.SelectablePlayerModel;
       generateLeague: GenerateLeagueDTOModel;
-      generatedLeagueListViewModel:LeagueViewModel[];
-      mainService : GenerateLeagueService;
-      wizardHandler:angular.mgoAngularWizard.WizardHandler;
-      showWizard:boolean;
 
-      // interval service use to show the result after a defined time
-      intervalService;
+      showWizard:boolean;
       countBeforeResult:number;
+
+      // The Id of the season after generation
+      generatedSeasonId:number;
+
 
     static $inject = ["$scope", '$interval', 'generateLeagueService', 'WizardHandler'];
 
@@ -25,14 +31,14 @@ module FifaLeagueClient.Module.League {
         this.mainService = generateLeagueService;
         this.generateLeague = new GenerateLeagueDTOModel(null);
         this.showWizard = true;
-        this.generatedLeagueListViewModel = null;
     }
 
-    // Hide the wizard, show the result
+    // Hide the wizard, show the result (count to 10 before showing)
     public finishedWizard():void{
       var self = this;
       self.showWizard = false;
       self.countBeforeResult = 10;
+      this.generatedSeasonId = this.generateLeague.SeasonId;
 
       self.intervalService(function(){
         self.countBeforeResult--;
@@ -74,8 +80,7 @@ module FifaLeagueClient.Module.League {
 
 
     // Go to the next step if the add was a success
-    protected handleGenerateLeagueSuccess = (data:LeagueViewModel[]) => {
-        this.generatedLeagueListViewModel = data;
+    protected handleGenerateLeagueSuccess = (data) => {
         if(this.wizardHandler.wizard() != null){
           this.wizardHandler.wizard().next();
         }

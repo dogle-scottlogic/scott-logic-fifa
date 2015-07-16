@@ -119,6 +119,7 @@ namespace FIFA.Server.Models
             .Where(l => l.Id == id)
             .Select(l => new LeagueViewModel
             {
+                Id = l.Id,
                 Name = l.Name,
                 TeamPlayers = l.TeamPlayers.Select(tp => new TeamPlayerViewModel
                 {

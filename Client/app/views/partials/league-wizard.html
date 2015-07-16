@@ -37,27 +37,8 @@
       <h2>{{vm.countBeforeResult}}</h2>
     </div>
 
-
     <div ng-hide="vm.countBeforeResult > 0">
-      <p>Below the teams for each players of the leagues :</p>
-
-      <div ng-repeat="generatedLeagueViewModel in vm.generatedLeagueListViewModel">
-        <h2>{{generatedLeagueViewModel.Name}}</h2>
-        <table class="table table-striped table-bordered">
-            <thead>
-              <tr>
-                  <th>Player name</th>
-                  <th width="50%">Team Name</th>
-              </tr>
-            </thead>
-            <tbody>
-            <tr ng-repeat="teamPlayer in generatedLeagueViewModel.TeamPlayers">
-                <td>{{teamPlayer.player.Name}}</td>
-                <td>{{teamPlayer.team.Name}}</td>
-            </tr>
-            </tbody>
-        </table>
-      </div>
+      <seasonviewshow seasonid="vm.generatedSeasonId"></seasonviewshow>
     </div>
 
 </div>

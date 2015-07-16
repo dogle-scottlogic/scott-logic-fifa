@@ -44,16 +44,16 @@ describe('Testing the LeagueWizardController', function() {
        var player2 = new FifaLeagueClient.Module.Player.PlayerModel({Id:2,Name:"Robert"});
        leagueWizardController.playerSelection = [new FifaLeagueClient.Module.Player.Directives.SelectablePlayerModel(player1),
                                                 new FifaLeagueClient.Module.Player.Directives.SelectablePlayerModel(player2)];
+
+        // we select only roger
        leagueWizardController.playerSelection[0].selected = true;
 
         // Validate the player selection which mean have the selected player in repo
         leagueWizardController.validatePlayerSelectionStep();
         verifyPromiseAndFlush(leagueWizardController, $httpBackend);
-        // The last array shall be what we have in leagueWizardController.generatedLeagueViewModel
-        expect(leagueWizardController.generatedLeagueListViewModel).toEqual(dataRepository[dataRepository.length - 1]);
-        // Expect to have Roger in the return but not robert
-        expect(leagueWizardController.generatedLeagueListViewModel[0].TeamPlayers[0].player.Name).toContain(player1.Name);
-        expect(leagueWizardController.generatedLeagueListViewModel[0].TeamPlayers[0].player.Name).not.toContain(player2.Name);
+        // Expect to have Roger created in this new league and note Robert
+        expect(dataRepository[dataRepository.length - 1].TeamPlayers[0].player.Name).toContain(player1.Name);
+        expect(dataRepository[dataRepository.length - 1].TeamPlayers[0].player.Name).not.toContain(player2.Name);
 
     });
 

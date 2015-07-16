@@ -102,7 +102,6 @@ namespace FIFA.Server.Controllers
 
             Random rand = new Random();
 
-            List<LeagueViewModel> createdLeaguesVM = new List<LeagueViewModel>();
             // We mix randomly the list of players (maybe in a future we ll have to determine the order in function of the ranks)
             int nbPlayers = players.Count();
             List<Player> playerListRemaining = new List<Player>();
@@ -143,17 +142,12 @@ namespace FIFA.Server.Controllers
 
                 // First we create the league attached to the players
                 League createdLeague = await this.createLeagueWithTeams(season.Id, leagueName, playerToAddInThisLeague, teams, rand);
-
-
-                // To finish, we load the generated league from the data base
-                LeagueViewModel createdLeagueVM = await this.leagueRepository.GetViewModel(createdLeague.Id);
-                createdLeaguesVM.Add(createdLeagueVM);
-
+                
                 leagueNumber++;
 
             }
-            
-            var response = Request.CreateResponse<List<LeagueViewModel>>(HttpStatusCode.Created, createdLeaguesVM);
+
+            var response = Request.CreateResponse<int>(HttpStatusCode.Created, season.Id);
 
             return response;
 
