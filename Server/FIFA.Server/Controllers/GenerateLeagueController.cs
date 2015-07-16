@@ -161,7 +161,6 @@ namespace FIFA.Server.Controllers
             League leagueInCreation = new League();
             leagueInCreation.Name = leagueName;
             leagueInCreation.SeasonId = seasonId;
-            leagueInCreation.TeamPlayers = new List<TeamPlayer>();
 
             List<TeamPlayer> teamPlayers = new List<TeamPlayer>();
 
@@ -187,39 +186,6 @@ namespace FIFA.Server.Controllers
             return await this.leagueRepository.createLeagueWithTeamPlayers(leagueInCreation, teamPlayers);
         }
         
-
-        /**
-         * Create Matches and scores associated to leagues / players
-         */
-        /*private async Task<Match> createMatchAndScore(IEnumerable<TeamPlayer> teamPlayers)
-        {
-            foreach (var homeTeamPlayer in teamPlayers)
-            {
-                foreach (var awayTeamPlayer in teamPlayers)
-                {
-                    // If the Id of teamplayer1 is different of team player 2, we create a match with the scores
-                    if (homeTeamPlayer.Id != awayTeamPlayer.Id)
-                    {
-                        //add match & score
-                        Match match = new Match { };
-
-                       var scoreHomePlayer1 = new Score { Location = Location.Home, TeamPlayerId = p1.Id };
-                        var scoreAwayPlayer2 = new Score { Location = Location.Away, TeamPlayerId = p2.Id };
-                        
-                        match.Scores = {scoreHomePlayer1, scoreAwayPlayer2};
-
-                        context.Scores.AddOrUpdate(
-                            s => s.Id,
-                            scoreHomePlayer1, scoreAwayPlayer2
-                        );
-                        Match match = new Match();
-                        match.Scores = new List<Score>();
-
-                    }
-
-                }
-            }
-        }*/
 
         
         // Get the list of the teams associated to the country Id
