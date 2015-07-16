@@ -12,10 +12,15 @@ module FifaLeagueClient.Module.League {
       wizardHandler:angular.mgoAngularWizard.WizardHandler;
       showWizard:boolean;
 
-    static $inject = ["$scope", 'generateLeagueService', 'WizardHandler'];
+      // interval service use to show the result after a defined time
+      intervalService;
+      countBeforeResult:number;
 
-    constructor(scope, generateLeagueService : GenerateLeagueService, wizardHandler:angular.mgoAngularWizard.WizardHandler){
+    static $inject = ["$scope", '$interval', 'generateLeagueService', 'WizardHandler'];
+
+    constructor(scope, interval, generateLeagueService : GenerateLeagueService, wizardHandler:angular.mgoAngularWizard.WizardHandler){
         super(scope);
+        this.intervalService = interval;
         this.wizardHandler= wizardHandler;
         this.mainService = generateLeagueService;
         this.generateLeague = new GenerateLeagueDTOModel(null);
@@ -25,7 +30,14 @@ module FifaLeagueClient.Module.League {
 
     // Hide the wizard, show the result
     public finishedWizard():void{
-      this.showWizard = false;
+      var self = this;
+      self.showWizard = false;
+      self.countBeforeResult = 10;
+
+      self.intervalService(function(){
+        self.countBeforeResult--;
+      }, 1000, self.countBeforeResult);
+
     }
 
     public selectCountry():boolean{
