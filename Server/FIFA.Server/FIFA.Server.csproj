@@ -152,14 +152,14 @@
     <EmbeddedResource Include="Migrations\201507101440297_nullable_match_date.resx">
       <DependentUpon>201507101440297_nullable_match_date.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201507131332275_score_teamPlayer.resx">
-      <DependentUpon>201507131332275_score_teamPlayer.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201507131601582_League_changes.resx">
       <DependentUpon>201507131601582_League_changes.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201507151419265_TeamPlayerUnique.resx">
       <DependentUpon>201507151419265_TeamPlayerUnique.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201507161411572_score_teamPlayer.resx">
+      <DependentUpon>201507161411572_score_teamPlayer.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
@@ -225,10 +225,6 @@
     <Compile Include="Migrations\201507101440297_nullable_match_date.Designer.cs">
       <DependentUpon>201507101440297_nullable_match_date.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201507131332275_score_teamPlayer.cs" />
-    <Compile Include="Migrations\201507131332275_score_teamPlayer.Designer.cs">
-      <DependentUpon>201507131332275_score_teamPlayer.cs</DependentUpon>
-    </Compile>
     <Compile Include="Migrations\201507131601582_League_changes.cs" />
     <Compile Include="Migrations\201507131601582_League_changes.Designer.cs">
       <DependentUpon>201507131601582_League_changes.cs</DependentUpon>
@@ -236,6 +232,10 @@
     <Compile Include="Migrations\201507151419265_TeamPlayerUnique.cs" />
     <Compile Include="Migrations\201507151419265_TeamPlayerUnique.Designer.cs">
       <DependentUpon>201507151419265_TeamPlayerUnique.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201507161411572_score_teamPlayer.cs" />
+    <Compile Include="Migrations\201507161411572_score_teamPlayer.Designer.cs">
+      <DependentUpon>201507161411572_score_teamPlayer.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Country\CountryFilter.cs" />
