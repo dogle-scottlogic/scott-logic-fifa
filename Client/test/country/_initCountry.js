@@ -25,12 +25,12 @@ country_buildDataRepository = function() {
 // mocking the backend in normal case
 country_mockHTTPBackend = function(config, $httpBackend, $q, dataRepository){
 
-    $httpBackend.whenGET(config.backend+"api/Country/")
+    var mockedCountryGetList = $httpBackend.whenGET(config.backend+"api/Country/")
         .respond(function (method, url, data, headers) {
             return [200,dataRepository];
         });
 
-    $httpBackend.whenGET(config.backend+"api/Country/2")
+    $httpBackend.whenGET(/\/api\/Country\/[1-9][0-9]*/)
         .respond(function (method, url, data, headers) {
 
             var splitedURL = url.split("/");
@@ -66,7 +66,7 @@ country_mockHTTPBackend = function(config, $httpBackend, $q, dataRepository){
         });
 
 
-    $httpBackend.whenPUT(config.backend+"api/Country/1")
+    $httpBackend.whenPUT(/\/api\/Country\/[1-9][0-9]*/)
         .respond(function (method, url, data, headers) {
 
             var splitedURL = url.split("/");
@@ -90,7 +90,7 @@ country_mockHTTPBackend = function(config, $httpBackend, $q, dataRepository){
             return [200,item];
         });
 
-    $httpBackend.whenDELETE(config.backend+"api/Country/2")
+    $httpBackend.whenDELETE(/\/api\/Country\/[1-9][0-9]*/)
         .respond(function (method, url, data, headers) {
 
             var splitedURL = url.split("/");
@@ -109,6 +109,8 @@ country_mockHTTPBackend = function(config, $httpBackend, $q, dataRepository){
             return [200,true];
         });
 
+    return mockedCountryGetList;
+
 }
 
 // mocking the backend in error case
@@ -117,17 +119,17 @@ country_mockHTTPBackend_Error = function(config, $httpBackend, $q, dataRepositor
     $httpBackend.whenGET(config.backend+"api/Country/")
         .respond(0,{status:0});
 
-    $httpBackend.whenGET(config.backend+"api/Country/2")
+    $httpBackend.whenGET(/\/api\/Country\/[1-9][0-9]*/)
         .respond(404,{Message: 'Not Found'});
 
     $httpBackend.whenPOST(config.backend+"api/Country/")
         .respond(400,{Message: 'The country name already exists'});
 
 
-    $httpBackend.whenPUT(config.backend+"api/Country/1")
+    $httpBackend.whenPUT(/\/api\/Country\/[1-9][0-9]*/)
         .respond(400,{Message: 'The country name already exists'});
 
-    $httpBackend.whenDELETE(config.backend+"api/Country/2")
+    $httpBackend.whenDELETE(/\/api\/Country\/[1-9][0-9]*/)
         .respond(404,{Message: 'Not Found'});
 
 }

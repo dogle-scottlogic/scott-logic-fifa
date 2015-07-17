@@ -39,7 +39,7 @@ describe('Testing the SeasonAddController in error', function() {
 
     it('Try creating a new season with an already existing name', function () {
       // We simulate we entered a new Season
-      seasonAddController.season.Name = "Spain";
+      seasonAddController.season.Name = "Season 1";
       // And that we clicked a button or something
       seasonAddController.addSeason();
       verifyPromiseAndFlush(seasonAddController, $httpBackend);

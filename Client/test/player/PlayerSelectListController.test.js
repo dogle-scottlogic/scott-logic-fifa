@@ -41,7 +41,7 @@ describe('Testing the PlayerSelectListController', function() {
 
   describe('PlayerSelectListController in normal case (no error) : ', function(){
 
-    it('should contain all the players at initialize', function() {
+    it('should contain all none archived players at initialize', function() {
       // The player shall be retrieved in the list
       expect(playerSelectListController.scope.players[1].player).toEqual(dataRepository[0]);
       expect(playerSelectListController.scope.players[2].player).toEqual(dataRepository[1]);

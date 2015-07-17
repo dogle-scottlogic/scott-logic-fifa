@@ -5,6 +5,7 @@ module FifaLeagueClient.Module.Season.Directives {
     interface IMyScope extends ng.IScope {
         vm : SeasonSelectController;
         filtercountry:string;
+        filterhavingleague:boolean;
         selectedseason:string;
         required: boolean;
     }
@@ -14,6 +15,7 @@ module FifaLeagueClient.Module.Season.Directives {
             restrict: "E",
             scope: {
                 filtercountry:'=',
+                filterhavingleague:'=',
                 selectedseason:'=',
                 required:'=',
                 'triggerselect':'&onSelect'
@@ -23,9 +25,16 @@ module FifaLeagueClient.Module.Season.Directives {
             templateUrl: 'views/season/season-select.html',
             link: function (scope:IMyScope, $elm, $attr)
             {
-              // Reload the country if its ID changed
+              // Reload the list if the filtercountry changed
               scope.$watch('filtercountry', function(newfiltercountry, oldfiltercountry) {
                         if (newfiltercountry !== oldfiltercountry) {
+                          scope.vm.getSeasonList();
+                        }
+              }, true);
+
+              // Reload the list if the filterhavingleague changed
+              scope.$watch('filterhavingleague', function(newfilterhavingleague, oldfilterhavingleague) {
+                        if (newfilterhavingleague !== oldfilterhavingleague) {
                           scope.vm.getSeasonList();
                         }
               }, true);

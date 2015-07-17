@@ -19,24 +19,21 @@ namespace FIFA.Server.Controllers
     public class GenerateLeagueController : ApiController
     {
         public const int minNumberOfPlayers = 4;
+        public const int maxNumberOfPlayersByLeague = 6;
 
-        ILeagueRepository repository;
+        ILeagueRepository leagueRepository;
         ISeasonRepository seasonRepository;
         ITeamRepository teamRepository;
-        ITeamPlayerRepository teamPlayerRepository;
-        IPlayerRepository playerRepository;
         
         /// <summary>
         ///     Constructor
         /// </summary>
         /// <returns></returns>
-        public GenerateLeagueController(ILeagueRepository leagueRepository, ISeasonRepository seasonRepository, ITeamRepository teamRepository, ITeamPlayerRepository teamPlayerRepository, IPlayerRepository playerRepository)
+        public GenerateLeagueController(ILeagueRepository leagueRepository, ISeasonRepository seasonRepository, ITeamRepository teamRepository)
         {
-            this.repository = leagueRepository;
+            this.leagueRepository = leagueRepository;
             this.seasonRepository = seasonRepository;
             this.teamRepository = teamRepository;
-            this.teamPlayerRepository = teamPlayerRepository;
-            this.playerRepository = playerRepository;
         }
         
 
@@ -89,7 +86,7 @@ namespace FIFA.Server.Controllers
                 else if (ModelState.IsValid)
                 {
                     // Generate the league
-                    return await this.GenerateLeagues(season, teams, item.Players);
+                    return await this.GenerateLeagues(season, teams, new List<Player>(item.Players));
                 }
                 else
                 {
@@ -99,121 +96,96 @@ namespace FIFA.Server.Controllers
             }
         }
         
-        // Method generating the league -- TODO generate multiple leagues if more than 8 players
-        private async Task<HttpResponseMessage> GenerateLeagues(Season season, List<Team> teams, IEnumerable<Player> players)
+        // Method generating the league
+        private async Task<HttpResponseMessage> GenerateLeagues(Season season, List<Team> teams, List<Player> players)
         {
 
             Random rand = new Random();
-            // First we create the league attached to the players
-            League createdLeague = await createLeagueAttachedToPlayers(season.Id, "League 1", players);
 
-            // Second we create the league attached to the players
-            createdLeague = await createTeamAttachedToLeague(createdLeague, teams, players, rand);
+            // We mix randomly the list of players (maybe in a future we ll have to determine the order in function of the ranks)
+            int nbPlayers = players.Count();
+            List<Player> playerListRemaining = new List<Player>();
+            for (int i = 0; i < nbPlayers; i++)
+            {
+                // we pick randomly a player and add it to the list
+                int pickedPlayer = rand.Next(0,players.Count()-1);
+                playerListRemaining.Add(players.ElementAt(pickedPlayer));
+                players.RemoveAt(pickedPlayer);
+            }
 
-            // To finish, we load the generated league from the data base
-            LeagueViewModel createdLeagueVM = await this.repository.GetViewModel(createdLeague.Id);
 
-            var response = Request.CreateResponse<LeagueViewModel>(HttpStatusCode.Created, createdLeagueVM);
+            int leagueNumber = 1;
+
+            // For each <maxNumberOfPlayersByLeague>, we create an other league
+            while(playerListRemaining.Count() > 0){
+
+                string leagueName = "League " + leagueNumber;
+
+                List<Player> playerToAddInThisLeague = new List<Player>();
+                // If the list of remaining player / maxNumberOfPlayersByLeague > 2, we extract the max number of players
+                if ((playerListRemaining.Count() / maxNumberOfPlayersByLeague) >= 2)
+                {
+                    playerToAddInThisLeague.AddRange(playerListRemaining.GetRange(0, maxNumberOfPlayersByLeague));
+                    playerListRemaining.RemoveRange(0, maxNumberOfPlayersByLeague);
+                }
+                else if (playerListRemaining.Count() > maxNumberOfPlayersByLeague)
+                {
+                    playerToAddInThisLeague.AddRange(playerListRemaining.GetRange(0, minNumberOfPlayers));
+                    playerListRemaining.RemoveRange(0, minNumberOfPlayers);
+                }
+                else
+                {
+                    // Get the last one
+                    playerToAddInThisLeague.AddRange(playerListRemaining.GetRange(0, playerListRemaining.Count()));
+                    playerListRemaining.RemoveRange(0, playerListRemaining.Count());
+                }
+
+                // First we create the league attached to the players
+                League createdLeague = await this.createLeagueWithTeams(season.Id, leagueName, playerToAddInThisLeague, teams, rand);
+                
+                leagueNumber++;
+
+            }
+
+            var response = Request.CreateResponse<int>(HttpStatusCode.Created, season.Id);
 
             return response;
 
         }
 
-
         /**
-         * Create league attached to the season and the player
+         * Create a league with the teamplayers
          */
-        private async Task<League> createLeagueAttachedToPlayers(int seasonId, string leagueName, IEnumerable<Player> players)
+        private async Task<League> createLeagueWithTeams(int seasonId, string leagueName, IEnumerable<Player> players, List<Team> teams, Random rand)
         {
             League leagueInCreation = new League();
             leagueInCreation.Name = leagueName;
             leagueInCreation.SeasonId = seasonId;
 
-            // Create the league in the database
-            leagueInCreation = await this.repository.Add(leagueInCreation);
-            
-            return leagueInCreation;
-        }
-
-        /**
-         * Create teamPlayers attached to the league
-         */
-        private async Task<League> createTeamAttachedToLeague(League league, List<Team> teams, IEnumerable<Player> players, Random rand)
-        {
             List<TeamPlayer> teamPlayers = new List<TeamPlayer>();
 
             // for each players, we choose randomly a team
             foreach (Player player in players)
             {
                 // picking a team randomly from the list of teams an add to the player
-                int teamPosition = rand.Next(0, teams.Count()-1);
+                int teamPosition = rand.Next(0, teams.Count() - 1);
                 Team team = teams.ElementAt(teamPosition);
                 // remove from the teamlist the selected team
                 teams.RemoveAt(teamPosition);
-                    
+
                 //we add the team player if not exists
                 TeamPlayer tp = new TeamPlayer();
                 tp.PlayerId = player.Id;
                 tp.TeamId = team.Id;
 
-                TeamPlayerFilter teamPlayerFilter = new TeamPlayerFilter();
-                teamPlayerFilter.PlayerId = tp.PlayerId;
-                teamPlayerFilter.TeamId = tp.TeamId;
-                IEnumerable<TeamPlayer> dbTeamPlayer = await this.teamPlayerRepository.GetAllWithFilter(teamPlayerFilter);
-                if (dbTeamPlayer == null || dbTeamPlayer.Count() == 0)
-                {
-                    // If the team player doesn't exists, we add him in the repository
-                    tp = await this.teamPlayerRepository.Add(tp);
-                }
-
-                // If the list of teamPlayers is empty, we create a list
-                if (league.TeamPlayers == null)
-                {
-                    league.TeamPlayers = new List<TeamPlayer>();
-                }
-
                 // Add the team players to the season
-                league.TeamPlayers.Add(tp);
+                teamPlayers.Add(tp);
+
             }
 
-            // Adding the teamplayers to the season
-            await this.repository.Update(league.Id, league);
-
-            return league;
+            return await this.leagueRepository.createLeagueWithTeamPlayers(leagueInCreation, teamPlayers);
         }
-
-        /**
-         * Create Matches and scores associated to leagues / players
-         */
-        /*private async Task<Match> createMatchAndScore(IEnumerable<TeamPlayer> teamPlayers)
-        {
-            foreach (var homeTeamPlayer in teamPlayers)
-            {
-                foreach (var awayTeamPlayer in teamPlayers)
-                {
-                    // If the Id of teamplayer1 is different of team player 2, we create a match with the scores
-                    if (homeTeamPlayer.Id != awayTeamPlayer.Id)
-                    {
-                        //add match & score
-                        Match match = new Match { };
-
-                       var scoreHomePlayer1 = new Score { Location = Location.Home, TeamPlayerId = p1.Id };
-                        var scoreAwayPlayer2 = new Score { Location = Location.Away, TeamPlayerId = p2.Id };
-                        
-                        match.Scores = {scoreHomePlayer1, scoreAwayPlayer2};
-
-                        context.Scores.AddOrUpdate(
-                            s => s.Id,
-                            scoreHomePlayer1, scoreAwayPlayer2
-                        );
-                        Match match = new Match();
-                        match.Scores = new List<Score>();
-
-                    }
-
-                }
-            }
-        }*/
+        
 
         
         // Get the list of the teams associated to the country Id
@@ -239,7 +211,7 @@ namespace FIFA.Server.Controllers
         {
             LeagueFilter lf = new LeagueFilter();
             lf.SeasonId = seasonId;
-            IEnumerable<League> leagues = await this.repository.GetAllWithFilter(lf);
+            IEnumerable<League> leagues = await this.leagueRepository.GetAllWithFilter(lf);
             return (leagues != null && leagues.Count() > 0);
         }
 

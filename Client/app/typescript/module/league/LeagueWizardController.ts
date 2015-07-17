@@ -3,29 +3,47 @@
 module FifaLeagueClient.Module.League {
   export class LeagueWizardController extends Common.Controllers.AbstractController {
 
+
+      mainService : GenerateLeagueService;
+      wizardHandler:angular.mgoAngularWizard.WizardHandler;
+
+      // interval service use to show the result after a defined time
+      intervalService;
+
       // variable shown
       countryId: number;
       playerSelection:Player.Directives.SelectablePlayerModel;
       generateLeague: GenerateLeagueDTOModel;
-      generatedLeagueViewModel:LeagueViewModel;
-      mainService : GenerateLeagueService;
-      wizardHandler:angular.mgoAngularWizard.WizardHandler;
+
       showWizard:boolean;
+      countBeforeResult:number;
 
-    static $inject = ["$scope", 'generateLeagueService', 'WizardHandler'];
+      // The Id of the season after generation
+      generatedSeasonId:number;
 
-    constructor(scope, generateLeagueService : GenerateLeagueService, wizardHandler:angular.mgoAngularWizard.WizardHandler){
+
+    static $inject = ["$scope", '$interval', 'generateLeagueService', 'WizardHandler'];
+
+    constructor(scope, interval, generateLeagueService : GenerateLeagueService, wizardHandler:angular.mgoAngularWizard.WizardHandler){
         super(scope);
+        this.intervalService = interval;
         this.wizardHandler= wizardHandler;
         this.mainService = generateLeagueService;
         this.generateLeague = new GenerateLeagueDTOModel(null);
         this.showWizard = true;
-        this.generatedLeagueViewModel = null;
     }
 
-    // Hide the wizard, show the result
+    // Hide the wizard, show the result (count to 10 before showing)
     public finishedWizard():void{
-      this.showWizard = false;
+      var self = this;
+      self.showWizard = false;
+      self.countBeforeResult = 10;
+      this.generatedSeasonId = this.generateLeague.SeasonId;
+
+      self.intervalService(function(){
+        self.countBeforeResult--;
+      }, 1000, self.countBeforeResult);
+
     }
 
     public selectCountry():boolean{
@@ -62,8 +80,7 @@ module FifaLeagueClient.Module.League {
 
 
     // Go to the next step if the add was a success
-    protected handleGenerateLeagueSuccess = (data:LeagueViewModel) => {
-        this.generatedLeagueViewModel = data;
+    protected handleGenerateLeagueSuccess = (data) => {
         if(this.wizardHandler.wizard() != null){
           this.wizardHandler.wizard().next();
         }

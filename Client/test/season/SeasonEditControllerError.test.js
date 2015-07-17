@@ -51,7 +51,7 @@ describe('Testing the SeasonEditController in error', function() {
       seasonEditController.season = new FifaLeagueClient.Module.Season.SeasonModel();
       // We simulate we change a season
       seasonEditController.season.Id = 1;
-      seasonEditController.season.Name = "Francia";
+      seasonEditController.season.Name = "Season 1";
       // And that we clicked a button or something
       seasonEditController.updateSeason();
       verifyPromiseAndFlush(seasonEditController, $httpBackend);

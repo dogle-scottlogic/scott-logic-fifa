@@ -10,11 +10,11 @@ namespace FIFA.Server.Models
 {
     public class SeasonRepository : ISeasonRepository
     {
-        private FIFAServerContext db = new FIFAServerContext();
+        private FIFAServerContext db;
 
-        public SeasonRepository()
+        public SeasonRepository(FIFAServerContext db)
         {
-
+            this.db = db;
         }
         
         // Get all the Seasons ordered by name / seasons
@@ -49,6 +49,11 @@ namespace FIFA.Server.Models
                 if (filter.CountryId != 0)
                 {
                     query = query.Where(m => m.CountryId == filter.CountryId);
+                }
+
+                if (filter.HavingLeague != null)
+                {
+                    query = query.Where(m => (m.Leagues.Count() > 0) == filter.HavingLeague);
                 }
 
             }

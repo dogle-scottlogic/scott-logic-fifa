@@ -1,8 +1,8 @@
-describe('Testing the SeasonAddController', function() {
+describe('Testing the SeasonViewShowController', function() {
   beforeEach(module('season'));
   beforeEach(module(FifaLeagueClient.Module.Common.devConfig));
 
-  var seasonAddController;
+  var seasonViewShowController;
   var $httpBackend;
 
   var dataRepository;
@@ -28,25 +28,25 @@ describe('Testing the SeasonAddController', function() {
   beforeEach(inject(function($controller, $rootScope) {
     scope = $rootScope.$new();
 
-    seasonAddController = $controller(FifaLeagueClient.Module.Season.SeasonAddController,
+    seasonViewShowController = $controller(FifaLeagueClient.Module.Season.SeasonViewShowController,
         {$scope: scope});
 
     scope.$digest();
   }));
 
-  describe('seasonAddController in normal case (no error) : ', function(){
 
-    it('Should create new season', function () {
-      // We simulate we entered a new Season
-      seasonAddController.season.Name = "Season 1";
+  describe('seasonViewShowController in normal case (no error) : ', function(){
+  // Get test
+    it('should get a season', function () {
 
       // And that we clicked a button or something
-      seasonAddController.addSeason();
-      verifyPromiseAndFlush(seasonAddController, $httpBackend);
+      seasonViewShowController.loadSeason(2);
+      verifyPromiseAndFlush(seasonViewShowController, $httpBackend);
 
-      var lastSeason = dataRepository[dataRepository.length - 1];
-      expect(lastSeason.Name).toEqual(seasonAddController.season.Name);
+      var seasonLoaded = seasonViewShowController.seasonView;
+      expect(seasonLoaded.Name).toEqual(dataRepository[1].Name);
     });
+
 
   });
 

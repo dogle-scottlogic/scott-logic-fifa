@@ -6,50 +6,63 @@ season_buildDataRepository = function() {
         {
             Id: 1,
             CountryId: 1,
-            Name: 'Ligue 1'
+            Name: 'Season 1'
         }),
         new FifaLeagueClient.Module.Season.SeasonModel({
             Id: 2,
             CountryId: 1,
-            Name: 'Ligue 2'
+            Name: 'Season 2'
         }),
         new FifaLeagueClient.Module.Season.SeasonModel({
             Id: 3,
             CountryId: 2,
-            Name: 'League 1'
+            Name: 'Saison 1'
         }),
         new FifaLeagueClient.Module.Season.SeasonModel({
             Id: 4,
             CountryId: 2,
-            Name: 'League 2'
+            Name: 'Saison 2'
         })
     ];
+}
+
+getSeason = function(dataRepository, Id){
+  var seasonToReturn = null;
+  for(var i=0; i<dataRepository.length;i++)
+  {
+      var season = dataRepository[i];
+      if (season.Id == Id) {
+          seasonToReturn = season;
+      }
+  }
+  return seasonToReturn;
 }
 
 // mocking the backend
 season_mockHTTPBackend = function(config, $httpBackend, $q, dataRepository){
 
-    $httpBackend.whenGET(config.backend+"api/Season/")
+    var mockedSeasonGetList = $httpBackend.whenGET(config.backend+"api/Season/")
         .respond(function (method, url, data, headers) {
             return [200,dataRepository];
         });
 
-    $httpBackend.whenGET(config.backend+"api/Season/2")
+    $httpBackend.whenGET(/\/api\/Season\/[1-9][0-9]*/)
         .respond(function (method, url, data, headers) {
 
             var splitedURL = url.split("/");
             var IdToGet = parseInt(splitedURL[splitedURL.length -1]);
-            var seasonToReturn = null;
-            for(var i=0; i<dataRepository.length;i++)
-            {
-                var season = dataRepository[i];
-                if (season.Id == IdToGet) {
-                    seasonToReturn = season;
-                }
-            }
-            return [200,seasonToReturn];
+            return [200,getSeason(dataRepository, IdToGet)];
 
         });
+
+      $httpBackend.whenGET(/\/api\/SeasonView\/[1-9][0-9]*/)
+          .respond(function (method, url, data, headers) {
+
+                var splitedURL = url.split("/");
+                var IdToGet = parseInt(splitedURL[splitedURL.length -1]);
+                return [200,getSeason(dataRepository, IdToGet)];
+
+          });
 
 
     $httpBackend.whenGET(config.backend+"api/Season?CountryId=1")
@@ -64,6 +77,24 @@ season_mockHTTPBackend = function(config, $httpBackend, $q, dataRepository){
             {
                 var season = dataRepository[i];
                 if (season.CountryId == IdToGet) {
+                    item.push(season);
+                }
+            }
+            return [200,item];
+        });
+
+    $httpBackend.whenGET(config.backend+"api/Season?HavingLeague=false")
+        .respond(function (method, url, data, headers) {
+
+            var splitedURL = url.split("=");
+            var havingLeague = Boolean(splitedURL[splitedURL.length -1]);
+
+            var item = [];
+
+            for(var i=0; i<dataRepository.length;i++)
+            {
+                var season = dataRepository[i];
+                if (i % 2 == 0) {
                     item.push(season);
                 }
             }
@@ -91,7 +122,7 @@ season_mockHTTPBackend = function(config, $httpBackend, $q, dataRepository){
         });
 
 
-    $httpBackend.whenPUT(config.backend+"api/Season/1")
+    $httpBackend.whenPUT(/\/api\/Season\/[1-9][0-9]*/)
         .respond(function (method, url, data, headers) {
 
             var splitedURL = url.split("/");
@@ -118,7 +149,7 @@ season_mockHTTPBackend = function(config, $httpBackend, $q, dataRepository){
             return [200,item];
         });
 
-    $httpBackend.whenDELETE(config.backend+"api/Season/2")
+    $httpBackend.whenDELETE(/\/api\/Season\/[1-9][0-9]*/)
         .respond(function (method, url, data, headers) {
 
             var splitedURL = url.split("/");
@@ -137,6 +168,8 @@ season_mockHTTPBackend = function(config, $httpBackend, $q, dataRepository){
             return [200,true];
         });
 
+    return mockedSeasonGetList;
+
 }
 
 
@@ -146,17 +179,20 @@ season_mockHTTPBackend_Error = function(config, $httpBackend, $q, dataRepository
     $httpBackend.whenGET(config.backend+"api/Season/")
         .respond(0,{status:0});
 
-    $httpBackend.whenGET(config.backend+"api/Season/2")
+    $httpBackend.whenGET(/\/api\/Season\/[1-9][0-9]*/)
+        .respond(404,{Message: 'Not Found'});  
+
+    $httpBackend.whenGET(/\/api\/SeasonView\/[1-9][0-9]*/)
         .respond(404,{Message: 'Not Found'});
 
     $httpBackend.whenPOST(config.backend+"api/Season/")
         .respond(400,{Message: 'The season name already exists'});
 
 
-    $httpBackend.whenPUT(config.backend+"api/Season/1")
+    $httpBackend.whenPUT(/\/api\/Season\/[1-9][0-9]*/)
         .respond(400,{Message: 'The season name already exists'});
 
-    $httpBackend.whenDELETE(config.backend+"api/Season/2")
+    $httpBackend.whenDELETE(/\/api\/Season\/[1-9][0-9]*/)
         .respond(404,{Message: 'Not Found'});
 
 }

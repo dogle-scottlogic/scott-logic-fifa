@@ -10,9 +10,12 @@ namespace FIFA.Server.Models
 {
     public class PlayerRepository : IPlayerRepository
     {
-        private FIFAServerContext db = new FIFAServerContext();
+        private FIFAServerContext db;
 
-        public PlayerRepository() { }
+        public PlayerRepository(FIFAServerContext db)
+        {
+            this.db = db;
+        }
         
         public async Task<IEnumerable<Player>> GetAll()
         {

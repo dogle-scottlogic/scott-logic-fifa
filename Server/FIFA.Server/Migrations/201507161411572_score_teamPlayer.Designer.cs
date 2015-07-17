@@ -13,7 +13,7 @@ namespace FIFA.Server.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201507131332275_score_teamPlayer"; }
+            get { return "201507161411572_score_teamPlayer"; }
         }
         
         string IMigrationMetadata.Source

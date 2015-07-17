@@ -1,8 +1,9 @@
-describe('Testing the SeasonAddController', function() {
+describe('Testing the SeasonViewShowController in error', function() {
   beforeEach(module('season'));
   beforeEach(module(FifaLeagueClient.Module.Common.devConfig));
+  beforeEach(module(FifaLeagueClient.Module.Common.HTTPErrorHandleModuleName));
 
-  var seasonAddController;
+  var seasonViewShowController;
   var $httpBackend;
 
   var dataRepository;
@@ -19,7 +20,7 @@ describe('Testing the SeasonAddController', function() {
       $httpBackend = $injector.get('$httpBackend');
       $q = $injector.get('$q');
 
-      season_mockHTTPBackend(config, $httpBackend, $q, dataRepository);
+      season_mockHTTPBackend_Error(config, $httpBackend, $q, dataRepository);
     });
 
   });
@@ -28,24 +29,20 @@ describe('Testing the SeasonAddController', function() {
   beforeEach(inject(function($controller, $rootScope) {
     scope = $rootScope.$new();
 
-    seasonAddController = $controller(FifaLeagueClient.Module.Season.SeasonAddController,
+    seasonViewShowController = $controller(FifaLeagueClient.Module.Season.SeasonViewShowController,
         {$scope: scope});
 
     scope.$digest();
   }));
 
-  describe('seasonAddController in normal case (no error) : ', function(){
+  describe('SeasonViewShowController in error case : ', function(){
 
-    it('Should create new season', function () {
-      // We simulate we entered a new Season
-      seasonAddController.season.Name = "Season 1";
-
+  // Get test
+    it('Try getting a season but have an error', function () {
       // And that we clicked a button or something
-      seasonAddController.addSeason();
-      verifyPromiseAndFlush(seasonAddController, $httpBackend);
-
-      var lastSeason = dataRepository[dataRepository.length - 1];
-      expect(lastSeason.Name).toEqual(seasonAddController.season.Name);
+      seasonViewShowController.loadSeason(2);
+      verifyPromiseAndFlush(seasonViewShowController, $httpBackend);
+      expect(seasonViewShowController.errors["item.Global"]).toEqual([ '404 : ', 'Not Found' ]);
     });
 
   });

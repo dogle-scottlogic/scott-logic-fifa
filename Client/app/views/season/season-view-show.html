@@ -1,0 +1,24 @@
+<div ng-show"seasonid" ng-init="vm.loadSeason(seasonid)" cg-busy="vm.loadingPromise">
+  <div class="clear"></div>
+  <div class="alert alert-danger" role="alert" ng-repeat="value in vm.errors['item.Global']">{{value}}</div>
+  <div>
+    <h2>{{vm.seasonView.Name}}</h2>
+    <div ng-repeat="leagueViewModel in vm.seasonView.LeagueViewModels">
+      <h3>{{leagueViewModel.Name}}</h3>
+      <table class="table table-striped table-bordered">
+          <thead>
+            <tr>
+                <th>Player name</th>
+                <th width="50%">Team Name</th>
+            </tr>
+          </thead>
+          <tbody>
+          <tr ng-repeat="teamPlayer in leagueViewModel.TeamPlayers">
+              <td>{{teamPlayer.player.Name}}</td>
+              <td>{{teamPlayer.team.Name}}</td>
+          </tr>
+          </tbody>
+      </table>
+    </div>
+  </div>
+</div>

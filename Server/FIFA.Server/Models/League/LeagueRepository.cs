@@ -10,18 +10,21 @@ namespace FIFA.Server.Models
 {
     public class LeagueRepository : ILeagueRepository
     {
-        private FIFAServerContext db = new FIFAServerContext();
+        private FIFAServerContext db;
 
-        public LeagueRepository() { }
+        public LeagueRepository(FIFAServerContext db)
+        {
+            this.db = db;
+        }
         
         public async Task<IEnumerable<League>> GetAll()
         {
-            return await db.Leagues.ToListAsync();
+            return await this.db.Leagues.ToListAsync();
         }
 
         public async Task<IEnumerable<League>> GetAllWithFilter(LeagueFilter filter)
         {
-            return await FilterLeagues(db.Leagues, filter).ToListAsync();
+            return await this.FilterLeagues(this.db.Leagues, filter).ToListAsync();
         }
 
         private IQueryable<League> FilterLeagues(IQueryable<League> query, LeagueFilter filter)
@@ -116,6 +119,7 @@ namespace FIFA.Server.Models
             .Where(l => l.Id == id)
             .Select(l => new LeagueViewModel
             {
+                Id = l.Id,
                 Name = l.Name,
                 TeamPlayers = l.TeamPlayers.Select(tp => new TeamPlayerViewModel
                 {
@@ -127,6 +131,74 @@ namespace FIFA.Server.Models
 
 
             return lvm;
+        }
+
+        /**
+         * Create teamPlayers attached to the league
+         */
+        public async Task<League> createLeagueWithTeamPlayers(League leagueInCreation, List<TeamPlayer> teamPlayers)
+        {
+            leagueInCreation.TeamPlayers = new List<TeamPlayer>();
+            // for each team players, we see in database if it already exists, if so, we add it to the leage without creating it before
+            foreach (TeamPlayer tp in teamPlayers)
+            {
+                TeamPlayer dbTeamPlayer = this.db.TeamPlayers.Where(tpWhere => tpWhere.PlayerId == tp.PlayerId 
+                    && tpWhere.TeamId == tp.TeamId).FirstOrDefault();
+                if (dbTeamPlayer != null)
+                {
+                    leagueInCreation.TeamPlayers.Add(dbTeamPlayer);
+                }
+                else
+                {
+                    // Add the team players to the season
+                    leagueInCreation.TeamPlayers.Add(tp);
+                }
+
+            }
+            
+            // we update the league then
+            leagueInCreation = this.db.Leagues.Add(leagueInCreation);
+            await db.SaveChangesAsync();
+
+            // Then we create the matches and the scores
+            leagueInCreation.Matches = createMatchAndScore(leagueInCreation.TeamPlayers);
+            
+            db.Entry(leagueInCreation).State = EntityState.Modified;
+            await db.SaveChangesAsync();
+
+            return leagueInCreation;
+        }
+
+
+        /**
+         * Create Matches and scores associated to leagues / players
+         */
+        private List<Match> createMatchAndScore(IEnumerable<TeamPlayer> teamPlayers)
+        {
+            List<Match> matchsToCreate = new List<Match>();
+            foreach (var homeTeamPlayer in teamPlayers)
+            {
+                foreach (var awayTeamPlayer in teamPlayers)
+                {
+                    // If the Id of teamplayer1 is different of team player 2, we create a match with the scores
+                    if (homeTeamPlayer.Id != awayTeamPlayer.Id)
+                    {
+                        //add match & score
+                        Match match = new Match { };
+                        match.Played = false;
+
+                        var scoreHomePlayer1 = new Score { Location = Location.Home, TeamPlayerId = homeTeamPlayer.Id };
+                        var scoreAwayPlayer2 = new Score { Location = Location.Away, TeamPlayerId = awayTeamPlayer.Id };
+
+                        match.Scores = new List<Score> { scoreHomePlayer1, scoreAwayPlayer2 };
+
+                        matchsToCreate.Add(match);
+
+                    }
+
+                }
+            }
+            return matchsToCreate;
         }
     }
 }

@@ -15,7 +15,8 @@ namespace FIFA.Server.Models
     // Class showing a league with all the players and the teams
     public class LeagueViewModel
     {
-         public string Name { get; set; }
-         public IEnumerable<TeamPlayerViewModel> TeamPlayers { get; set; }
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public IEnumerable<TeamPlayerViewModel> TeamPlayers { get; set; }
     }
 }
