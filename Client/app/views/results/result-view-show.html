@@ -1,0 +1,32 @@
+<div ng-init="vm.loadResultViewList()" cg-busy="vm.loadingPromise">
+  <div class="clear"></div>
+  <div class="alert alert-danger" role="alert" ng-repeat="value in vm.errors['item.Global']">{{value}}</div>
+  <div>
+    <h1>Results</h1>
+    <form class="simple-form" ng-submit="vm.loadResultViewList()">
+      Show me:
+      <countryselect selectedcountry="vm.resultViewFilter.CountryId"></countryselect>
+      <seasonselect selectedseason="vm.resultViewFilter.SeasonId" filtercountry="vm.resultViewFilter.CountryId" filterhavingleague='true'></seasonselect>
+      <input type="submit" class="btn btn-primary" value="Update" />
+    </form>
+    <div ng-repeat="resultView in vm.resultViewList">
+      <h2>{{resultView.Date | date :'dd-MM-yyyy'}}</h2>
+      <div ng-repeat="leagueResult in resultView.leagues">
+        <table class="table table-striped table-bordered">
+            <thead>
+              <tr>
+                  <th colspan="3"><h2>{{leagueResult.Name}}</h2></th>
+              </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="match in leagueResult.matches" >
+                <td width="45%">{{match.homeTeamPlayer.PlayerName}} ({{match.homeTeamPlayer.TeamName}})</td>
+                <td>{{match.homeTeamPlayer.nbGoals}} - {{match.awayTeamPlayerName.nbGoals}}</td>
+                <td width="45%">{{match.awayTeamPlayerName.PlayerName}} ({{match.awayTeamPlayerName.TeamName}})</td>
+            </tr>
+            </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
