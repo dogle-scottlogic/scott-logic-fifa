@@ -10,22 +10,28 @@
       <input type="submit" class="btn btn-primary" value="Update" />
     </form>
     <div ng-repeat="resultView in vm.resultViewList">
-      <h2>{{resultView.Date | date :'dd-MM-yyyy'}}</h2>
-      <div ng-repeat="leagueResult in resultView.leagues">
-        <table class="table table-striped table-bordered">
-            <thead>
-              <tr>
-                  <th colspan="3"><h2>{{leagueResult.Name}}</h2></th>
-              </tr>
-            </thead>
-            <tbody>
-            <tr ng-repeat="match in leagueResult.matches" >
-                <td width="45%">{{match.homeTeamPlayer.PlayerName}} ({{match.homeTeamPlayer.TeamName}})</td>
-                <td>{{match.homeTeamPlayer.nbGoals}} - {{match.awayTeamPlayerName.nbGoals}}</td>
-                <td width="45%">{{match.awayTeamPlayerName.PlayerName}} ({{match.awayTeamPlayerName.TeamName}})</td>
-            </tr>
-            </tbody>
-        </table>
+      <h2>{{resultView.Date | date :'EEEE dd MMMM yyyy'}}</h2>
+      <div ng-repeat="countryMatch in resultView.countryMatches">
+        <h3>{{countryMatch.Name}}</h3>
+        <div ng-repeat="seasonMatch in countryMatch.seasonMatches">
+          <h4>{{seasonMatch.Name}}</h4>
+          <div ng-repeat="leagueMatch in seasonMatch.leagueMatches">
+            <table class="table table-striped table-bordered">
+                <thead>
+                  <tr>
+                      <th colspan="3"><h2>{{leagueMatch.Name}}</h2></th>
+                  </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="match in leagueMatch.matches" >
+                    <td width="50%">{{match.homeTeamPlayer.PlayerName}} ({{match.homeTeamPlayer.TeamName}})</td>
+                    <td class="text-nowrap">{{match.homeTeamPlayer.nbGoals}} - {{match.awayTeamPlayerName.nbGoals}}</td>
+                    <td width="50%">{{match.awayTeamPlayerName.PlayerName}} ({{match.awayTeamPlayerName.TeamName}})</td>
+                </tr>
+                </tbody>
+            </table>
+          </div>
+        </div>
       </div>
     </div>
   </div>

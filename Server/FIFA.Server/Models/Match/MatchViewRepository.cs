@@ -32,6 +32,10 @@ namespace FIFA.Server.Models
                     m => new MatchResultViewModel{
                             LeagueId = m.League.Id,
                             LeagueName = m.League.Name,
+                            SeasonId = m.League.Season.Id,
+                            SeasonName = m.League.Season.Name,
+                            CountryId = m.League.Season.SeasonCountry.Id,
+                            CountryName = m.League.Season.SeasonCountry.Name,
                             Date = m.Date,
                             homeTeamPlayer = m.Scores.Where(s => s.Location == Location.Home)
                             .Select(s => new TeamPlayerResultViewModel
@@ -61,24 +65,46 @@ namespace FIFA.Server.Models
                 .ThenBy(mv => mv.awayTeamPlayerName.TeamName);
 
 
-            // Grouping all the matches by date then by league name
+            // Grouping all the matches by date then by season ID then by league ID
             var resultView = matchQuery
                 .GroupBy(mq => DbFunctions.TruncateTime(mq.Date))
                 .Select(mq => new ResultViewModel
                 {
                     Date = DbFunctions.TruncateTime(mq.FirstOrDefault().Date),
-                    leagues = mq.ToList()
-                    .GroupBy(l => l.LeagueId)
+                    countryMatches = mq.ToList()
+                    .GroupBy(l => l.CountryId)
                     .Select(
-                            lq => new LeagueResultViewModel
+                        cv => new CountryResultViewModel
                             {
-                                Id = lq.FirstOrDefault().LeagueId,
-                                Name = lq.FirstOrDefault().LeagueName,
-                                Date = lq.FirstOrDefault().Date.Value,
-                                matches = lq.ToList()
+                                Id = cv.FirstOrDefault().CountryId,
+                                Name = cv.FirstOrDefault().CountryName,
+                                Date = cv.FirstOrDefault().Date.Value,
+                                seasonMatches = cv.ToList()
+                                .GroupBy(l => l.SeasonId)
+                                .Select(
+                                        sv => new SeasonResultViewModel
+                                        {
+                                            Id = sv.FirstOrDefault().SeasonId,
+                                            Name = sv.FirstOrDefault().SeasonName,
+                                            Date = sv.FirstOrDefault().Date.Value,
+                                            leagueMatches = sv.ToList()
+                                            .GroupBy(svg => svg.LeagueId)
+                                            .Select(
+                                                    lq => new LeagueResultViewModel
+                                                    {
+                                                        Id = lq.FirstOrDefault().LeagueId,
+                                                        Name = lq.FirstOrDefault().LeagueName,
+                                                        Date = lq.FirstOrDefault().Date.Value,
+                                                        matches = lq.ToList()
+                                                    }
+                                           )
+                                           .OrderBy(l => l.Name)
+                                        }
+                                    )
+                                    .OrderBy(sv => sv.Name)
                             }
-                        )
-                        .OrderBy(l => l.Name)
+                    )
+                    .OrderBy(cv => cv.Name)
                 }
                 )
                 .OrderByDescending(mv => mv.Date.Value);

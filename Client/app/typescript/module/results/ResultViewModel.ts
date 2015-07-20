@@ -3,15 +3,49 @@ module FifaLeagueClient.Module.Results {
 	export class ResultViewModel {
 
       public Date: Date;
-	    public leagues: LeagueResultViewModel[];
+	    public countryMatches: CountryResultViewModel[];
 
 			// build the model directly from the data returned by the service
 			constructor(data){
 					if(data != null){
 							this.Date = data.Date;
-			        this.leagues = data.leagues;
+			        this.countryMatches = data.countryMatches;
 					}
 			}
+	}
+
+export class CountryResultViewModel {
+	public Id: number;
+	public Name: string;
+	public Date: Date;
+
+	public seasonMatches: SeasonResultViewModel[];
+
+	contructor(data){
+		if (data != null){
+			this.Id = data.Id;
+			this.Name = data.Name;
+			this.Date = data.Date;
+			this.seasonMatches = data.seasonMatches;
+		}
+	}
+}
+
+	export class SeasonResultViewModel {
+		public Id: number;
+		public Name: string;
+		public Date: Date;
+
+		public leagueMatches: LeagueResultViewModel[];
+
+		contructor(data){
+			if (data != null){
+				this.Id = data.Id;
+				this.Name = data.Name;
+				this.Date = data.Date;
+				this.leagueMatches = data.leagueMatches;
+			}
+		}
 	}
 
   export class LeagueResultViewModel {
