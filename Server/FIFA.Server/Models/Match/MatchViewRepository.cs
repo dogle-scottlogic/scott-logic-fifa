@@ -57,11 +57,7 @@ namespace FIFA.Server.Models
                             )
                             .FirstOrDefault()
                         }
-                )
-                .OrderBy(mv => mv.homeTeamPlayer.PlayerName)
-                .ThenBy(mv => mv.homeTeamPlayer.TeamName)
-                .ThenBy(mv => mv.awayTeamPlayerName.PlayerName)
-                .ThenBy(mv => mv.awayTeamPlayerName.TeamName);
+                );
 
 
             // Grouping all the matches by date then by season ID then by league ID
@@ -95,6 +91,10 @@ namespace FIFA.Server.Models
                                                         Name = lq.FirstOrDefault().LeagueName,
                                                         Date = lq.FirstOrDefault().Date.Value,
                                                         matches = lq.ToList()
+                                                        .OrderBy(mv => mv.homeTeamPlayer.PlayerName)
+                                                        .ThenBy(mv => mv.homeTeamPlayer.TeamName)
+                                                        .ThenBy(mv => mv.awayTeamPlayerName.PlayerName)
+                                                        .ThenBy(mv => mv.awayTeamPlayerName.TeamName)
                                                     }
                                            )
                                            .OrderBy(l => l.Name)

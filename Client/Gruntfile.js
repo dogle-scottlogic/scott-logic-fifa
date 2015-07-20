@@ -12,6 +12,8 @@ module.exports = function(grunt) {
                 'lib/underscore/underscore.js'
             ],
             jsDest: 'app/script.js',
+            fontSrc: 'lib/bootstrap/dist/fonts/',
+            fontDest: 'app/fonts/',
             typescriptSrc: [
                 'typescript/**/*.ts',
             ],
@@ -101,6 +103,12 @@ module.exports = function(grunt) {
                        cwd: '<%= paths.bowerAssets %>/angular-wizard/dist/',
                        src: ['angular-wizard.js'],
                        dest: 'app/lib/angular-wizard/'
+                   },
+                   {
+                       expand: true,
+                       cwd: '<%= paths.fontSrc %>',
+                       src: ['*.*'],
+                       dest: '<%= paths.fontDest %>'
                    }
                 ]
             }
