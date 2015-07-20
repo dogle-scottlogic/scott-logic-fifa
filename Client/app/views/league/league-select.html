@@ -1,0 +1,11 @@
+<div ng-init="vm.getLeagueList()" cg-busy="vm.loadingPromise">
+
+    <div class="clear"></div>
+    <div class="alert alert-danger" role="alert" ng-repeat="value in vm.errors['item.Global']">{{value}}</div>
+    <select class="form-control" ng-model="selectedleague" ng-change="vm.select()"
+            ng-options="league.Id as league.Name for league in vm.leagues"
+            ng-required='required'>
+        <option value=""></option>
+    </select>
+
+</div>

@@ -6,6 +6,7 @@ describe('Testing the results locations', function() {
   var resultViewService = {};
   var countryService = {};
   var seasonService = {};
+  var leagueService = {};
   var location, rootScope, compile;
   var route;
   var defer;
@@ -18,6 +19,7 @@ describe('Testing the results locations', function() {
         $provide.value('resultViewService', resultViewService);
         $provide.value('countryService', countryService);
         $provide.value('seasonService', seasonService);
+        $provide.value('leagueService', leagueService);
       });
 
       // defining the method getResultViewFilteredList for the service used by the controller
@@ -30,6 +32,8 @@ describe('Testing the results locations', function() {
       seasonService.getSeasonFilteredList = function(filter){
       }
 
+      leagueService.getLeagueFilteredList = function(filter){
+      }
 
   });
 
@@ -65,6 +69,7 @@ describe('Testing the results locations', function() {
       spyOn(resultViewService, 'getResultViewFilteredList').and.returnValue(defer.promise);
       spyOn(countryService, 'getCountryList').and.returnValue(defer.promise);
       spyOn(seasonService, 'getSeasonFilteredList').and.returnValue(defer.promise);
+      spyOn(leagueService, 'getLeagueFilteredList').and.returnValue(defer.promise);
       // Creating a fake view in order to have then the location diplayed in this
       var html = angular.element('<ng-view></ng-view>');
       var element = compile(html)(rootScope.$new());
@@ -78,6 +83,7 @@ describe('Testing the results locations', function() {
       expect(resultViewService.getResultViewFilteredList).toHaveBeenCalled();
       expect(countryService.getCountryList).toHaveBeenCalled();
       expect(seasonService.getSeasonFilteredList).toHaveBeenCalled();
+      expect(leagueService.getLeagueFilteredList).toHaveBeenCalled();
     });
 
   });

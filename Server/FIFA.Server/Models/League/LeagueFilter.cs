@@ -16,6 +16,7 @@ namespace FIFA.Server.Models
         public int Id { get; set; }
         public string Name { get; set; }
         public int SeasonId { get; set; }
+        public int CountryId { get; set; }
 
     }
 }

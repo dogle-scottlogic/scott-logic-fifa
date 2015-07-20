@@ -131,7 +131,7 @@ namespace FIFA.Server.Models
                 
                 if (filter.LeagueId != 0)
                 {
-                    query = query.Where(m => m.LeagueId == filter.LeagueId);
+                    query = query.Where(m => m.League.Id == filter.LeagueId);
                 }
 
                 if (filter.SeasonId != 0)

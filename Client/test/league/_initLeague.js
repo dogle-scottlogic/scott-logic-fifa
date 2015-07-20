@@ -1,96 +1,117 @@
-// Season INIT
+// League INIT
 
 // build a dataRepository with the leagues
 league_buildDataRepository = function() {
-    return [new FifaLeagueClient.Module.League.LeagueViewModel(
+    return [new FifaLeagueClient.Module.League.LeagueModel(
         {
-          Name: 'Ligue 1',
-          TeamPlayers: [
-            {
-              player: {
-                Id: 1,
-                Name: "Tony"
-              },
-              team: {
-                Id: 1,
-                Name: "Team 1"
-              }
-            },
-            {
-              player: {
-                Id: 2,
-                Name: "Jack"
-              },
-              team: {
-                Id: 2,
-                Name: "Team 2"
-              }
-            }
-          ]
+            Id: 1,
+            Name: 'League 1'
         }),
-        new FifaLeagueClient.Module.League.LeagueViewModel(
-            {
-              Name: 'Ligue 2',
-              TeamPlayers: [
-                {
-                  player: {
-                    Id: 3,
-                    Name: "Jony"
-                  },
-                  team: {
-                    Id: 3,
-                    Name: "Team 1"
-                  }
-                },
-                {
-                  player: {
-                    Id: 4,
-                    Name: "Bobby"
-                  },
-                  team: {
-                    Id: 4,
-                    Name: "Team 2"
-                  }
-                }
-              ]
-            })
+        new FifaLeagueClient.Module.League.LeagueModel({
+            Id: 2,
+            Name: 'League 2'
+        }),
+        new FifaLeagueClient.Module.League.LeagueModel({
+            Id: 3,
+            Name: 'Ligue 1'
+        }),
+        new FifaLeagueClient.Module.League.LeagueModel({
+            Id: 4,
+            Name: 'Ligue 2'
+        })
     ];
 }
 
+getLeague = function(dataRepository, Id){
+  var leagueToReturn = null;
+  for(var i=0; i<dataRepository.length;i++)
+  {
+      var league = dataRepository[i];
+      if (league.Id == Id) {
+          leagueToReturn = league;
+      }
+  }
+  return leagueToReturn;
+}
+
+// The country 1 got the element 2 and 3
+getCountry1Leagues = function(dataRepository){
+  return [dataRepository[2], dataRepository[3]];
+}
+
+// The season 1 got the element 1
+getSeason1Leagues = function(dataRepository){
+  return [dataRepository[1],dataRepository[3]];
+}
+
+getSeason2Leagues = function(dataRepository){
+  return [dataRepository[2]];
+}
+
 // mocking the backend
-generateLeague_mockHTTPBackend = function(config, $httpBackend, $q, dataRepository){
+league_mockHTTPBackend = function(config, $httpBackend, $q, dataRepository){
 
-  $httpBackend.whenPOST(config.backend+"api/GenerateLeague/")
-      .respond(function (method, url, data, headers) {
-          // Parsing the data to fack the generation and return what we intended
-          var jsonObj = JSON.parse(data);
-          var player = jsonObj.Players[0];
-          var createdLeague = new FifaLeagueClient.Module.League.LeagueViewModel(
-            {
-              Name: 'Ligue 1',
-              TeamPlayers: [
-                {
-                  player,
-                  team: {
-                    Id: 4,
-                    Name: "Team 3"
-                  }
-                }
-              ]
-            });
+    var mockedLeagueGetList = $httpBackend.whenGET(config.backend+"api/League/")
+        .respond(function (method, url, data, headers) {
+            return [200,dataRepository];
+        });
 
-          dataRepository.push(createdLeague);
+    $httpBackend.whenGET(/\/api\/League\/[1-9][0-9]*/)
+        .respond(function (method, url, data, headers) {
 
-          return [200,createdLeague];
-      });
+            var splitedURL = url.split("/");
+            var IdToGet = parseInt(splitedURL[splitedURL.length -1]);
+            return [200,getLeague(dataRepository, IdToGet)];
+
+        });
+
+    $httpBackend.whenGET(config.backend+"api/League?CountryId=1")
+        .respond(function (method, url, data, headers) {
+
+            var splitedURL = url.split("=");
+            var IdToGet = parseInt(splitedURL[splitedURL.length -1]);
+
+            var item = getCountry1Leagues(dataRepository);
+
+            return [200,item];
+        });
+
+
+    $httpBackend.whenGET(config.backend+"api/League?SeasonId=1")
+        .respond(function (method, url, data, headers) {
+
+            var splitedURL = url.split("=");
+            var IdToGet = parseInt(splitedURL[splitedURL.length -1]);
+
+            var item = getSeason1Leagues(dataRepository);
+
+            return [200,item];
+        });
+
+
+    $httpBackend.whenGET(config.backend+"api/League?SeasonId=2")
+        .respond(function (method, url, data, headers) {
+
+            var splitedURL = url.split("=");
+            var IdToGet = parseInt(splitedURL[splitedURL.length -1]);
+
+            var item = getSeason2Leagues(dataRepository);
+
+            return [200,item];
+        });
+
+    return mockedLeagueGetList;
+
 }
 
 
 // mocking the backend in error case
-generateLeague_mockHTTPBackend_Error = function(config, $httpBackend, $q, dataRepository){
+league_mockHTTPBackend_Error = function(config, $httpBackend, $q, dataRepository){
 
-    $httpBackend.whenPOST(config.backend+"api/GenerateLeague/")
-        .respond(500,{Message: 'A league already exists'});
+    $httpBackend.whenGET(config.backend+"api/League/")
+        .respond(0,{status:0});
 
+    $httpBackend.whenGET(/\/api\/League\/[1-9][0-9]*/)
+        .respond(404,{Message: 'Not Found'});
 
 }
