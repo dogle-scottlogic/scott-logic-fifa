@@ -15,6 +15,7 @@ namespace FIFA.Server.Models
         public int LeagueId { get; set; }
         public int SeasonId { get; set; }
         public int CountryId { get; set; }
+        public bool? PlayedMatch { get; set; }
         
     }
 }

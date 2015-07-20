@@ -1,4 +1,4 @@
-/// <reference path="../common/controllers/AbstractController.ts" />
+/// <reference path="../../common/controllers/AbstractController.ts" />
 
 module FifaLeagueClient.Module.Results {
 	export class AddResultController extends Common.Controllers.AbstractController {
@@ -33,7 +33,7 @@ module FifaLeagueClient.Module.Results {
 			this.loadingPromise = this.availablePlayersService.getPlayers()
 									.then(this.onHomePlayersSuccess)
 									.catch(this.onError);
-		} 
+		}
 
 		// Get the possible opponents for the specified player
 		public retrieveOpponents = () => {
@@ -73,4 +73,4 @@ module FifaLeagueClient.Module.Results {
 			this.errors = config.errors;
 		}
 	}
-} 
+}

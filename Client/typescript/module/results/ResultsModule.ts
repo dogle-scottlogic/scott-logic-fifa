@@ -11,6 +11,11 @@ module FifaLeagueClient.Module.Results {
 	        templateUrl: 'views/results/result-view-show.html',
 	        controller: ResultViewShowController,
 	        controllerAs: 'vm'
+	      })
+				.when('/view-fixture', {
+	        templateUrl: 'views/results/fixture-view-show.html',
+	        controller: FixtureViewShowController,
+	        controllerAs: 'vm'
 	      });
 
 	    }]);

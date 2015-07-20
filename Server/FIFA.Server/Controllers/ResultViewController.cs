@@ -24,7 +24,7 @@ namespace FIFA.Server.Controllers
         // Get all the played matches results ordered by date DESC
         public async Task<HttpResponseMessage> GetAll([FromUri] MatchViewFilter mf = null)
         {
-            List<ResultViewModel> matches = await this.matchViewRepository.GetAllPlayedMatches(mf);
+            List<ResultViewModel> matches = await this.matchViewRepository.GetAll(mf);
             return Request.CreateResponse(HttpStatusCode.OK, matches);
         }
     }

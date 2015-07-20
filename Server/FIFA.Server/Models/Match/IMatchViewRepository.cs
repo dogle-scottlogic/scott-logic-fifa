@@ -8,6 +8,6 @@ namespace FIFA.Server.Models
 {
     public interface IMatchViewRepository
     {
-        Task<List<ResultViewModel>> GetAllPlayedMatches(MatchViewFilter filter);
+        Task<List<ResultViewModel>> GetAll(MatchViewFilter filter);
     }
 }

@@ -1,7 +1,7 @@
-/// <reference path="../common/controllers/AbstractController.ts" />
+/// <reference path="../../common/controllers/AbstractController.ts" />
 module FifaLeagueClient.Module.Results {
 
-	export class ResultViewShowController extends Common.Controllers.AbstractController {
+	export class AbstractResultViewShowController extends Common.Controllers.AbstractController {
 		mainService: ResultViewService;
 		resultViewList: ResultViewModel[];
 

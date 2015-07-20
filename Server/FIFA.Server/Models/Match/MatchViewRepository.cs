@@ -20,14 +20,13 @@ namespace FIFA.Server.Models
         /**
          * Get all the played matches for every leagues
          */
-        public async Task<List<ResultViewModel>> GetAllPlayedMatches(MatchViewFilter filter)
+        public async Task<List<ResultViewModel>> GetAll(MatchViewFilter filter)
         {
 
             var filteredMatchQuery = this.FilterMatchView(db.Matches, filter);
 
            // Getting all the played matches
             var matchQuery = filteredMatchQuery
-                .Where(m => m.Played == true)
                 .Select(
                     m => new MatchResultViewModel{
                             LeagueId = m.League.Id,
@@ -119,6 +118,11 @@ namespace FIFA.Server.Models
         {
             if (filter != null)
             {
+                
+                if (filter.PlayedMatch != null)
+                {
+                    query = query.Where(m => m.Played == filter.PlayedMatch);
+                }
 
                 if (filter.Date != null)
                 {

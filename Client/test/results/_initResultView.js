@@ -58,7 +58,7 @@ getresultByCountryId = function(dataRepository, countryId){
 // mocking the backend
 resultView_mockHTTPBackend = function(config, $httpBackend, $q, dataRepository){
 
-    var mockedResultViewGetList = $httpBackend.whenGET(config.backend+"api/ResultView/")
+    var mockedResultViewGetList = $httpBackend.whenGET(config.backend+"api/ResultView?PlayedMatch=true")
         .respond(function (method, url, data, headers) {
             return [200,dataRepository];
         });
@@ -67,7 +67,9 @@ resultView_mockHTTPBackend = function(config, $httpBackend, $q, dataRepository){
     var mockedResultViewGetList = $httpBackend.whenGET(/\/api\/ResultView\?CountryId=[1-9][0-9]*/)
         .respond(function (method, url, data, headers) {
             var urlSplited = url.split("=");
-            var countryId = urlSplited[urlSplited.length-1];
+            var urlCountrySplited = urlSplited[1].split("&");
+
+            var countryId = urlCountrySplited[0];
 
             var dataToReturn = getresultByCountryId(dataRepository, countryId);
 
@@ -82,7 +84,7 @@ resultView_mockHTTPBackend = function(config, $httpBackend, $q, dataRepository){
 // mocking the backend in error case
 resultView_mockHTTPBackend_Error = function(config, $httpBackend, $q, dataRepository){
 
-    $httpBackend.whenGET(config.backend+"api/ResultView/")
+    $httpBackend.whenGET(config.backend+"api/ResultView?PlayedMatch=true")
         .respond(0,{status:0});
 
 

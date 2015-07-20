@@ -45,7 +45,7 @@ namespace FIFATests.ControllerTests
             var mock = new Mock<IMatchViewRepository>(MockBehavior.Strict);
 
             // Filling mock with data
-            mock.As<IMatchViewRepository>().Setup(m => m.GetAllPlayedMatches(null))
+            mock.As<IMatchViewRepository>().Setup(m => m.GetAll(null))
                 .Returns(Task.FromResult(results));
 
             // Creating the controller which we want to create
@@ -68,7 +68,7 @@ namespace FIFATests.ControllerTests
             var mock = new Mock<IMatchViewRepository>(MockBehavior.Strict);
 
             // Filling mock with data
-            mock.As<IMatchViewRepository>().Setup(m => m.GetAllPlayedMatches(null))
+            mock.As<IMatchViewRepository>().Setup(m => m.GetAll(null))
                 .Returns(Task.FromResult((List<ResultViewModel>)null));
 
             // Creating the controller which we want to create
