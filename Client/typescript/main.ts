@@ -1,4 +1,4 @@
-/// <reference path="../../typings/tsd.d.ts"/>
+/// <reference path="../typings/tsd.d.ts"/>
 
 /// <reference path="module/common/services/Config.ts" />
 /// <reference path="module/common/services/HTTPErrorInterceptorService.ts" />
@@ -12,7 +12,7 @@
 module FifaLeagueClient {
     export var mainModule = angular.module("FifaLeagueApp", ['ngRoute',
         Module.Common.HTTPErrorHandleModuleName, Module.Common.devConfig, Module.Player.moduleName,
-        Module.Country.moduleName, Module.Season.moduleName, Module.Team.moduleName, 
+        Module.Country.moduleName, Module.Season.moduleName, Module.Team.moduleName,
         Module.League.moduleName, Module.Results.moduleName
     ])    .config(["$routeProvider",
     function routes($routeProvider: ng.route.IRouteProvider){

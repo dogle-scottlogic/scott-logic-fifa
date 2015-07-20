@@ -13,7 +13,7 @@ module.exports = function(grunt) {
             ],
             jsDest: 'app/script.js',
             typescriptSrc: [
-                'app/typescript/**/*.ts',
+                'typescript/**/*.ts',
             ],
             typescriptDest: 'app/leagueManager.js',
             htmlSrc: 'app/**/*.html'
