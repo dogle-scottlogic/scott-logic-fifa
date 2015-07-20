@@ -185,6 +185,7 @@
     <Compile Include="Controllers\GenerateLeagueController.cs" />
     <Compile Include="Controllers\LeagueController.cs" />
     <Compile Include="Controllers\MatchController.cs" />
+    <Compile Include="Controllers\ResultViewController.cs" />
     <Compile Include="Controllers\MatchResultController.cs" />
     <Compile Include="Controllers\PlayerController.cs" />
     <Compile Include="Controllers\ScoreController.cs" />
@@ -241,7 +242,11 @@
     <Compile Include="Models\League\LeagueFilter.cs" />
     <Compile Include="Models\League\LeagueViewModel.cs" />
     <Compile Include="Models\MatchResultDTO.cs" />
+    <Compile Include="Models\Match\IMatchViewRepository.cs" />
     <Compile Include="Models\Match\IMatchRepository.cs" />
+    <Compile Include="Models\Match\MatchViewRepository.cs" />
+    <Compile Include="Models\Match\MatchViewFilter.cs" />
+    <Compile Include="Models\Match\ResultViewModel.cs" />
     <Compile Include="Models\Match\MatchFilter.cs" />
     <Compile Include="Models\Match\MatchRepository.cs" />
     <Compile Include="Models\Players\PlayerFilter.cs" />

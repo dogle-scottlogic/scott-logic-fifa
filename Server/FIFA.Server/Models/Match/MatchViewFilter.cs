@@ -7,16 +7,15 @@ using System.Web;
 
 namespace FIFA.Server.Models
 {
-    public class LeagueFilter
+    public class MatchViewFilter
     {
-        public LeagueFilter()
-        {
-        }
 
-        public int Id { get; set; }
-        public string Name { get; set; }
+        public DateTime? Date { get; set; }
+
+        public int LeagueId { get; set; }
         public int SeasonId { get; set; }
         public int CountryId { get; set; }
-
+        public bool? PlayedMatch { get; set; }
+        
     }
 }

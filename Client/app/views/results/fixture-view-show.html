@@ -1,0 +1,37 @@
+<div ng-init="vm.loadResultViewList()" cg-busy="vm.loadingPromise">
+  <div class="clear"></div>
+  <div class="alert alert-danger" role="alert" ng-repeat="value in vm.errors['item.Global']">{{value}}</div>
+  <div class="grid-view">
+    <h1>Fixtures</h1>
+    <form class="simple-form" ng-submit="vm.loadResultViewList()">
+      Show me:
+      <countryselect selectedcountry="vm.resultViewFilter.CountryId"></countryselect>
+      <seasonselect selectedseason="vm.resultViewFilter.SeasonId" filtercountry="vm.resultViewFilter.CountryId" filterhavingleague='true'></seasonselect>
+      <leagueselect selectedleague="vm.resultViewFilter.LeagueId" filtercountry="vm.resultViewFilter.CountryId" filterseason="vm.resultViewFilter.SeasonId"></leagueselect>
+      <input type="submit" class="btn btn-primary" value="Update" />
+    </form>
+    <div ng-repeat="resultView in vm.resultViewList">
+      <h2>{{resultView.Date | date :'EEEE dd MMMM yyyy'}}</h2>
+      <div ng-repeat="countryMatch in resultView.countryMatches">
+        <div ng-repeat="seasonMatch in countryMatch.seasonMatches">
+          <div ng-repeat="leagueMatch in seasonMatch.leagueMatches">
+            <table class="table table-striped table-bordered">
+                <thead>
+                  <tr>
+                      <th colspan="3">{{countryMatch.Name}} / {{seasonMatch.Name}} - {{leagueMatch.Name}}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="match in leagueMatch.matches" >
+                    <td width="50%">{{match.homeTeamPlayer.PlayerName}} ({{match.homeTeamPlayer.TeamName}})</td>
+                    <td class="text-nowrap">v</td>
+                    <td width="50%">{{match.awayTeamPlayerName.PlayerName}} ({{match.awayTeamPlayerName.TeamName}})</td>
+                </tr>
+                </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

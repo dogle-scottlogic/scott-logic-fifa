@@ -45,6 +45,11 @@ namespace FIFA.Server.Models
                 {
                     query = query.Where(l => l.SeasonId == filter.SeasonId);
                 }
+
+                if (filter.CountryId != 0)
+                {
+                    query = query.Where(l => l.Season.SeasonCountry.Id == filter.CountryId);
+                }
                 
             }
 
@@ -200,5 +205,6 @@ namespace FIFA.Server.Models
             }
             return matchsToCreate;
         }
+
     }
 }

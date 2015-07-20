@@ -1,4 +1,4 @@
-/// <reference path="../common/controllers/AbstractController.ts" />
+/// <reference path="../../common/controllers/AbstractController.ts" />
 
 module FifaLeagueClient.Module.League {
   export class LeagueWizardController extends Common.Controllers.AbstractController {

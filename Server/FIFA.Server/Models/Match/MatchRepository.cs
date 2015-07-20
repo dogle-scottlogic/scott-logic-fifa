@@ -10,11 +10,11 @@ namespace FIFA.Server.Models
 {
     public class MatchRepository : IMatchRepository
     {
-        private FIFAServerContext db = new FIFAServerContext();
+        private FIFAServerContext db;
 
-        public MatchRepository()
+        public MatchRepository(FIFAServerContext db)
         {
-
+            this.db = db;
         }
         
         // Get all the Matchs ordered by name / matchs
@@ -115,6 +115,7 @@ namespace FIFA.Server.Models
                 db.Dispose();
             }
         }
+
         
 
     }

@@ -10,7 +10,7 @@ describe('Testing the LeagueWizardController', function() {
   // Mocking the season service
   beforeEach(function() {
 
-    dataRepository = league_buildDataRepository();
+    dataRepository = generateLeague_buildDataRepository();
 
     // Mocking the datas
     inject(function($injector) {
