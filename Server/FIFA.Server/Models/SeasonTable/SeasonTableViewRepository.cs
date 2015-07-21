@@ -25,19 +25,16 @@ namespace FIFA.Server.Models
          */
         public async Task<IEnumerable<SeasonTableViewModel>> GetAll()
         {
-            var nbWiningPoints = 3;
-            var nbDrawPoints = 1;
-
             // Getting all the seasons where at least one match havent been played
             var currentSeasons = db.Seasons
                 .Where(s => s.Leagues.Any(l => l.Matches.Any(m => m.Played == false)));
 
             var leagueTableView = currentSeasons.Select(
-                s => new SeasonTableViewModel{
+                s => new SeasonTableViewModel
+                {
                     Id = s.Id,
                     Name = s.Name,
-                    LeagueTables = s.Leagues.Select(
-                    l => new LeagueTableViewModel
+                    LeagueTables = s.Leagues.Select(l => new LeagueTableViewModel
                     {
                         Id = l.Id,
                         Name = l.Name,
@@ -47,53 +44,60 @@ namespace FIFA.Server.Models
                             {
                                 player = tp.Player,
                                 team = tp.Team,
-                                nbPlayedMatches = l.Matches.Count(m => m.Played == true && m.Scores.Any(sc => sc.TeamPlayer == tp)),
-                                // Getting the number of goals realized by the player
-                                nbGoals = l.Matches.Where(m => m.Played == true && m.Scores.Any(sc => sc.TeamPlayer == tp))
-                                                    .Select(m => m.Scores
-                                                        .Where(sc => sc.TeamPlayer == tp)
-                                                        .Select(sc => sc.Goals)
-                                                        .DefaultIfEmpty(0)
-                                                        .Sum()
-                                                        )
+                                nbPlayedMatches = l.Matches.Count(m => m.Played == true
+                                                    && m.Scores.Any(sc => sc.TeamPlayer == tp)),
+                                nbGoals = l.Matches.Where(m => m.Played == true
+                                            && m.Scores.Any(sc => sc.TeamPlayer == tp)
+                                            )
+                                                .Select(m => m.Scores
+                                                    .Where(sc => sc.TeamPlayer == tp)
+                                                    .Select(sc => sc.Goals)
                                                     .DefaultIfEmpty(0)
-                                                    .Sum(),
-                                // Calculating the number of points
+                                                    .Sum()
+                                                    )
+                                                .DefaultIfEmpty(0)
+                                                .Sum(),
                                 nbPoints = l.Matches
-                                .Where(m => m.Played == true && m.Scores.Any(sc => sc.TeamPlayer == tp))
-                                .Select(
-                                    m =>
-                                    m.Scores
-                                    .Where(sc => sc.TeamPlayer == tp)
-                                    .Select(
-                                        sc =>
-                                            // Wining scores + nbWiningPoints
-                                        m.Scores.Where(s2 => s2.TeamPlayer != tp
-                                        && s2.Match == sc.Match && s2.Goals < sc.Goals)
-                                        .Select(r => nbWiningPoints)
-                                        .DefaultIfEmpty(0)
-                                        .Sum()
-                                        +
-                                            // Draw scores + nbDrawPoints
-                                        m.Scores.Where(s2 => s2.TeamPlayer != tp
-                                        && s2.Match == sc.Match && s2.Goals == sc.Goals)
-                                        .Select(r => nbDrawPoints)
-                                        .DefaultIfEmpty(0)
-                                        .Sum()
-                                        )
-                                    .DefaultIfEmpty(0)
-                                    .Sum()
-                                )
-                                .DefaultIfEmpty(0)
-                                .Sum()
+                                            // for all played matches by the teamplayer for the league l
+                                            .Where(m => m.Played == true
+                                                && m.Scores.Any(sc => sc.TeamPlayer == tp))
+                                            .Select(
+                                                m =>
+                                                m.Scores
+                                                    // which has been played by the player
+                                                .Where(sc => sc.TeamPlayer == tp)
+                                                .Select(
+                                                    sc =>
+                                                        // Wining case - We add <nbWiningPoints> for each match that the player has won 
+                                                        // (ie the number of goals from the adversary < of his score)
+                                                    m.Scores.Where(s2 => s2.TeamPlayer != tp
+                                                    && s2.Match == sc.Match
+                                                    && s2.Goals < sc.Goals)
+                                                    .Select(r => nbWiningPoints)
+                                                    .DefaultIfEmpty(0)
+                                                    .Sum()
+                                                    +
+                                                        // Draw case - We add <nbDrawPoints> for each match that the player is draw 
+                                                        // (ie the number of goals from the adversary == of his score)
+                                                    m.Scores.Where(s2 => s2.TeamPlayer != tp
+                                                    && s2.Match == sc.Match
+                                                    && s2.Goals == sc.Goals)
+                                                    .Select(r => nbDrawPoints)
+                                                    .DefaultIfEmpty(0)
+                                                    .Sum()
+                                                    )
+                                                .DefaultIfEmpty(0)
+                                                .Sum()
+                                            )
+                                            .DefaultIfEmpty(0)
+                                            .Sum()
                             }
                         )
-                        .OrderByDescending(tp=>tp.nbPoints)
+                        .OrderByDescending(tp => tp.nbPoints)
                         .ThenByDescending(tp => tp.nbGoals)
                         .ThenBy(tp => tp.nbPlayedMatches)
                         .ThenBy(tp => tp.player.Name)
-                    }
-                    )
+                    })
                     .OrderBy(l => l.Name)
                 }
                 );
@@ -126,6 +130,7 @@ namespace FIFA.Server.Models
             return seasons;
 
         }
+        
 
         
 
