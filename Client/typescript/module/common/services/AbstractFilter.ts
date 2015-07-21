@@ -30,6 +30,17 @@ module FifaLeagueClient.Module.Common.Services {
             return this;
         }
 
+
+        public addRequestDayDateParameter(name:string, value:Date):AbstractFilter{
+            if(value!=null){
+                this.chainQuery();
+                //Formating the date like : 2015-07-21 (no time in this case)
+                var input = value.getFullYear().toString()+"-"+(value.getMonth()+1).toString()+"-"+value.getDate().toString();
+                this.query = this.query.concat(name).concat("=").concat(input);
+            }
+            return this;
+        }
+
         private chainQuery():void{
             if(this.query != ""){
                 this.query = this.query.concat("&");

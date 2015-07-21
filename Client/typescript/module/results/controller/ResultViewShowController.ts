@@ -8,6 +8,10 @@ module FifaLeagueClient.Module.Results {
 		constructor(scope, resultViewService: ResultViewService) {
 			super(scope, resultViewService);
 			this.resultViewFilter.PlayedMatch = true;
+
+			// Initialize the date filter 1 year before today
+			this.resultViewFilter.DateFrom = new Date();
+			this.resultViewFilter.DateFrom.setFullYear(this.resultViewFilter.DateFrom.getFullYear() - 1);
 		}
 	}
 }

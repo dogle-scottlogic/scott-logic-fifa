@@ -8,7 +8,8 @@
       <countryselect selectedcountry="vm.resultViewFilter.CountryId"></countryselect>
       <seasonselect selectedseason="vm.resultViewFilter.SeasonId" filtercountry="vm.resultViewFilter.CountryId" filterhavingleague='true'></seasonselect>
       <leagueselect selectedleague="vm.resultViewFilter.LeagueId" filtercountry="vm.resultViewFilter.CountryId" filterseason="vm.resultViewFilter.SeasonId"></leagueselect>
-      <input type="submit" class="btn btn-primary" value="Update" />
+			From : <input type="date" ng-model="vm.resultViewFilter.DateFrom" /> To : <input type="date" ng-model="vm.resultViewFilter.DateTo" />
+      <input type="submit" class="btn btn-primary right" value="Update" />
     </form>
     <br>
     <accordion close-others="true">

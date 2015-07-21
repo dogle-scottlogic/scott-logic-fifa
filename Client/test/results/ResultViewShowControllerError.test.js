@@ -32,6 +32,9 @@ describe('Testing the ResultViewShowController in error', function() {
     resultViewShowController = $controller(FifaLeagueClient.Module.Results.ResultViewShowController,
         {$scope: scope});
 
+    // We put the date dateTo at null in order to not have error
+    resultViewShowController.resultViewFilter.DateFrom = null;
+
     scope.$digest();
   }));
 
