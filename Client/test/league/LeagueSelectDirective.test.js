@@ -193,6 +193,50 @@ describe('Testing the LeagueSelectDirective', function() {
 
     });
 
+    it('Filterhasremainingmatchtoplay filter initialized', function() {
+      var scope = $rootScope.$new();
+      scope.filterhasremainingmatchtoplay=true;
+
+      // defining the directive which call back to scope.triggerselect function
+      var html = angular.element('<leagueselect filterhasremainingmatchtoplay="filterhasremainingmatchtoplay"></leagueselect>');
+      var element = $compile(html)(scope);
+
+      $rootScope.$digest();
+      verifyPromiseAndFlush(element.isolateScope().vm, $httpBackend);
+      expect(element.html()).toContain('League 1');
+      expect(element.html()).not.toContain('Ligue 1');
+      expect(element.html()).not.toContain('League 2');
+      expect(element.html()).not.toContain('Ligue 2');
+
+    });
+
+    it('Filterhasremainingmatchtoplay filter changed', function() {
+      var scope = $rootScope.$new();
+      scope.filterhasremainingmatchtoplay=null;
+
+      // defining the directive which call back to scope.triggerselect function
+      var html = angular.element('<leagueselect filterhasremainingmatchtoplay="filterhasremainingmatchtoplay"></leagueselect>');
+      var element = $compile(html)(scope);
+
+      $rootScope.$digest();
+      verifyPromiseAndFlush(element.isolateScope().vm, $httpBackend);
+      expect(element.html()).toContain('League 1');
+      expect(element.html()).toContain('Ligue 1');
+      expect(element.html()).toContain('League 2');
+      expect(element.html()).toContain('Ligue 2');
+
+      scope.filterhasremainingmatchtoplay=true;
+      $rootScope.$digest();
+      verifyPromiseAndFlush(element.isolateScope().vm, $httpBackend);
+      expect(element.html()).toContain('League 1');
+      expect(element.html()).not.toContain('Ligue 1');
+      expect(element.html()).not.toContain('League 2');
+      expect(element.html()).not.toContain('Ligue 2');
+
+    });
+
+
+
   });
 
 });

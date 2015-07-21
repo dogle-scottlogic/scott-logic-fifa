@@ -22,16 +22,22 @@ namespace FIFA.Server.Controllers
 
         // GET api/AvailablePlayers
         [ResponseType(typeof(IEnumerable<TeamPlayer>))]
-        public async Task<HttpResponseMessage> GetAvailablePlayers(int? id = null)
+        public async Task<HttpResponseMessage> GetAvailablePlayers(int? id = null, [FromUri]MatchFilter filter = null)
         {
             IEnumerable<TeamPlayer> list; 
+
+            // We remove the Id of the match filter because it s not intend to be in TODO ! Rename the filters property with a prefix OR remove ID
+            if (filter != null)
+            {
+                filter.Id = null;
+            }
             if (id == null) { 
                 //when no id specified, get all the available players for a home game
-                list = await teamPlayerRepo.GetAllWithUnplayedMatches(Location.Home); 
+                list = await teamPlayerRepo.GetAllWithUnplayedMatches(Location.Home, filter); 
             } else {
                 // if we get an id argument, we need to retrieve the available players 
                 // that still have unplayed matched with player with Id = id
-                list = await teamPlayerRepo.GetAvailableAwayOpponents(id.Value);
+                list = await teamPlayerRepo.GetAvailableAwayOpponents(id.Value, filter);
             }
             
             return Request.CreateResponse(HttpStatusCode.OK, list);

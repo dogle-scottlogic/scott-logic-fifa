@@ -18,12 +18,19 @@ module FifaLeagueClient.Module.League {
 			this.errors = {};
 			// if we have a filter, we use it
 			var leagueFilter:LeagueFilter = new LeagueFilter();
+
 			if(this.scope.filtercountry != null){
 				leagueFilter.CountryId = this.scope.filtercountry;
 			}
+
 			if(this.scope.filterseason != null){
 				leagueFilter.SeasonId = this.scope.filterseason;
 			}
+
+			if(this.scope.filterhasremainingmatchtoplay != null){
+				leagueFilter.HasRemainingMatchToPlay = this.scope.filterhasremainingmatchtoplay;
+			}
+
 			this.loadingPromise =
 					this.mainService.getLeagueFilteredList(leagueFilter)
 						.then(this.onGetLeaguesSuccess)

@@ -189,6 +189,48 @@ describe('Testing the SeasonSelectDirective', function() {
 
     });
 
+    it('Filterhasremainingmatchtoplay filter intialized', function() {
+      var scope = $rootScope.$new();
+      scope.filterhasremainingmatchtoplay=true;
+
+      // defining the directive which call back to scope.triggerselect function
+      var html = angular.element('<seasonselect filterhasremainingmatchtoplay="filterhasremainingmatchtoplay"></seasonselect>');
+      var element = $compile(html)(scope);
+
+      $rootScope.$digest();
+      verifyPromiseAndFlush(element.isolateScope().vm, $httpBackend);
+      expect(element.html()).toContain('Season 1');
+      expect(element.html()).not.toContain('Saison 1');
+      expect(element.html()).not.toContain('Season 2');
+      expect(element.html()).not.toContain('Saison 2');
+
+    });
+
+    it('Filterhasremainingmatchtoplay filter changed', function() {
+      var scope = $rootScope.$new();
+      scope.filterhasremainingmatchtoplay=null;
+
+      var html = angular.element('<seasonselect filterhasremainingmatchtoplay="filterhasremainingmatchtoplay"></seasonselect>');
+      var element = $compile(html)(scope);
+
+      $rootScope.$digest();
+      verifyPromiseAndFlush(element.isolateScope().vm, $httpBackend);
+      expect(element.html()).toContain('Season 1');
+      expect(element.html()).toContain('Season 2');
+      expect(element.html()).toContain('Saison 1');
+      expect(element.html()).toContain('Saison 2');
+
+      scope.filterhasremainingmatchtoplay=true;
+      $rootScope.$digest();
+      verifyPromiseAndFlush(element.isolateScope().vm, $httpBackend);
+      expect(element.html()).toContain('Season 1');
+      expect(element.html()).not.toContain('Saison 1');
+      expect(element.html()).not.toContain('Season 2');
+      expect(element.html()).not.toContain('Saison 2');
+
+    });
+
+
   });
 
 });

@@ -8,8 +8,8 @@ namespace FIFA.Server.Models
 {
     public interface ITeamPlayerRepository : ICRUDRepository<TeamPlayer, int, TeamPlayerFilter>
     {
-        Task<IEnumerable<TeamPlayer>> GetAllWithUnplayedMatches(Location location);
+        Task<IEnumerable<TeamPlayer>> GetAllWithUnplayedMatches(Location location, MatchFilter filter);
 
-        Task<IEnumerable<TeamPlayer>> GetAvailableAwayOpponents(int id);
+        Task<IEnumerable<TeamPlayer>> GetAvailableAwayOpponents(int id, MatchFilter filter);
     }
 }

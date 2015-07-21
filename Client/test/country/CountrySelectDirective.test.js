@@ -108,6 +108,47 @@ describe('Testing the CountrySelectDirective', function() {
 
     });
 
+    it('Filterhasremainingmatchtoplay filter intialized', function() {
+      var scope = $rootScope.$new();
+      scope.filterhasremainingmatchtoplay=true;
+
+      // defining the directive which call back to scope.triggerselect function
+      var html = angular.element('<countryselect filterhasremainingmatchtoplay="filterhasremainingmatchtoplay"></countryselect>');
+      var element = $compile(html)(scope);
+
+      $rootScope.$digest();
+      verifyPromiseAndFlush(element.isolateScope().vm, $httpBackend);
+      expect(element.html()).toContain('France');
+      expect(element.html()).not.toContain('Scotland');
+      expect(element.html()).not.toContain('Romania');
+      expect(element.html()).not.toContain('Italy');
+
+    });
+
+    it('Filterhasremainingmatchtoplay filter changed', function() {
+      var scope = $rootScope.$new();
+      scope.filterhasremainingmatchtoplay=null;
+
+      var html = angular.element('<countryselect filterhasremainingmatchtoplay="filterhasremainingmatchtoplay"></countryselect>');
+      var element = $compile(html)(scope);
+
+      $rootScope.$digest();
+      verifyPromiseAndFlush(element.isolateScope().vm, $httpBackend);
+      expect(element.html()).toContain('France');
+      expect(element.html()).toContain('Scotland');
+      expect(element.html()).toContain('Romania');
+      expect(element.html()).toContain('Italy');
+
+      scope.filterhasremainingmatchtoplay=true;
+      $rootScope.$digest();
+      verifyPromiseAndFlush(element.isolateScope().vm, $httpBackend);
+      expect(element.html()).toContain('France');
+      expect(element.html()).not.toContain('Scotland');
+      expect(element.html()).not.toContain('Romania');
+      expect(element.html()).not.toContain('Italy');
+
+    });
+
   });
 
 });

@@ -35,21 +35,7 @@ namespace FIFA.Server.Models
         {
             if (filter != null)
             {
-                if (filter.Id != 0)
-                {
-                    query = query.Where(m => m.Id == filter.Id);
-                }
-
-                if (filter.Date != null)
-                {
-                    query = query.Where(m => m.Date == filter.Date);
-                }
-
-                if (filter.LeagueId != null)
-                {
-                    query = query.Where(m => m.LeagueId == filter.LeagueId);
-                }
-
+                query = filter.FilterMatchs(query);
             }
 
             return query;
