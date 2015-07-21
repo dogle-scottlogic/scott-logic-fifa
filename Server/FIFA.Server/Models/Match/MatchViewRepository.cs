@@ -118,32 +118,8 @@ namespace FIFA.Server.Models
         {
             if (filter != null)
             {
-                
-                if (filter.PlayedMatch != null)
-                {
-                    query = query.Where(m => m.Played == filter.PlayedMatch);
-                }
 
-                if (filter.Date != null)
-                {
-                    query = query.Where(m => m.Date == filter.Date);
-                }
-                
-                if (filter.LeagueId != 0)
-                {
-                    query = query.Where(m => m.League.Id == filter.LeagueId);
-                }
-
-                if (filter.SeasonId != 0)
-                {
-                    query = query.Where(m => m.League.Season.Id == filter.SeasonId);
-                }
-
-
-                if (filter.CountryId != 0)
-                {
-                    query = query.Where(m => m.League.Season.SeasonCountry.Id == filter.CountryId);
-                }
+                query = filter.FilterMatchView(query);
 
             }
 
