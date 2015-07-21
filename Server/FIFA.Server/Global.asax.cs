@@ -60,6 +60,7 @@ namespace FIFA.Server
             kernel.Bind<IScoreRepository>().To<ScoreRepository>();
             kernel.Bind<IMatchRepository>().To<MatchRepository>();
             kernel.Bind<IMatchViewRepository>().To<MatchViewRepository>();
+            kernel.Bind<ISeasonTableViewRepository>().To<SeasonTableViewRepository>();
         }
     }
 }
