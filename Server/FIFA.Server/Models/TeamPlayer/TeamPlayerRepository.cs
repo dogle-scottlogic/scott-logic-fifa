@@ -87,35 +87,59 @@ namespace FIFA.Server.Models
                     query = query.Where(m => m.Id == filter.Id);
                 }
 
-                if (filter.TeamId != null)
+                if (filter.TeamId != 0)
                 {
                     query = query.Where(m => m.TeamId == filter.TeamId);
                 }
 
-                if (filter.PlayerId != null)
+                if (filter.PlayerId != 0)
                 {
                     query = query.Where(m => m.PlayerId == filter.PlayerId);
                 }
+
+
             }
 
             return query;
         }
 
-        public async Task<IEnumerable<TeamPlayer>> GetAllWithUnplayedMatches(Location location) {
-            return await db.TeamPlayers.Where(tp => tp.Scores.Any(s => s.Match.Played == false && s.Location == location))
+        public async Task<IEnumerable<TeamPlayer>> GetAllWithUnplayedMatches(Location location, MatchFilter filter)
+        {
+            if (filter == null)
+            {
+                filter = new MatchFilter();
+            }
+            filter.Played = false;
+            var filterMatch = filter.FilterMatchs(db.Matches);
+
+            return await db.TeamPlayers.Where(tp => tp.Scores.Any(s => filterMatch.Contains(s.Match) 
+                                        && s.Location == location))
                                        .Include(tp => tp.Player)
-                                       .Include(tp => tp.Team).ToListAsync();
+                                       .Include(tp => tp.Team)
+                                       .OrderBy(tp => tp.Player.Name)
+                                       .ThenBy(tp => tp.Team.Name)
+                                       .ToListAsync();
         }
 
-        public async Task<IEnumerable<TeamPlayer>> GetAvailableAwayOpponents(int id)
-        { 
+        public async Task<IEnumerable<TeamPlayer>> GetAvailableAwayOpponents(int id, MatchFilter filter)
+        {
+            if (filter == null)
+            {
+                filter = new MatchFilter();
+            }
+            filter.Played = false;
+            var filterMatch = filter.FilterMatchs(db.Matches);
+
             // Get all teamPlayers which is id not <id> that have at least one unplayed match with the player with <id>
-           return await db.TeamPlayers.Where(tp => tp.Id != id && 
-                                                tp.Scores.Any(sc => sc.Match.Played == false 
+           return await db.TeamPlayers.Where(tp => tp.Id != id &&
+                                                tp.Scores.Any(sc => filterMatch.Contains(sc.Match)
                                                     && sc.Location == Location.Away
                                                     && sc.Match.Scores.Any(sc2 => sc2.TeamPlayerId == id)))
                                                     .Include(tp => tp.Player)
-                                                    .Include(tp => tp.Team).ToListAsync();
+                                                    .Include(tp => tp.Team)
+                                                    .OrderBy(tp => tp.Player.Name)
+                                                    .ThenBy(tp => tp.Team.Name)
+                                                    .ToListAsync();
         }
 
         public void Dispose(bool disposing)

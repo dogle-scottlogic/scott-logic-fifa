@@ -13,6 +13,9 @@ module FifaLeagueClient.Module.Results {
 		goalsAway: number;
 		displaySuccess: boolean;
 
+		// Filters used to filter the player selections
+		matchFilter: MatchFilter;
+
 		static $inject = ["$scope", "availablePlayersService", "matchResultsService"];
 
 		constructor(scope, availablePlayersService: AvailablePlayersService, matchResultsService: MatchResultsService){
@@ -21,16 +24,43 @@ module FifaLeagueClient.Module.Results {
 			this.matchResultsService = matchResultsService;
 			this.homePlayers = [];
 			this.awayPlayers = [];
+			this.matchFilter = new MatchFilter();
 		}
 
-		private initFields = () => {
+		public initFields = () => {
 			this.matchDate = new Date();
 			this.goalsHome = null;
 			this.goalsAway = null;
 			this.selectedHomePlayerId = null;
 			this.selectedAwayPlayerId = null;
+			this.loadHomePlayerList();
+		}
 
-			this.loadingPromise = this.availablePlayersService.getPlayers()
+    // Refresh the list of home players if the country is selected
+		public refreshHomePlayerListFromCountry(country:string){
+			this.matchFilter.CountryId = country;
+			this.matchFilter.SeasonId = null;
+			this.matchFilter.LeagueId = null;
+			this.loadHomePlayerList();
+		}
+
+    // Refresh the list of home players if the season is selected
+		public refreshHomePlayerListFromSeason(season:string){
+			this.matchFilter.SeasonId = season;
+			this.matchFilter.LeagueId = null;
+			this.loadHomePlayerList();
+		}
+
+
+    // Refresh the list of home players if the league is selected
+		public refreshHomePlayerListFromLeague(league:string){
+			this.matchFilter.LeagueId = league;
+			this.loadHomePlayerList();
+		}
+
+
+		private loadHomePlayerList(){
+			this.loadingPromise = this.availablePlayersService.getFilteredPlayers(this.matchFilter)
 									.then(this.onHomePlayersSuccess)
 									.catch(this.onError);
 		}
@@ -38,7 +68,7 @@ module FifaLeagueClient.Module.Results {
 		// Get the possible opponents for the specified player
 		public retrieveOpponents = () => {
 			this.availablePlayersService
-				.getOpponents(this.selectedHomePlayerId)
+				.getFilteredOpponents(this.selectedHomePlayerId, this.matchFilter)
 				.then(this.onAwayPlayersSuccess)
 				.catch(this.onError);
 		}

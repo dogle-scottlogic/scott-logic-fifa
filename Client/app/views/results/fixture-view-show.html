@@ -5,9 +5,9 @@
     <h1>Fixtures</h1>
     <form class="simple-form" ng-submit="vm.loadResultViewList()">
       Show me:
-      <countryselect selectedcountry="vm.resultViewFilter.CountryId"></countryselect>
-      <seasonselect selectedseason="vm.resultViewFilter.SeasonId" filtercountry="vm.resultViewFilter.CountryId" filterhavingleague='true'></seasonselect>
-      <leagueselect selectedleague="vm.resultViewFilter.LeagueId" filtercountry="vm.resultViewFilter.CountryId" filterseason="vm.resultViewFilter.SeasonId"></leagueselect>
+      <countryselect selectedcountry="vm.resultViewFilter.CountryId" filterhasremainingmatchtoplay="true"></countryselect>
+      <seasonselect selectedseason="vm.resultViewFilter.SeasonId" filtercountry="vm.resultViewFilter.CountryId" filterhavingleague='true' filterhasremainingmatchtoplay="true"></seasonselect>
+      <leagueselect selectedleague="vm.resultViewFilter.LeagueId" filtercountry="vm.resultViewFilter.CountryId" filterseason="vm.resultViewFilter.SeasonId" filterhasremainingmatchtoplay="true"></leagueselect>
       <input type="submit" class="btn btn-primary" value="Update" />
     </form>
     <accordion close-others="true">

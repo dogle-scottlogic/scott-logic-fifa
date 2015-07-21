@@ -6,19 +6,39 @@
 <div class="clear"></div>
 <div class="alert alert-danger" role="alert" ng-repeat="value in vm.errors['item.Global']">{{value}}</div>
 <div class="form-group" ng-init="vm.initFields()" cg-busy="vm.loadingPromise">
+
+    <div class="row">
+      <div class="col-md-4" >
+        <h1>Add a result</h1>
+      </div>
+    </div>
+
+  <div class="row">
+    <div class="col-md-4" >
+      <label>Country</label>
+      <countryselect selectedcountry="vm.matchFilter.CountryId" on-select="vm.refreshHomePlayerListFromCountry(country)" filterhasremainingmatchtoplay="true"></countryselect>
+      <label>Season</label>
+      <seasonselect selectedseason="vm.matchFilter.SeasonId" filtercountry="vm.matchFilter.CountryId" filterhavingleague='true' filterhasremainingmatchtoplay="true"
+      on-select="vm.refreshHomePlayerListFromSeason(season)"></seasonselect>
+      <label>League</label>
+      <leagueselect selectedleague="vm.matchFilter.LeagueId" filtercountry="vm.matchFilter.CountryId" filterseason="vm.matchFilter.SeasonId" filterhasremainingmatchtoplay="true"
+      on-select="vm.refreshHomePlayerListFromLeague(league)"></leagueselect>
+    </div>
+  </div>
+
 	<div class="row">
 		<div class="col-md-2" >
-			<h3>Home</h3> 
+			<h3>Home</h3>
 			<select ng-model="vm.selectedHomePlayerId"
 					ng-options="tp.Id as tp.DisplayName for tp in vm.homePlayers"
 					ng-change="vm.retrieveOpponents()"
 					required>
 				<option value=""></option>
-			</select>			
+			</select>
 		</div>
 
 		<div class="col-md-1">
-			<h3>Away</h3> 
+			<h3>Away</h3>
 
 			<select ng-model="vm.selectedAwayPlayerId"
 					ng-options="tp.Id as tp.DisplayName for tp in vm.awayPlayers"
@@ -27,17 +47,17 @@
 			</select>
 		</div>
 	</div>
-	
+
 	<div class="row">
 		<div class="col-md-2">
-			<h3>Score</h3> 
+			<h3>Score</h3>
 			<div>
 				<input type="text" style="width: 2em" ng-model="vm.goalsHome"/> - <input type="text" style="width: 2em" ng-model="vm.goalsAway"/>
 			</div>
 		</div>
 
 		<div class="col-md-1">
-			<h3>Date</h3> 
+			<h3>Date</h3>
 			<div>
 				<input type="date" ng-model="vm.matchDate" required />
 			</div>
@@ -51,6 +71,3 @@
 	</div>
 </div>
 </form>
-
-
-

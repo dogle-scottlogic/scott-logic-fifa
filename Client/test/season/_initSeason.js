@@ -38,6 +38,11 @@ getSeason = function(dataRepository, Id){
   return seasonToReturn;
 }
 
+getSeasonfilterhasremainingmatchtoplay = function(dataRepository){
+  return [dataRepository[0]];
+}
+
+
 // mocking the backend
 season_mockHTTPBackend = function(config, $httpBackend, $q, dataRepository){
 
@@ -99,6 +104,12 @@ season_mockHTTPBackend = function(config, $httpBackend, $q, dataRepository){
                 }
             }
             return [200,item];
+        });
+
+        
+    $httpBackend.whenGET(config.backend+"api/Season?HasRemainingMatchToPlay=true")
+        .respond(function (method, url, data, headers) {
+            return [200,getSeasonfilterhasremainingmatchtoplay(dataRepository)];
         });
 
     $httpBackend.whenPOST(config.backend+"api/Season/")
@@ -180,7 +191,7 @@ season_mockHTTPBackend_Error = function(config, $httpBackend, $q, dataRepository
         .respond(0,{status:0});
 
     $httpBackend.whenGET(/\/api\/Season\/[1-9][0-9]*/)
-        .respond(404,{Message: 'Not Found'});  
+        .respond(404,{Message: 'Not Found'});
 
     $httpBackend.whenGET(/\/api\/SeasonView\/[1-9][0-9]*/)
         .respond(404,{Message: 'Not Found'});

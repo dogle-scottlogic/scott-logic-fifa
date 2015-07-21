@@ -13,26 +13,55 @@ module FifaLeagueClient.Module.Results {
 		constructor($http: ng.IHttpService, config: Common.Config, $q: ng.IQService) {
             this.httpService = $http;
             this.qService = $q;
-            this.apiURL = config.backend+"api/AvailablePlayers/";
+            this.apiURL = config.backend+"api/AvailablePlayers";
         }
 
         public getPlayers() : ng.IPromise<TeamPlayerModel> {
-        	var deferred = this.qService.defer();
-        	var self = this;
-
-        	this.httpService.get(this.apiURL).success(function (data:[string], status, headers, config) {
-                deferred.resolve(self.toTeamPlayerArray(data));
-            }).error(function (data, status, headers, config) {
-                deferred.reject(config);
-            });
-            return deferred.promise;
+            return this.getFilteredPlayers(null);
         }
 
-        public getOpponents(id: number): ng.IPromise<TeamPlayerModel> {
-            var deferred = this.qService.defer();
-            var self = this;
+				public getFilteredPlayers(matchFilter: MatchFilter) : ng.IPromise<TeamPlayerModel> {
+					var deferred = this.qService.defer();
+					var self = this;
 
-            this.httpService.get(this.apiURL + "/" + id).success(function (data:[string], status, headers, config) {
+					// Building the parameters
+					var getParams = "";
+					var url = this.apiURL;
+					if(matchFilter!= null){
+							getParams = matchFilter.getParameters(getParams);
+							if(getParams!= ""){
+									url = url +"?"+ getParams;
+							}
+					}
+
+					// Getting the datas from the url
+					this.httpService.get(url).success(function (data:[string], status, headers, config) {
+								deferred.resolve(self.toTeamPlayerArray(data));
+						}).error(function (data, status, headers, config) {
+								deferred.reject(config);
+						});
+						return deferred.promise;
+				}
+
+				public getOpponents(id: number): ng.IPromise<TeamPlayerModel> {
+						return this.getFilteredOpponents(id, null);
+				}
+
+        public getFilteredOpponents(id: number, matchFilter: MatchFilter): ng.IPromise<TeamPlayerModel> {
+						var deferred = this.qService.defer();
+						var self = this;
+
+						// Building the parameters
+						var getParams = "";
+						var url = this.apiURL + "/" + id;
+						if(matchFilter!= null){
+								getParams = matchFilter.getParameters(getParams);
+								if(getParams!= ""){
+										url = url +"?"+ getParams;
+								}
+						}
+
+            this.httpService.get(url).success(function (data:[string], status, headers, config) {
                 deferred.resolve(self.toTeamPlayerArray(data));
             }).error(function (data, status, headers, config) {
                 deferred.reject(config);

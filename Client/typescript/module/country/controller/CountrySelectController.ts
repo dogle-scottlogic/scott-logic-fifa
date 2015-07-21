@@ -16,8 +16,16 @@ module FifaLeagueClient.Module.Country {
 
 		public getCountryList = () =>{
 			this.errors = {};
+
+			// if we have a filter, we use it
+			var countryFilter:CountryFilter = new CountryFilter();
+
+			if(this.scope.filterhasremainingmatchtoplay != null){
+				countryFilter.HasRemainingMatchToPlay = this.scope.filterhasremainingmatchtoplay;
+			}
+
 			this.loadingPromise =
-				this.countryService.getCountryList()
+				this.countryService.getCountryFilteredList(countryFilter)
 					.then(this.onGetCountriesSuccess)
 					.catch(this.onError);
 		}

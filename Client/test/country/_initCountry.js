@@ -22,6 +22,11 @@ country_buildDataRepository = function() {
     ];
 }
 
+
+getCountryfilterhasremainingmatchtoplay = function(dataRepository){
+  return [dataRepository[0]];
+}
+
 // mocking the backend in normal case
 country_mockHTTPBackend = function(config, $httpBackend, $q, dataRepository){
 
@@ -45,6 +50,11 @@ country_mockHTTPBackend = function(config, $httpBackend, $q, dataRepository){
             }
             return [200,countryToReturn];
 
+        });
+
+    $httpBackend.whenGET(config.backend+"api/Country?HasRemainingMatchToPlay=true")
+        .respond(function (method, url, data, headers) {
+            return [200,getCountryfilterhasremainingmatchtoplay(dataRepository)];
         });
 
     $httpBackend.whenPOST(config.backend+"api/Country/")

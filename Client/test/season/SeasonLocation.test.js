@@ -25,7 +25,7 @@ describe('Testing the season locations', function() {
       seasonService.getSeason = function(id){
       }
 
-      countryService.getCountryList = function(){
+      countryService.getCountryFilteredList = function(){
 
       }
 
@@ -106,7 +106,7 @@ describe('Testing the season locations', function() {
       // Spying the seasonService for the method getSeasonList which will return a promise
       spyOn(seasonService, 'getSeason').and.returnValue(defer.promise);
       // Spying the countryService for the method getSeasonList which will return a promise
-      spyOn(countryService, 'getCountryList').and.returnValue(defer.promise);
+      spyOn(countryService, 'getCountryFilteredList').and.returnValue(defer.promise);
 
       // Creating a fake view in order to have then the location diplayed in this
       var html = angular.element('<ng-view></ng-view>');
@@ -120,7 +120,7 @@ describe('Testing the season locations', function() {
       // Verfiying that on init the getSeasonList of the service is called
       expect(seasonService.getSeason).toHaveBeenCalledWith('1');
       // Verfiying that on init the getCountryList of the service is called
-      expect(countryService.getCountryList).toHaveBeenCalled();
+      expect(countryService.getCountryFilteredList).toHaveBeenCalled();
     });
 
   });

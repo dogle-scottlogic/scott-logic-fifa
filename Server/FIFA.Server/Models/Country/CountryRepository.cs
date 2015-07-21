@@ -17,27 +17,23 @@ namespace FIFA.Server.Models
         // Get all the countries ordered by name / seasons
         public async Task<IEnumerable<Country>> GetAll()
         {
-            return await db.Countries.ToListAsync();
+            return await db.Countries
+                .OrderBy(c => c.Name)
+                .ToListAsync();
         }
 
         public async Task<IEnumerable<Country>> GetAllWithFilter(CountryFilter filter)
         {
-            return await FilterCountries(db.Countries, filter).ToListAsync();
+            return await FilterCountries(db.Countries, filter)
+                .OrderBy(c => c.Name)
+                .ToListAsync();
         }
 
         private IQueryable<Country> FilterCountries(IQueryable<Country> query, CountryFilter filter)
         {
             if (filter != null)
             {
-                if (filter.Id != 0)
-                {
-                    query = query.Where(m => m.Id == filter.Id);
-                }
-
-                if (!String.IsNullOrEmpty(filter.Name))
-                {
-                    query = query.Where(m => m.Name.Contains(filter.Name));
-                }
+                query = filter.FilterCountries(query);
             }
 
             return query;

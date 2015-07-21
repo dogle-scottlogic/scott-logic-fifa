@@ -13,12 +13,22 @@ module FifaLeagueClient.Module.Country.Directives {
             restrict: "E",
             scope: {
                 selectedcountry:'=',
+                filterhasremainingmatchtoplay:'=',
                 required:'=',
                 'triggerselect':'&onSelect'
             },
             controller: CountrySelectController,
             controllerAs: "vm",
-            templateUrl: 'views/country/country-select.html'
+            templateUrl: 'views/country/country-select.html',
+            link: function (scope:IMyScope, $elm, $attr)
+            {
+              // Reload the list if the filterhasremainingmatchtoplay changed
+              scope.$watch('filterhasremainingmatchtoplay', function(newfilterhasremainingmatchtoplay, oldfilterhasremainingmatchtoplay) {
+                        if (newfilterhasremainingmatchtoplay !== oldfilterhasremainingmatchtoplay) {
+                          scope.vm.getCountryList();
+                        }
+              }, true);
+            }
         }
     }
 

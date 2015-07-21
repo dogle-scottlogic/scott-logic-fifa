@@ -16,6 +16,7 @@ module FifaLeagueClient.Module.League.Directives {
             scope: {
                 filtercountry:'=',
                 filterseason:'=',
+                filterhasremainingmatchtoplay:'=',
                 selectedleague:'=',
                 required:'=',
                 'triggerselect':'&onSelect'
@@ -32,9 +33,16 @@ module FifaLeagueClient.Module.League.Directives {
                         }
               }, true);
 
-              // Reload the list if the filterhavingleague changed
+              // Reload the list if the filterseason changed
               scope.$watch('filterseason', function(newfilterseason, oldfilterseason) {
                         if (newfilterseason !== oldfilterseason) {
+                          scope.vm.getLeagueList();
+                        }
+              }, true);
+
+              // Reload the list if the filterhasremainingmatchtoplay changed
+              scope.$watch('filterhasremainingmatchtoplay', function(newfilterhasremainingmatchtoplay, oldfilterhasremainingmatchtoplay) {
+                        if (newfilterhasremainingmatchtoplay !== oldfilterhasremainingmatchtoplay) {
                           scope.vm.getLeagueList();
                         }
               }, true);

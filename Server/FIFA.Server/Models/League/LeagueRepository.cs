@@ -19,37 +19,23 @@ namespace FIFA.Server.Models
         
         public async Task<IEnumerable<League>> GetAll()
         {
-            return await this.db.Leagues.ToListAsync();
+            return await this.db.Leagues
+                .OrderBy(l => l.Name)
+                .ToListAsync();
         }
 
         public async Task<IEnumerable<League>> GetAllWithFilter(LeagueFilter filter)
         {
-            return await this.FilterLeagues(this.db.Leagues, filter).ToListAsync();
+            return await this.FilterLeagues(this.db.Leagues, filter)
+                .OrderBy(l => l.Name)
+                .ToListAsync();
         }
 
         private IQueryable<League> FilterLeagues(IQueryable<League> query, LeagueFilter filter)
         {
             if (filter != null)
             {
-                if (filter.Id != 0)
-                {
-                    query = query.Where(l => l.Id == filter.Id);
-                }
-
-                if (!String.IsNullOrEmpty(filter.Name))
-                {
-                    query = query.Where(l => l.Name.Contains(filter.Name));
-                }
-
-                if (filter.SeasonId != 0)
-                {
-                    query = query.Where(l => l.SeasonId == filter.SeasonId);
-                }
-
-                if (filter.CountryId != 0)
-                {
-                    query = query.Where(l => l.Season.SeasonCountry.Id == filter.CountryId);
-                }
+                query = filter.FilterLeagues(query);
                 
             }
 

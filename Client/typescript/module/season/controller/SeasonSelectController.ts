@@ -16,14 +16,22 @@ module FifaLeagueClient.Module.Season {
 
 		public getSeasonList = () =>{
 			this.errors = {};
+
 			// if we have a filter, we use it
 			var seasonFilter:SeasonFilter = new SeasonFilter();
+
 			if(this.scope.filtercountry != null){
 				seasonFilter.CountryId = this.scope.filtercountry;
 			}
+
 			if(this.scope.filterhavingleague != null){
 				seasonFilter.HavingLeague = this.scope.filterhavingleague;
 			}
+
+			if(this.scope.filterhasremainingmatchtoplay != null){
+				seasonFilter.HasRemainingMatchToPlay = this.scope.filterhasremainingmatchtoplay;
+			}
+
 			this.loadingPromise =
 					this.mainService.getSeasonFilteredList(seasonFilter)
 						.then(this.onGetSeasonsSuccess)

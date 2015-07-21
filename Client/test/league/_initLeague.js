@@ -48,6 +48,11 @@ getSeason2Leagues = function(dataRepository){
   return [dataRepository[2]];
 }
 
+getLeaguesHasRemainingMatchToPlay = function(dataRepository){
+  return [dataRepository[0]];
+}
+
+
 // mocking the backend
 league_mockHTTPBackend = function(config, $httpBackend, $q, dataRepository){
 
@@ -80,9 +85,6 @@ league_mockHTTPBackend = function(config, $httpBackend, $q, dataRepository){
     $httpBackend.whenGET(config.backend+"api/League?SeasonId=1")
         .respond(function (method, url, data, headers) {
 
-            var splitedURL = url.split("=");
-            var IdToGet = parseInt(splitedURL[splitedURL.length -1]);
-
             var item = getSeason1Leagues(dataRepository);
 
             return [200,item];
@@ -92,10 +94,15 @@ league_mockHTTPBackend = function(config, $httpBackend, $q, dataRepository){
     $httpBackend.whenGET(config.backend+"api/League?SeasonId=2")
         .respond(function (method, url, data, headers) {
 
-            var splitedURL = url.split("=");
-            var IdToGet = parseInt(splitedURL[splitedURL.length -1]);
-
             var item = getSeason2Leagues(dataRepository);
+
+            return [200,item];
+        });
+
+    $httpBackend.whenGET(config.backend+"api/League?HasRemainingMatchToPlay=true")
+        .respond(function (method, url, data, headers) {
+
+            var item = getLeaguesHasRemainingMatchToPlay(dataRepository);
 
             return [200,item];
         });

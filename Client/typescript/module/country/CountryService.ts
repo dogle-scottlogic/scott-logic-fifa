@@ -7,6 +7,7 @@ module FifaLeagueClient.Module.Country {
 
         // URL used to reach the country API
         apiURL:string;
+        apiURLWithSlash:string;
 
         static $inject = [
             "$httpService", '$q'
@@ -15,15 +16,33 @@ module FifaLeagueClient.Module.Country {
         constructor($http: ng.IHttpService, config: Common.Config, $q: ng.IQService) {
             this.httpService = $http;
             this.qService = $q;
-            this.apiURL = config.backend+"api/Country/";
+            this.apiURL = config.backend+"api/Country";
+            this.apiURLWithSlash = this.apiURL+"/";
         }
 
         // Get a country list, execute successCallBack if it is a success and errorCallBack if it is a failure
         public getCountryList(): ng.IPromise<CountryModel[]> {
+            return this.getCountryFilteredList(null);
+        }
+
+        // Get a filtered country list, execute successCallBack if it is a success and errorCallBack if it is a failure
+        public getCountryFilteredList(countryFilter:CountryFilter): ng.IPromise<CountryModel[]> {
             var deferred = this.qService.defer();
+            var getParams = "";
+            var url;
+            if(countryFilter!= null){
+                getParams = countryFilter.getParameters(getParams);
+                if(getParams!= ""){
+                    url = this.apiURL +"?"+ getParams;
+                }else{
+                  url = this.apiURLWithSlash;
+                }
+            }else{
+              url = this.apiURLWithSlash;
+            }
 
             var self = this;
-            this.httpService.get(this.apiURL)
+            this.httpService.get(url)
                 .success(function (data:[string], status, headers, config) {
                     var countryList =  [];
                     for(var i = 0; i<data.length; i++){
@@ -42,7 +61,7 @@ module FifaLeagueClient.Module.Country {
         public getCountry(ID): ng.IPromise<CountryModel>{
             var deferred = this.qService.defer();
             var self = this;
-            this.httpService.get(this.apiURL + ID).success(function (data, status, headers, config) {
+            this.httpService.get(this.apiURLWithSlash + ID).success(function (data, status, headers, config) {
                 var country = self.convertDataToCountry(data);
                 deferred.resolve(country);
             }).error(function (data, status, headers, config) {
@@ -56,7 +75,7 @@ module FifaLeagueClient.Module.Country {
             var deferred = this.qService.defer();
             var self = this;
 
-            this.httpService.post(this.apiURL, country).success(function (data, status, headers, config) {
+            this.httpService.post(this.apiURLWithSlash, country).success(function (data, status, headers, config) {
                 var country = self.convertDataToCountry(data);
                 deferred.resolve(country);
             }).error(function (data, status, headers, config) {
@@ -69,7 +88,7 @@ module FifaLeagueClient.Module.Country {
         public updateCountry(country:CountryModel): ng.IPromise<CountryModel> {
             var deferred = this.qService.defer();
             var self = this;
-            this.httpService.put(this.apiURL + country.Id, country).success(function (data, status, headers, config) {
+            this.httpService.put(this.apiURLWithSlash + country.Id, country).success(function (data, status, headers, config) {
                 var country = self.convertDataToCountry(data);
                 deferred.resolve(country);
             }).error(function (data, status, headers, config) {
@@ -82,7 +101,7 @@ module FifaLeagueClient.Module.Country {
         public deleteCountry(Id) : ng.IPromise<boolean> {
             var deferred = this.qService.defer();
             var self = this;
-            this.httpService.delete(this.apiURL + Id).success(function (data, status, headers, config) {
+            this.httpService.delete(this.apiURLWithSlash + Id).success(function (data, status, headers, config) {
                 deferred.resolve(true);
             }).error(function (data, status, headers, config) {
                 deferred.reject(config);
