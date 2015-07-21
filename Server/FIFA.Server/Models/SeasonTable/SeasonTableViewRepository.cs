@@ -47,28 +47,34 @@ namespace FIFA.Server.Models
                             {
                                 player = tp.Player,
                                 team = tp.Team,
-                                nbPlayedMatches = l.Matches.Count(m => m.Played == true),
+                                nbPlayedMatches = l.Matches.Count(m => m.Played == true && m.Scores.Any(sc => sc.TeamPlayer == tp)),
                                 // Getting the number of goals realized by the player
-                                nbGoals = l.Matches.Sum(m => m.Scores
-                                    .Where(sc => sc.TeamPlayer == tp)
-                                    .Select(sc => sc.Goals)
-                                    .DefaultIfEmpty(0)
-                                    .Sum()
-                                    ),
+                                nbGoals = l.Matches.Where(m => m.Played == true && m.Scores.Any(sc => sc.TeamPlayer == tp))
+                                                    .Select(m => m.Scores
+                                                        .Where(sc => sc.TeamPlayer == tp)
+                                                        .Select(sc => sc.Goals)
+                                                        .DefaultIfEmpty(0)
+                                                        .Sum()
+                                                        )
+                                                    .DefaultIfEmpty(0)
+                                                    .Sum(),
                                 // Calculating the number of points
-                                nbPoints = l.Matches.Sum(m =>
+                                nbPoints = l.Matches
+                                .Where(m => m.Played == true && m.Scores.Any(sc => sc.TeamPlayer == tp))
+                                .Select(
+                                    m =>
                                     m.Scores
                                     .Where(sc => sc.TeamPlayer == tp)
                                     .Select(
                                         sc =>
-                                        // Wining scores + nbWiningPoints
+                                            // Wining scores + nbWiningPoints
                                         m.Scores.Where(s2 => s2.TeamPlayer != tp
                                         && s2.Match == sc.Match && s2.Goals < sc.Goals)
                                         .Select(r => nbWiningPoints)
                                         .DefaultIfEmpty(0)
                                         .Sum()
                                         +
-                                        // Draw scores + nbDrawPoints
+                                            // Draw scores + nbDrawPoints
                                         m.Scores.Where(s2 => s2.TeamPlayer != tp
                                         && s2.Match == sc.Match && s2.Goals == sc.Goals)
                                         .Select(r => nbDrawPoints)
@@ -78,10 +84,14 @@ namespace FIFA.Server.Models
                                     .DefaultIfEmpty(0)
                                     .Sum()
                                 )
+                                .DefaultIfEmpty(0)
+                                .Sum()
                             }
                         )
                         .OrderByDescending(tp=>tp.nbPoints)
-                        .ThenBy(tp => tp.nbGoals)
+                        .ThenByDescending(tp => tp.nbGoals)
+                        .ThenBy(tp => tp.nbPlayedMatches)
+                        .ThenBy(tp => tp.player.Name)
                     }
                     )
                     .OrderBy(l => l.Name)
