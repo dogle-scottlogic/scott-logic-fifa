@@ -108,10 +108,24 @@ namespace FIFA.Server.Models
                 )
                 .OrderByDescending(mv => mv.Date.Value);
 
-            // Finally returning the list
-           return await resultView
-               .ToListAsync();
+            // Finally returning result
+            return await this.ReturnResult(resultView, filter);
+           
 
+        }
+
+        // Returning the list with limited result or not depending on the filter
+        private async Task<List<ResultViewModel>> ReturnResult(IQueryable<ResultViewModel> resultView, MatchViewFilter filter)
+        {
+            if (filter != null && filter.LimitResult != null)
+            {
+                var result = resultView.Take(filter.LimitResult.Value);
+                return await result.ToListAsync();
+            }
+            else
+            {
+                return await resultView.ToListAsync();
+            }
         }
 
         private IQueryable<Match> FilterMatchView(IQueryable<Match> query, MatchViewFilter filter)

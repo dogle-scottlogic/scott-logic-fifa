@@ -11,6 +11,7 @@ module FifaLeagueClient.Module.Results {
         public PlayedMatch:boolean;
         public DateTo:Date;
         public DateFrom:Date;
+        public LimitResult:number;
 
         // build the model directly from the data returned by the service
         constructor(){
@@ -25,6 +26,7 @@ module FifaLeagueClient.Module.Results {
             this.PlayedMatch = null;
             this.DateTo = null;
             this.DateFrom = null;
+            this.LimitResult = null;
         }
 
         // Add the request with the names
@@ -37,7 +39,8 @@ module FifaLeagueClient.Module.Results {
               .addRequestParameter("CountryId", this.CountryId)
               .addRequestBooleanParameter("PlayedMatch", this.PlayedMatch)
               .addRequestDayDateParameter("DateTo", this.DateTo)
-              .addRequestDayDateParameter("DateFrom", this.DateFrom);
+              .addRequestDayDateParameter("DateFrom", this.DateFrom)
+              .addRequestNumberParameter("LimitResult", this.LimitResult);
 
             return this.query;
         }
