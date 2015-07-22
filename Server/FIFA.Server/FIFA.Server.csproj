@@ -181,6 +181,7 @@
     <Compile Include="Controllers\AbstractCRUDAPIController.cs" />
     <Compile Include="Controllers\AvailablePlayersController.cs" />
     <Compile Include="Controllers\CountryController.cs" />
+    <Compile Include="Controllers\SeasonTableViewController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\GenerateLeagueController.cs" />
     <Compile Include="Controllers\LeagueController.cs" />
@@ -238,6 +239,9 @@
     <Compile Include="Models\Country\ICountryRepository.cs" />
     <Compile Include="Models\FIFAServerContext.cs" />
     <Compile Include="Models\ICRUDRepository.cs" />
+    <Compile Include="Models\SeasonTable\ISeasonTableViewRepository.cs" />
+    <Compile Include="Models\SeasonTable\SeasonTableViewRepository.cs" />
+    <Compile Include="Models\SeasonTable\SeasonTableViewModel.cs" />
     <Compile Include="Models\League\GenerateLeagueDTO.cs" />
     <Compile Include="Models\League\LeagueFilter.cs" />
     <Compile Include="Models\League\LeagueViewModel.cs" />
