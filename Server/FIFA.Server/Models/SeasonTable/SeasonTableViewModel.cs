@@ -8,6 +8,7 @@ namespace FIFA.Server.Models
 
     public class TeamPlayerTableLeagueViewModel
     {
+        public int Id { get; set; }
         public int position { get; set; }
         public int nbPlayedMatches { get; set; }
         public int nbGoals { get; set; }

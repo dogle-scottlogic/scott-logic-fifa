@@ -11,5 +11,7 @@ namespace FIFA.Server.Models
         Task<IEnumerable<TeamPlayer>> GetAllWithUnplayedMatches(Location location, MatchFilter filter);
 
         Task<IEnumerable<TeamPlayer>> GetAvailableAwayOpponents(int id, MatchFilter filter);
+
+        Task<TeamPlayerSeasonStatisticViewModel> GetTeamPlayerStatisticForASeason(int teamPlayerId, int seasonId);
     }
 }

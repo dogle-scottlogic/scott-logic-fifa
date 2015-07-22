@@ -1,0 +1,33 @@
+<div ng-init="vm.loadSeasonTableViewList()" cg-busy="vm.loadingPromise">
+  <div class="clear"></div>
+  <div class="alert alert-danger" role="alert" ng-repeat="value in vm.errors['item.Global']">{{value}}</div>
+  <div class="grid-view" ng-show="vm.teamPlayerStatisticViewModel">
+    <table class="table table-striped table-bordered">
+        <tr>
+          <td>
+            <table width="100%">
+              <tr>
+                <td width="50%">Last Game in {{vm.teamPlayerStatisticViewModel.lastPlayedMatch.leagueName}}</td>
+                <td width="50%">Next Game in {{vm.teamPlayerStatisticViewModel.nextMatch.leagueName}}</td>
+              </tr>
+              <tr>
+                <td>{{vm.teamPlayerStatisticViewModel.lastPlayedMatch.homeTeam}} {{vm.teamPlayerStatisticViewModel.lastPlayedMatch.homeNbGoals}}
+              {{vm.teamPlayerStatisticViewModel.lastPlayedMatch.awayNbGoals}} {{vm.teamPlayerStatisticViewModel.lastPlayedMatch.awayTeam}}</td>
+                <td>{{vm.teamPlayerStatisticViewModel.nextMatch.homeTeam}} v {{vm.teamPlayerStatisticViewModel.nextMatch.awayTeam}}</td>
+              </tr>
+              <tr>
+                <td>{{vm.teamPlayerStatisticViewModel.lastPlayedMatch.dateMatch}}</td>
+                <td>{{vm.teamPlayerStatisticViewModel.nextMatch.dateMatch}}</td>
+              </tr>
+            </table>
+          </td>
+        <tr>
+        <tr>
+          <td colspan="2">
+            Average goals per match this season<br>
+            <center>{{vm.teamPlayerStatisticViewModel.nbAverageGoals}}</center>
+          </td>
+        </tr>
+    </table>
+  </div>
+</div>

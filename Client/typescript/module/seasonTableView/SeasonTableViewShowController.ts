@@ -34,6 +34,12 @@ module FifaLeagueClient.Module.SeasonTableView {
 			this.errors = config.errors;
 		}
 
+		// Get the statistics from a teamPlayer
+		public showTeamPlayerStatistic = (teamPlayer:TeamPlayerTableLeagueViewModel) => {
+			teamPlayer.show = !teamPlayer.show;
+		}
+
+
 	}
 
 }
