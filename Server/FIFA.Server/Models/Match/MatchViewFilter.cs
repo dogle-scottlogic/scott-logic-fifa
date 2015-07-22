@@ -19,6 +19,9 @@ namespace FIFA.Server.Models
         public DateTime? DateFrom { get; set; }
         public DateTime? DateTo { get; set; }
 
+        // Limitation of results
+        public int? LimitResult { get; set; }
+
         public IQueryable<Match> FilterMatchView(IQueryable<Match> query)
         {
 

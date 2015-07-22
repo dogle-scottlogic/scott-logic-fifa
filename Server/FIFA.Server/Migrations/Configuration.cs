@@ -119,7 +119,7 @@ namespace FIFA.Server.Migrations
             context.SaveChanges();
 
             // half the players in League 1, half in 2
-            var teamPlayersLeague1 = allTeamPlayers.GetRange(0, 6);
+            /*var teamPlayersLeague1 = allTeamPlayers.GetRange(0, 6);
             var teamPlayersLeague2 = allTeamPlayers.GetRange(6, 6);
 
             int scoreId = 1;
@@ -143,7 +143,7 @@ namespace FIFA.Server.Migrations
                     league
                 );
             }
-            context.SaveChanges();
+            context.SaveChanges();*/
         }
         
         // Generates matches and scores for a list of players
