@@ -2,7 +2,7 @@
   <div class="clear"></div>
   <div class="alert alert-danger" role="alert" ng-repeat="value in vm.errors['item.Global']">{{value}}</div>
   <div class="grid-view">
-    <h1>Results</h1>
+    <h2>Season table</h2>
     <accordion close-others="true">
         <accordion-group  ng-repeat="seasonTableView in vm.seasonTableViewList" ng-init="status.open = $first" is-open="status.open">
                 <accordion-heading>
