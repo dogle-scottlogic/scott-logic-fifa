@@ -25,7 +25,7 @@ namespace FIFA.Server.Models
         public string playerName { get; set; }
         public int seasonId { get; set; }
         public string seasonName { get; set; }
-        public int nbAverageGoals { get; set; }
+        public double nbAverageGoals { get; set; }
 
         public MatchStatisticViewModel lastPlayedMatch { get; set; }
 

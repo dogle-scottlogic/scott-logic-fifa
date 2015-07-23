@@ -23,7 +23,8 @@ module FifaLeagueClient.Module.Team.Directives {
             {
               // Reload the season if its ID changed
               scope.$watch('show', function(newshow, oldshow) {
-                        if (newshow) {
+                        // We load the teamplayer statistic only if it asks to show and has not been loaded before
+                        if (newshow && scope.vm.teamPlayerStatisticViewModel == null) {
                           scope.vm.loadTeamPlayerStatistic();
                         }
               }, true);

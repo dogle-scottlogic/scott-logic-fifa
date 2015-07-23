@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
-using FIFA.Server.Models;
 using System.Data.Entity;
 
 namespace FIFA.Server.Models
@@ -181,22 +178,23 @@ namespace FIFA.Server.Models
         }
 
         // Retrieve the number of goals done by a teamplayer on a season
-        public int getAverageGoalVM(IQueryable<Match> filteredMatches, int teamPlayerId)
+        public double getAverageGoalVM(IQueryable<Match> filteredMatches, int teamPlayerId)
         {
             filteredMatches = filteredMatches.Where(m => m.Played == true);
 
-            // Getting the total of goals for this season
-            var returnedQuery = filteredMatches.Select(m => m.Scores
+            // Getting the total of goals for this teamPlayer
+            double totalOfGoals = filteredMatches.Select(m => m.Scores
                                         .Where(sc => sc.TeamPlayer.Id == teamPlayerId)
                                         .Select(sc => sc.Goals)
                                         .DefaultIfEmpty(0).Sum()
-                            )
-                            .DefaultIfEmpty(0).Sum()
-                            /
-                            // Divided by the number of played matches (1 by default to avoid / 0)
-                            filteredMatches.Select(m => 1).DefaultIfEmpty(1).Count();
+                                        )
+                                        .DefaultIfEmpty(0).Sum();
+
+            // Get the number of played matches
+            double numberOfMatch = filteredMatches.Select(m => 1).DefaultIfEmpty(1).Count();
             
-            return returnedQuery;
+            // dividing the total of goals with the number of matches
+            return (totalOfGoals / numberOfMatch);
         }
 
 
