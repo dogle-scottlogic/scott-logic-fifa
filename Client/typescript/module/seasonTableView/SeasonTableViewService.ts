@@ -22,9 +22,26 @@ module FifaLeagueClient.Module.SeasonTableView {
 
         // Get a seasonTableView list, execute successCallBack if it is a success and errorCallBack if it is a failure
         public getSeasonTableViewList(): ng.IPromise<SeasonTableViewModel[]> {
+            return this.getSeasonTableViewFilteredList(null);
+        }
+
+        public getSeasonTableViewFilteredList(seasonTableFilter:SeasonTableFilter): ng.IPromise<SeasonTableViewModel[]> {
             var deferred = this.qService.defer();
+            var getParams = "";
+            var url;
+            if(seasonTableFilter!= null){
+                getParams = seasonTableFilter.getParameters(getParams);
+                if(getParams!= ""){
+                    url = this.apiURL +"?"+ getParams;
+                }else{
+                  url = this.apiURLWithSlash;
+                }
+            }else{
+              url = this.apiURLWithSlash;
+            }
+
             var self = this;
-            this.httpService.get(this.apiURLWithSlash)
+            this.httpService.get(url)
                 .success(function (data:[string], status, headers, config) {
                     var seasonTableViewList =  [];
                     for(var i = 0; i<data.length; i++){
@@ -38,6 +55,8 @@ module FifaLeagueClient.Module.SeasonTableView {
 
             return deferred.promise;
         }
+
+
 
 
         // Method converting the data into a seasonTableView

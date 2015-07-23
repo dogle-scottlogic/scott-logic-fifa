@@ -9,6 +9,8 @@ module FifaLeagueClient.Module.Season {
 		locationService: ng.ILocationService;
 		id: number;
 		season: SeasonModel;
+		seasonTableFilter: SeasonTableView.SeasonTableFilter;
+		showSeasonTableView: boolean;
 
 		static $inject = ["$scope", 'seasonService', '$location', '$routeParams'];
 
@@ -28,6 +30,9 @@ module FifaLeagueClient.Module.Season {
 					this.SeasonService.getSeason(this.id)
 						.then(function(data) {
 							self.season = data;
+							self.seasonTableFilter = new SeasonTableView.SeasonTableFilter();
+							self.seasonTableFilter.SeasonId = self.id;
+							self.showSeasonTableView = true;
 						}).catch(this.onError);
 			}
 		}

@@ -53,7 +53,7 @@ namespace FIFATests.ControllerTests
             List<SeasonTableViewModel> seasonView = CreateSeasonList();
 
             var mock = new Mock<ISeasonTableViewRepository>(MockBehavior.Strict);
-            mock.As<ISeasonTableViewRepository>().Setup(m => m.GetAll())
+            mock.As<ISeasonTableViewRepository>().Setup(m => m.GetAll(null))
                 .Returns(Task.FromResult((IEnumerable<SeasonTableViewModel>)seasonView));
 
 
@@ -63,7 +63,7 @@ namespace FIFATests.ControllerTests
             // configuring the context for the controler
             fakeContext(controller);
 
-            HttpResponseMessage response = controller.GetAll().Result;
+            HttpResponseMessage response = controller.GetAll(null).Result;
             Assert.AreEqual(response.StatusCode, HttpStatusCode.OK);
             var objectContent = response.Content as ObjectContent;
             // we should retrieve the season view 0
@@ -78,7 +78,7 @@ namespace FIFATests.ControllerTests
         public void RetrieveNothingForTheSeasonInTheRepo()
         {
             var mock = new Mock<ISeasonTableViewRepository>(MockBehavior.Strict);
-            mock.As<ISeasonTableViewRepository>().Setup(m => m.GetAll())
+            mock.As<ISeasonTableViewRepository>().Setup(m => m.GetAll(null))
                 .Returns(Task.FromResult((IEnumerable<SeasonTableViewModel>)null));
 
 
@@ -88,7 +88,7 @@ namespace FIFATests.ControllerTests
             // configuring the context for the controler
             fakeContext(controller);
 
-            HttpResponseMessage response = controller.GetAll().Result;
+            HttpResponseMessage response = controller.GetAll(null).Result;
             Assert.AreEqual(response.StatusCode, HttpStatusCode.OK);
 
         }

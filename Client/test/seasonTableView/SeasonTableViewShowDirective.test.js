@@ -12,6 +12,7 @@ describe('Testing the SeasonTableViewShowDirective', function() {
 
   var $httpBackend;
   var dataRepository;
+  var $http;
 
   // Mocking the season service
   beforeEach(function() {
@@ -24,6 +25,7 @@ describe('Testing the SeasonTableViewShowDirective', function() {
       config = $injector.get(FifaLeagueClient.Module.Common.configService);
       $httpBackend = $injector.get('$httpBackend');
       $q = $injector.get('$q');
+      $http = $injector.get('$http');
 
       seasonTableView_mockHTTPBackend(config, $httpBackend, $q, dataRepository);
     });
@@ -40,9 +42,20 @@ describe('Testing the SeasonTableViewShowDirective', function() {
 
 
   describe(' Tests show directive', function(){
-    it('Show the season', function() {
+
+    it('Show nothing', function() {
         var scope = $rootScope.$new();
         var html = angular.element('<seasontableviewshow></seasontableviewshow>');
+        var element = $compile(html)(scope);
+
+        $rootScope.$digest();
+
+        expect($http.pendingRequests.length).toEqual(0);
+      });
+
+    it('Show the season', function() {
+        var scope = $rootScope.$new();
+        var html = angular.element('<seasontableviewshow show="true"></seasontableviewshow>');
         var element = $compile(html)(scope);
 
         $rootScope.$digest();
@@ -51,6 +64,19 @@ describe('Testing the SeasonTableViewShowDirective', function() {
           // Check that the compiled element contains the templated content
           expect(element.html()).toContain(dataRepository[i].Name);
         }
+    });
+
+    it('Show filtered', function() {
+        var scope = $rootScope.$new();
+        scope.filter = new FifaLeagueClient.Module.SeasonTableView.SeasonTableFilter();
+        scope.filter.CountryId = 1;
+        var html = angular.element('<seasontableviewshow filter="filter" show="true"></seasontableviewshow>');
+        var element = $compile(html)(scope);
+
+        $rootScope.$digest();
+        verifyPromiseAndFlush(element.isolateScope().vm, $httpBackend);
+        // Check that the compiled element contains the templated content
+        expect(element.html()).toContain(dataRepository[0].Name);
     });
 
   });

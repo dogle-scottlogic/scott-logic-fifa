@@ -19,15 +19,19 @@ namespace FIFA.Server.Models
         {
             this.db = db;
         }
-        
+
         /**
-         * Get all the current leagues which have remaining matches
+         * Get all the current leagues which have remaining matches to play
          */
-        public async Task<IEnumerable<SeasonTableViewModel>> GetAll()
+        public async Task<IEnumerable<SeasonTableViewModel>> GetAll(SeasonTableFilter filter)
         {
-            // Getting all the seasons where at least one match havent been played
-            var currentSeasons = db.Seasons
-                .Where(s => s.Leagues.Any(l => l.Matches.Any(m => m.Played == false)));
+            if (filter == null)
+            {
+                filter = new SeasonTableFilter();
+            }
+
+            // Getting all the seasons having at least one match havent been played
+            var currentSeasons = filter.FilterSeasonTable(db.Seasons);
 
             var leagueTableView = currentSeasons.Select(
                 s => new SeasonTableViewModel
@@ -65,12 +69,12 @@ namespace FIFA.Server.Models
                                             .Select(
                                                 m =>
                                                 m.Scores
-                                                    // which has been played by the player
+                                                // which has been played by the player
                                                 .Where(sc => sc.TeamPlayer == tp)
                                                 .Select(
                                                     sc =>
-                                                        // Wining case - We add <nbWiningPoints> for each match that the player has won 
-                                                        // (ie the number of goals from the adversary < of his score)
+                                                    // Wining case - We add <nbWiningPoints> for each match that the player has won 
+                                                    // (ie the number of goals from the adversary < of his score)
                                                     m.Scores.Where(s2 => s2.TeamPlayer != tp
                                                     && s2.Match == sc.Match
                                                     && s2.Goals < sc.Goals)
@@ -78,8 +82,8 @@ namespace FIFA.Server.Models
                                                     .DefaultIfEmpty(0)
                                                     .Sum()
                                                     +
-                                                        // Draw case - We add <nbDrawPoints> for each match that the player is draw 
-                                                        // (ie the number of goals from the adversary == of his score)
+                                                    // Draw case - We add <nbDrawPoints> for each match that the player is draw 
+                                                    // (ie the number of goals from the adversary == of his score)
                                                     m.Scores.Where(s2 => s2.TeamPlayer != tp
                                                     && s2.Match == sc.Match
                                                     && s2.Goals == sc.Goals)
@@ -132,8 +136,5 @@ namespace FIFA.Server.Models
 
         }
         
-
-        
-
     }
 }
