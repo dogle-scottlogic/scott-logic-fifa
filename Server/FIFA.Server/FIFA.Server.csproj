@@ -249,6 +249,7 @@
     <Compile Include="Models\FIFAServerContext.cs" />
     <Compile Include="Models\ICRUDRepository.cs" />
     <Compile Include="Models\SeasonTable\ISeasonTableViewRepository.cs" />
+    <Compile Include="Models\SeasonTable\SeasonTableFilter.cs" />
     <Compile Include="Models\SeasonTable\SeasonTableViewRepository.cs" />
     <Compile Include="Models\SeasonTable\SeasonTableViewModel.cs" />
     <Compile Include="Models\League\GenerateLeagueDTO.cs" />

@@ -28,18 +28,18 @@ namespace FIFA.Server.Controllers
         {
             this.seasonTableViewRepository = seasonTableViewRepository;
         }
-        
+
 
         /// <summary>
-        ///     Get all the leagues which remain at least a match to play
+        ///     Get all the season classement in function of the filter
         /// </summary>
         /// <returns>Return all the current leagues (which have remaining matches)</returns>
         /// 
         // POST api/League
         [ResponseType(typeof(League))]
-        public async Task<HttpResponseMessage> GetAll()
+        public async Task<HttpResponseMessage> GetAll([FromUri]SeasonTableFilter filter)
         {
-            IEnumerable<SeasonTableViewModel> leagues = await this.seasonTableViewRepository.GetAll();
+            IEnumerable<SeasonTableViewModel> leagues = await this.seasonTableViewRepository.GetAll(filter);
             return Request.CreateResponse(HttpStatusCode.OK, leagues);
         }
         

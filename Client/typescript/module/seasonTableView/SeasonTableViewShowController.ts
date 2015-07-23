@@ -16,10 +16,10 @@ module FifaLeagueClient.Module.SeasonTableView {
 
 		/** LOADING THE Season VIEW SHOW **/
 		// loading the result view from database
-		public loadSeasonTableViewList = () => {
+		public loadSeasonTableViewList = (filter:SeasonTableFilter) => {
 			this.resetErrors();
 			this.loadingPromise =
-					this.mainService.getSeasonTableViewList()
+					this.mainService.getSeasonTableViewFilteredList(filter)
 						.then(this.handleLoadSuccess)
 						.catch(this.handleLoadErrors);
 		}

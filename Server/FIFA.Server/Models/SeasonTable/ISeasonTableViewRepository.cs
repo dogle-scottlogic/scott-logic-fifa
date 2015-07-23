@@ -8,6 +8,6 @@ namespace FIFA.Server.Models
 {
     public interface ISeasonTableViewRepository 
     {
-        Task<IEnumerable<SeasonTableViewModel>> GetAll();
+        Task<IEnumerable<SeasonTableViewModel>> GetAll(SeasonTableFilter filter);
     }
 }

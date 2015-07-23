@@ -53,11 +53,6 @@ describe('Testing the TeamPlayerStatisticViewShowDirective', function() {
         $rootScope.$digest();
 
         expect($http.pendingRequests.length).toEqual(0);
-        /*verifyPromiseAndFlush(element.isolateScope().vm, $httpBackend);
-        for(var i = 0; i< dataRepository.length;i++){
-          // Check that the compiled element contains the templated content
-          expect(element.html()).not.toContain(dataRepository[i].Name);
-        }*/
     });
 
     it('Show at tru should load the teamPlayerStatistic', function() {

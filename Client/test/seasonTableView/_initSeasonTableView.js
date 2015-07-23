@@ -28,6 +28,12 @@ seasonTableView_mockHTTPBackend = function(config, $httpBackend, $q, dataReposit
             return [200,dataRepository];
         });
 
+
+    var mockedSeasonTableViewGetList = $httpBackend.whenGET(config.backend+"api/SeasonTableView?CountryId=1")
+        .respond(function (method, url, data, headers) {
+            return [200,[dataRepository[0]]];
+        });
+
     return mockedSeasonTableViewGetList;
 
 }

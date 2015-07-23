@@ -5,8 +5,14 @@ module FifaLeagueClient.Module.Dashboard {
 
 		static $inject = ["$scope"];
 
+		seasonTableFilter:SeasonTableView.SeasonTableFilter;
+		showSeasonTableView: boolean;
+
 		constructor(scope) {
 			super(scope);
+			this.seasonTableFilter = new SeasonTableView.SeasonTableFilter();
+			this.seasonTableFilter.HasRemainingMatchToPlay = true;
+			this.showSeasonTableView = true;
 		}
 
 	}

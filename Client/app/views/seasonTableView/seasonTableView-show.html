@@ -1,4 +1,4 @@
-<div ng-init="vm.loadSeasonTableViewList()" cg-busy="vm.loadingPromise">
+<div cg-busy="vm.loadingPromise">
   <div class="clear"></div>
   <div class="alert alert-danger" role="alert" ng-repeat="value in vm.errors['item.Global']">{{value}}</div>
   <div class="grid-view">
@@ -26,7 +26,7 @@
                           <tbody ng-repeat="teamPlayer in leagueTableView.TeamPlayers">
                               <tr>
                                   <td>
-                                  <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': teamPlayer.show, 'glyphicon-chevron-right': !teamPlayer.show}" 
+                                  <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': teamPlayer.show, 'glyphicon-chevron-right': !teamPlayer.show}"
                                   ng-click="vm.showTeamPlayerStatistic(teamPlayer)"></i>
                                   </td>
                                   <td>{{teamPlayer.position}}</td>
