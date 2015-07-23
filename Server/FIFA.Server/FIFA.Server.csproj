@@ -181,6 +181,7 @@
     <Compile Include="Controllers\AbstractCRUDAPIController.cs" />
     <Compile Include="Controllers\AvailablePlayersController.cs" />
     <Compile Include="Controllers\CountryController.cs" />
+    <Compile Include="Controllers\TeamPlayerStatisticViewController.cs" />
     <Compile Include="Controllers\SeasonTableViewController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\GenerateLeagueController.cs" />
@@ -270,6 +271,7 @@
     <Compile Include="Models\Season\SeasonRepository.cs" />
     <Compile Include="Models\Season\ISeasonRepository.cs" />
     <Compile Include="Models\TeamPlayer\ITeamPlayerRepository.cs" />
+    <Compile Include="Models\TeamPlayer\TeamPlayerSeasonStatisticViewModel.cs" />
     <Compile Include="Models\TeamPlayer\TeamPlayerFilter.cs" />
     <Compile Include="Models\TeamPlayer\TeamPlayerRepository.cs" />
     <Compile Include="Models\Team\TeamFilter.cs" />

@@ -35,12 +35,14 @@ module FifaLeagueClient.Module.SeasonTableView {
 
 	export class TeamPlayerTableLeagueViewModel {
 
+			public Id: number;
 			public position: number;
 			public nbPlayedMatches: number;
 			public nbGoals: number;
 			public nbPoints: number;
 			public player:Player.PlayerModel;
 			public team: Team.TeamModel;
+			public show:boolean;
 
 			// build the model directly from the data returned by the service
 			constructor(data){
@@ -51,6 +53,7 @@ module FifaLeagueClient.Module.SeasonTableView {
 							this.nbPoints = data.nbPoints;
 							this.player = data.player;
 							this.team = data.team;
+							this.show = false;
 					}
 			}
 	}

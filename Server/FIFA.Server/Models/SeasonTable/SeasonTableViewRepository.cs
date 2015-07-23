@@ -42,6 +42,7 @@ namespace FIFA.Server.Models
                         .Select(
                             tp => new TeamPlayerTableLeagueViewModel
                             {
+                                Id = tp.Id,
                                 player = tp.Player,
                                 team = tp.Team,
                                 nbPlayedMatches = l.Matches.Count(m => m.Played == true
