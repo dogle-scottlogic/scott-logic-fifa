@@ -13,6 +13,7 @@ namespace FIFA.Server.Models
         [Key]
         public int Id { get; set; }
 
+        [Index("DateOfMatch")]
         public DateTime? Date { get; set; }
 
         public bool Played { get; set; }
