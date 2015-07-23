@@ -16,10 +16,12 @@ module FifaLeagueClient.Module.Team {
 
 		// Get the statistics from a teamPlayer
 		public loadTeamPlayerStatistic = () => {
-
-			this.mainService.getTeamPlayerStatisticViewList(this.scope.teamplayerid, this.scope.seasonid)
-				.then(this.handleLoadPlayerSuccess)
-				.catch(this.handleLoadErrors);
+			if(this.scope.teamplayerid != null && this.scope.seasonid != null){
+				this.loadingPromise =
+					this.mainService.getTeamPlayerStatisticViewList(this.scope.teamplayerid, this.scope.seasonid)
+						.then(this.handleLoadPlayerSuccess)
+						.catch(this.handleLoadErrors);
+			}
 		}
 
 		protected handleLoadPlayerSuccess = (data:Team.TeamPlayerStatisticViewModel) => {
