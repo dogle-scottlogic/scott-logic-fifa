@@ -20,6 +20,7 @@
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -158,6 +159,9 @@
     <EmbeddedResource Include="Migrations\201507161411572_score_teamPlayer.resx">
       <DependentUpon>201507161411572_score_teamPlayer.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201507231254289_MatchIndexDate.resx">
+      <DependentUpon>201507231254289_MatchIndexDate.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
@@ -232,6 +236,10 @@
     <Compile Include="Migrations\201507161411572_score_teamPlayer.cs" />
     <Compile Include="Migrations\201507161411572_score_teamPlayer.Designer.cs">
       <DependentUpon>201507161411572_score_teamPlayer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201507231254289_MatchIndexDate.cs" />
+    <Compile Include="Migrations\201507231254289_MatchIndexDate.Designer.cs">
+      <DependentUpon>201507231254289_MatchIndexDate.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Country\CountryFilter.cs" />
