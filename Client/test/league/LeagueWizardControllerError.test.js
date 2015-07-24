@@ -38,13 +38,25 @@ describe('Testing the LeagueWizardController in error', function() {
   describe('LeagueWizardController in error case : ', function(){
 
   // Get test
-    it('Try create a league but have an error', function () {
+    it('Try having the teams but have an error', function () {
 
       // And that we clicked a button or something
+      generateLeagueController.countryId = 1;
       generateLeagueController.validatePlayerSelectionStep();
       verifyPromiseAndFlush(generateLeagueController, $httpBackend);
       expect(generateLeagueController.errors["item.Global"]).toEqual([ '500 : ', 'A league already exists' ]);
     });
+
+    // Get test
+      it('Try create a league but have an error', function () {
+
+        // And that we clicked a button or something
+        generateLeagueController.countryId = 1;
+        generateLeagueController.leagues = [];
+        generateLeagueController.validateAssignPlayerToLeagueStep();
+        verifyPromiseAndFlush(generateLeagueController, $httpBackend);
+        expect(generateLeagueController.errors["item.Global"]).toEqual([ '500 : ', 'A league already exists' ]);
+      });
 
   });
 

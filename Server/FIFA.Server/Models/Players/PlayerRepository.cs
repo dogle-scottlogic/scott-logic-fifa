@@ -19,13 +19,13 @@ namespace FIFA.Server.Models
         
         public async Task<IEnumerable<Player>> GetAll()
         {
-            return await db.Players.ToListAsync();
+            return await db.Players.OrderBy(p => p.Name).ToListAsync();
         }
 
 
         public async Task<IEnumerable<Player>> GetAllWithFilter(PlayerFilter filter)
         {
-            return await FilterPlayers(db.Players, filter).ToListAsync();
+            return await FilterPlayers(db.Players, filter).OrderBy(p => p.Name).ToListAsync();
         }
 
 

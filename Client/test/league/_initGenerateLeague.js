@@ -60,26 +60,46 @@ generateLeague_buildDataRepository = function() {
 // mocking the backend
 generateLeague_mockHTTPBackend = function(config, $httpBackend, $q, dataRepository){
 
+
+  $httpBackend.whenGET(/\/api\/GenerateLeague\?numberOfPlayers=[1-9][0-9]*/)
+      .respond(function (method, url, data, headers) {
+
+          var league = new FifaLeagueClient.Module.League.LeagueModel();
+          return [200,[league,league]];
+      });
+
   $httpBackend.whenPOST(config.backend+"api/GenerateLeague/")
       .respond(function (method, url, data, headers) {
           // Parsing the data to fack the generation and return what we intended
           var jsonObj = JSON.parse(data);
-          var player = jsonObj.Players[0];
-          var createdLeague = new FifaLeagueClient.Module.League.LeagueViewModel(
-            {
-              Name: 'Ligue 1',
-              TeamPlayers: [
-                {
-                  player,
-                  team: {
-                    Id: 4,
-                    Name: "Team 3"
-                  }
-                }
-              ]
-            });
+          var playerLeagues = jsonObj.PlayerLeagues;
 
-          dataRepository.push(createdLeague);
+          for(var i = 0;i<playerLeagues.length;i++){
+
+            var playerLeague = playerLeagues[i];
+
+            for(var j = 0;j<playerLeague.players.length;j++){
+
+              var player = playerLeague.players[j];
+
+              var createdLeague = new FifaLeagueClient.Module.League.LeagueViewModel(
+                {
+                  Name: playerLeague.league.Name,
+                  TeamPlayers: [
+                    {
+                      player,
+                      team: {
+                        Id: 4,
+                        Name: "Team 3"
+                      }
+                    }
+                  ]
+                });
+                dataRepository.push(createdLeague);
+
+            }
+          }
+
 
           return [200,createdLeague];
       });
@@ -88,6 +108,9 @@ generateLeague_mockHTTPBackend = function(config, $httpBackend, $q, dataReposito
 
 // mocking the backend in error case
 generateLeague_mockHTTPBackend_Error = function(config, $httpBackend, $q, dataRepository){
+
+  $httpBackend.whenGET(/\/api\/GenerateLeague\?numberOfPlayers=[0-9][0-9]*/)
+      .respond(500,{Message: 'A league already exists'});
 
     $httpBackend.whenPOST(config.backend+"api/GenerateLeague/")
         .respond(500,{Message: 'A league already exists'});

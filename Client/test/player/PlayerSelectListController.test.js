@@ -43,9 +43,9 @@ describe('Testing the PlayerSelectListController', function() {
 
     it('should contain all none archived players at initialize', function() {
       // The player shall be retrieved in the list
-      expect(playerSelectListController.scope.players[1].player).toEqual(dataRepository[0]);
-      expect(playerSelectListController.scope.players[2].player).toEqual(dataRepository[1]);
-      expect(Object.keys(playerSelectListController.scope.players).length).toEqual(2);
+      expect(playerSelectListController.scope.players[0].player).toEqual(dataRepository[0]);
+      expect(playerSelectListController.scope.players[1].player).toEqual(dataRepository[1]);
+      expect(playerSelectListController.scope.players.length).toEqual(2);
     });
 
 
@@ -58,14 +58,14 @@ describe('Testing the PlayerSelectListController', function() {
 
 
     it('Selecting a player shall select him and not the others', function() {
-      var playerSelected = 1;
+      var playerSelected = playerSelectListController.scope.players[0];
       playerSelectListController.selectPlayer(playerSelected);
       // The player shall be retrieved in the list
-      for(var key in playerSelectListController.scope.players){
-        if(playerSelected == key){
-          expect(playerSelectListController.scope.players[key].selected).toEqual(true);
+      for(var i=0; i<playerSelectListController.scope.players.length;i++){
+        if(i == 0){
+          expect(playerSelectListController.scope.players[i].selected).toEqual(true);
         }else{
-          expect(playerSelectListController.scope.players[key].selected).toEqual(false);
+          expect(playerSelectListController.scope.players[i].selected).toEqual(false);
         }
       }
     });
@@ -73,17 +73,17 @@ describe('Testing the PlayerSelectListController', function() {
 
     it('Unselecting a player shall unselect him and not the others', function() {
       // first we select all players
-      for(var key in playerSelectListController.scope.players){
-        playerSelectListController.scope.players[key].selected = true;
+      for(var i=0; i<playerSelectListController.scope.players.length;i++){
+        playerSelectListController.scope.players[i].selected = true;
       }
-      var playerUnSelected = 1;
+      var playerUnSelected = playerSelectListController.scope.players[0];
       playerSelectListController.unSelectPlayer(playerUnSelected);
       // The player shall be retrieved in the list
-      for(var key in playerSelectListController.scope.players){
-        if(playerUnSelected == key){
-          expect(playerSelectListController.scope.players[key].selected).toEqual(false);
+      for(var i=0; i<playerSelectListController.scope.players.length;i++){
+        if(i == 0){
+          expect(playerSelectListController.scope.players[i].selected).toEqual(false);
         }else{
-          expect(playerSelectListController.scope.players[key].selected).toEqual(true);
+          expect(playerSelectListController.scope.players[i].selected).toEqual(true);
         }
       }
     });
@@ -91,20 +91,20 @@ describe('Testing the PlayerSelectListController', function() {
     it('Select all player shall select them all', function() {
       playerSelectListController.selectAllPlayers();
       // The player shall be retrieved in the list
-      for(var key in playerSelectListController.scope.players){
-        expect(playerSelectListController.scope.players[key].selected).toEqual(true);
+      for(var i=0; i<playerSelectListController.scope.players.length;i++){
+        expect(playerSelectListController.scope.players[i].selected).toEqual(true);
       }
     });
 
     it('Unselect all player shall select them all', function() {
       // first we select all players
-      for(var key in playerSelectListController.scope.players){
-        playerSelectListController.scope.players[key].selected = true;
+      for(var i=0; i<playerSelectListController.scope.players.length;i++){
+        playerSelectListController.scope.players[i].selected = true;
       }
       playerSelectListController.unSelectAllPlayers();
       // The player shall be retrieved in the list
-      for( var i=0;i<playerSelectListController.scope.players.size;i++){
-          expect(playerSelectListController.scope.players[i].selected).toEqual(false);
+      for(var i=0; i<playerSelectListController.scope.players.length;i++){
+        expect(playerSelectListController.scope.players[i].selected).toEqual(false);
       }
     });
 

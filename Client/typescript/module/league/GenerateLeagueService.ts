@@ -7,6 +7,7 @@ module FifaLeagueClient.Module.League {
 
         // URL used to reach the league API
         apiURL:string;
+        apiURLWithSlash:string;
 
         static $inject = [
             "$httpService", '$q'
@@ -15,7 +16,8 @@ module FifaLeagueClient.Module.League {
         constructor($http: ng.IHttpService, config: Common.Config, $q: ng.IQService) {
             this.httpService = $http;
             this.qService = $q;
-            this.apiURL = config.backend+"api/GenerateLeague/";
+            this.apiURL = config.backend+"api/GenerateLeague";
+            this.apiURLWithSlash = this.apiURL + "/";
         }
 
         // generate a league in the database
@@ -23,7 +25,21 @@ module FifaLeagueClient.Module.League {
             var deferred = this.qService.defer();
             var self = this;
 
-            this.httpService.post(this.apiURL, generateLeague).success(function (data, status, headers, config) {
+            this.httpService.post(this.apiURLWithSlash, generateLeague).success(function (data, status, headers, config) {
+                deferred.resolve(data);
+            }).error(function (data, status, headers, config) {
+                deferred.reject(config);
+            });
+            return deferred.promise;
+        }
+
+
+        // Define the number of leagues (it depend on the number of players)
+        public getLeaguesFilteredList(numberOfPlayer:number, countryId:number): ng.IPromise<LeagueModel[]>{
+            var deferred = this.qService.defer();
+            var self = this;
+
+            this.httpService.get(this.apiURL+"?numberOfPlayers="+numberOfPlayer+"&countryId="+countryId).success(function (data, status, headers, config) {
                 deferred.resolve(data);
             }).error(function (data, status, headers, config) {
                 deferred.reject(config);
