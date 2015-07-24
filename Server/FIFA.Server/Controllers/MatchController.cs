@@ -6,113 +6,106 @@ using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 using FIFA.Server.Models;
+using System.Threading.Tasks;
+using FIFA.Server.Infrastructure;
 
 namespace FIFA.Server.Controllers
 {
-    public class MatchController : ApiController
-    {
-        private FIFAServerContext db = new FIFAServerContext();
 
-        // GET api/Match
-        public IQueryable<Match> GetMatches()
+    [ConfigurableCorsPolicy("localhost")]
+    public class MatchController : AbstractCRUDAPIController<Match, int, MatchFilter>
+    {
+        /// <summary>
+        ///     Constructor
+        /// </summary>
+        /// <returns></returns>
+        public MatchController(IMatchRepository matchRepository)
+            : base(matchRepository)
         {
-            return db.Matches;
         }
 
+        /// <summary>
+        ///     Retrieve a list of countries
+        /// </summary>
+        /// <returns>Return a list of matchModel</returns>
+        /// 
+        // GET api/Match
+        [ResponseType(typeof(IEnumerable<Match>))]
+        public async Task<HttpResponseMessage> GetAll([FromUri] MatchFilter matchFilter = null)
+        {
+            IEnumerable<Match> list;
+
+            if (matchFilter == null)
+            {
+                list = await base.repository.GetAll();
+            }
+            else
+            {
+                list = await base.repository.GetAllWithFilter(matchFilter);
+            }
+
+            return Request.CreateResponse(HttpStatusCode.OK, list);
+        }
+
+        /// <summary>
+        ///     Retrieves a specific match by it's ID
+        /// </summary>
+        /// <param name="id">The ID of the match.</param>
+        /// <returns>Return a matchModel if found</returns>
+        /// 
         // GET api/Match/5
         [ResponseType(typeof(Match))]
-        public async Task<IHttpActionResult> GetMatch(int id)
+        public async Task<HttpResponseMessage> Get(int id)
         {
-            Match match = await db.Matches.FindAsync(id);
-            if (match == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(match);
+            return await base.Get(id);
         }
 
-        // PUT api/Match/5
-        public async Task<IHttpActionResult> PutMatch(int id, Match match)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            if (id != match.Id)
-            {
-                return BadRequest();
-            }
-
-            db.Entry(match).State = EntityState.Modified;
-
-            try
-            {
-                await db.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!MatchExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return StatusCode(HttpStatusCode.NoContent);
-        }
-
+        /// <summary>
+        ///     Create a new match
+        /// </summary>
+        /// <param name="item">The match to add without id</param>
+        /// <returns>Return a matchModel if created and its uri to retrieve it</returns>
+        /// 
         // POST api/Match
         [ResponseType(typeof(Match))]
-        public async Task<IHttpActionResult> PostMatch(Match match)
+        public async Task<HttpResponseMessage> Post(Match item)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            db.Matches.Add(match);
-            await db.SaveChangesAsync();
-
-            return CreatedAtRoute("DefaultApi", new { id = match.Id }, match);
+            return await base.Post(item);
         }
 
+        /// <summary>
+        ///     Update a match by its ID
+        /// </summary>
+        /// <param name="id">The ID of the match.</param>
+        /// <param name="item">The modified match</param>
+        /// <returns>Return the modified matchModel if no error</returns>
+        /// 
+        // PUT api/Match/5
+        [ResponseType(typeof(Match))]
+        public async Task<HttpResponseMessage> Put(int id, Match item)
+        {
+           return await base.Put(id, item);
+        }
+
+        /// <summary>
+        ///     Delete a match by its ID
+        /// </summary>
+        /// <param name="id">The ID of the match.</param>
+        /// <returns>
+        /// Status 200 if deleted correctly
+        /// Status 404 if not (with match not found message)
+        /// </returns>
+        /// 
         // DELETE api/Match/5
         [ResponseType(typeof(Match))]
-        public async Task<IHttpActionResult> DeleteMatch(int id)
+        public async Task<HttpResponseMessage> Delete(int id)
         {
-            Match match = await db.Matches.FindAsync(id);
-            if (match == null)
-            {
-                return NotFound();
-            }
-
-            db.Matches.Remove(match);
-            await db.SaveChangesAsync();
-
-            return Ok(match);
+            return await base.Delete(id);
         }
+        
 
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
-        }
-
-        private bool MatchExists(int id)
-        {
-            return db.Matches.Count(e => e.Id == id) > 0;
-        }
     }
 }

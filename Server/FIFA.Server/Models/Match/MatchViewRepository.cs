@@ -66,8 +66,8 @@ namespace FIFA.Server.Models
                                                             matches = lq.ToList()
                                                             .OrderBy(mv => mv.homeTeamPlayer.PlayerName)
                                                             .ThenBy(mv => mv.homeTeamPlayer.TeamName)
-                                                            .ThenBy(mv => mv.awayTeamPlayerName.PlayerName)
-                                                            .ThenBy(mv => mv.awayTeamPlayerName.TeamName)
+                                                            .ThenBy(mv => mv.awayTeamPlayer.PlayerName)
+                                                            .ThenBy(mv => mv.awayTeamPlayer.TeamName)
                                                         }
                                                )
                                                .OrderBy(l => l.Name)
@@ -101,6 +101,7 @@ namespace FIFA.Server.Models
                 .Select(
                     m => new MatchResultViewModel
                     {
+                        Id = m.Id,
                         LeagueId = m.League.Id,
                         LeagueName = m.League.Name,
                         SeasonId = m.League.Season.Id,
@@ -117,7 +118,7 @@ namespace FIFA.Server.Models
                                 nbGoals = s.Goals
                             })
                             .FirstOrDefault(),
-                        awayTeamPlayerName = m.Scores
+                        awayTeamPlayer = m.Scores
                             .Where(s => s.Location == Location.Away)
                             .Select(s => new TeamPlayerResultViewModel
                             {
@@ -133,9 +134,17 @@ namespace FIFA.Server.Models
 
         }
 
+        /**
+         * Get the played match
+         */
+        public async Task<MatchResultViewModel> Get(int id)
+        {
+            return await getMatchResultViewModel(db.Matches.Where(m => m.Id == id)).FirstOrDefaultAsync();
+        }
+
 
     // Returning the list with limited result or not depending on the filter
-    private async Task<List<ResultViewModel>> ReturnResult(IQueryable<ResultViewModel> resultView, MatchViewFilter filter)
+        private async Task<List<ResultViewModel>> ReturnResult(IQueryable<ResultViewModel> resultView, MatchViewFilter filter)
         {
             if (filter != null && filter.LimitResult != null)
             {
