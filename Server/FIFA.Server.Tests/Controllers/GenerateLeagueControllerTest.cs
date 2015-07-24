@@ -124,11 +124,16 @@ namespace FIFATests.ControllerTests
         public void GenerateFailureLeagueLessThanFourPlayers()
         {
             GenerateLeagueDTO generateLeagueDTO = new GenerateLeagueDTO();
-            generateLeagueDTO.Players = new List<PlayerAssignLeagueModel>();
+            generateLeagueDTO.PlayerLeagues = new List<PlayerAssignLeagueModel>();
+            // We create a list of players
+            List<Player> players = new List<Player>();
             for (int i = 0; i < 3; i++)
             {
-                generateLeagueDTO.Players.Add(new PlayerAssignLeagueModel());
+                players.Add(new Player());
             }
+            PlayerAssignLeagueModel playerLeague = new PlayerAssignLeagueModel { league = new League(), Players = players };
+
+            generateLeagueDTO.PlayerLeagues.Add(playerLeague);
 
             // Filling mock rull with repository
             var mock = new Mock<ILeagueRepository>(MockBehavior.Strict);
@@ -160,16 +165,21 @@ namespace FIFATests.ControllerTests
 
         }
 
-        // Verifying the Generate failure if we have an even number of players
+        // Verifying the Generate failure if a league don't have a name
         [TestMethod]
-        public void GenerateFailureLeagueNotEvenPlayers()
+        public void GenerateFailureLeagueNoName()
         {
+
             GenerateLeagueDTO generateLeagueDTO = new GenerateLeagueDTO();
-            generateLeagueDTO.Players = new List<PlayerAssignLeagueModel>();
+            generateLeagueDTO.PlayerLeagues = new List<PlayerAssignLeagueModel>();
+            // We create a list of players
+            List<Player> players = new List<Player>();
             for (int i = 0; i < 5; i++)
             {
-                generateLeagueDTO.Players.Add(new PlayerAssignLeagueModel());
+                players.Add(new Player());
             }
+            generateLeagueDTO.PlayerLeagues.Add(new PlayerAssignLeagueModel { Players = players });
+
 
             // Filling mock rull with repository
             var mock = new Mock<ILeagueRepository>(MockBehavior.Strict);
@@ -185,7 +195,7 @@ namespace FIFATests.ControllerTests
             // Setting up that the teams
             mockTeamRepo.As<ICRUDRepository<Team, int, TeamFilter>>().Setup(s => s.GetAllWithFilter(It.IsAny<TeamFilter>()))
                 .Returns(Task.FromResult((IEnumerable<Team>)new List<Team>()));
-            
+
             // Creating the controller which we want to create
             GenerateLeagueController controller = new GenerateLeagueController(mock.Object, mockSeasonRepo.Object,
                 mockTeamRepo.Object);
@@ -196,20 +206,29 @@ namespace FIFATests.ControllerTests
             HttpResponseMessage response = controller.Post(generateLeagueDTO).Result;
             String errorMessage = response.Content.ReadAsStringAsync().Result;
             Assert.AreEqual(response.StatusCode, HttpStatusCode.BadRequest);
-            Assert.AreEqual(errorMessage, "{\"Message\":\"You must choose an even number of players.\"}");
+            Assert.AreEqual(errorMessage, "{\"Message\":\"All the leagues must have a name.\"}");
 
         }
+
+        private void  fillPlayerLeagues(GenerateLeagueDTO generateLeagueDTO, int nbPlayers)
+        {
+            generateLeagueDTO.PlayerLeagues = new List<PlayerAssignLeagueModel>();
+            // We create a list of players
+            List<Player> players = new List<Player>();
+            for (int i = 0; i < nbPlayers; i++)
+            {
+                players.Add(new Player());
+            }
+            generateLeagueDTO.PlayerLeagues.Add(new PlayerAssignLeagueModel { league = new League {Name="League 1" }, Players = players });
+        }
+        
 
         // Verifying the Generate failure if we have not enough team for players
         [TestMethod]
         public void GenerateFailureNotEnoughTeamForPlayers()
         {
             GenerateLeagueDTO generateLeagueDTO = new GenerateLeagueDTO();
-            generateLeagueDTO.Players = new List<PlayerAssignLeagueModel>();
-            for (int i = 0; i < 4; i++)
-            {
-                generateLeagueDTO.Players.Add(new PlayerAssignLeagueModel());
-            }
+            fillPlayerLeagues(generateLeagueDTO, 4);
 
             List<Team> teams = new List<Team>();
             for (int i = 0; i < 3; i++)
@@ -251,11 +270,7 @@ namespace FIFATests.ControllerTests
         public void GenerateFailureIfModelStateNotValid()
         {
             GenerateLeagueDTO generateLeagueDTO = new GenerateLeagueDTO();
-            generateLeagueDTO.Players = new List<PlayerAssignLeagueModel>();
-            for (int i = 0; i < 4; i++)
-            {
-                generateLeagueDTO.Players.Add(new PlayerAssignLeagueModel());
-            }
+            fillPlayerLeagues(generateLeagueDTO, 4);
 
             List<Team> teams = new List<Team>();
             for (int i = 0; i < 8; i++)
@@ -303,11 +318,7 @@ namespace FIFATests.ControllerTests
             League league = new League();
 
             GenerateLeagueDTO generateLeagueDTO = new GenerateLeagueDTO();
-            generateLeagueDTO.Players = new List<Player>();
-            for (int i = 0; i < 4; i++)
-            {
-                generateLeagueDTO.Players.Add(new Player());
-            }
+            fillPlayerLeagues(generateLeagueDTO, 4);
             List<Team> teams = new List<Team>();
             for (int i = 0; i < 8; i++)
             {
@@ -364,11 +375,7 @@ namespace FIFATests.ControllerTests
             League league = new League();
 
             GenerateLeagueDTO generateLeagueDTO = new GenerateLeagueDTO();
-            generateLeagueDTO.Players = new List<Player>();
-            for (int i = 0; i < 4; i++)
-            {
-                generateLeagueDTO.Players.Add(new Player());
-            }
+            fillPlayerLeagues(generateLeagueDTO, 4);
             List<Team> teams = new List<Team>();
             for (int i = 0; i < 8; i++)
             {
@@ -422,11 +429,7 @@ namespace FIFATests.ControllerTests
         private List<League> _initGenerateLeagueValidPlayers(int nbPlayers)
         {
             GenerateLeagueDTO generateLeagueDTO = new GenerateLeagueDTO();
-            generateLeagueDTO.Players = new List<Player>();
-            for (int i = 0; i < nbPlayers; i++)
-            {
-                generateLeagueDTO.Players.Add(new Player());
-            }
+            fillPlayerLeagues(generateLeagueDTO, nbPlayers);
             List<Team> teams = new List<Team>();
             for (int i = 0; i < nbPlayers; i++)
             {
@@ -444,23 +447,7 @@ namespace FIFATests.ControllerTests
 
             // Mocking the creation of the league createLeagueAttachedToPlayers
             List<League> createdLeagues = new List<League>();
-
-            // Mocking the creation of the league createLeagueAttachedToPlayers
-
-            mock.As<ILeagueRepository>().Setup(l => l.createLeagueWithTeamPlayers(It.IsAny<League>(),
-                It.IsAny<List<TeamPlayer>>()))
-                .Callback((League l, List<TeamPlayer> tp) =>
-                {
-                    l.TeamPlayers = tp;
-                    createdLeagues.Add(l);
-                })
-                .Returns(Task.FromResult(new League()));
-
-
             var mockSeasonRepo = new Mock<ISeasonRepository>(MockBehavior.Strict);
-            // Setting up that the country name already exist
-            mockSeasonRepo.As<ICRUDRepository<Season, int, SeasonFilter>>().Setup(s => s.Get(It.IsAny<int>()))
-                .Returns(Task.FromResult(new Season()));
 
 
             var mockTeamRepo = new Mock<ITeamRepository>(MockBehavior.Strict);
@@ -479,10 +466,13 @@ namespace FIFATests.ControllerTests
 
             // configuring the context for the controler
             fakeContext(controller);
+                
 
-            HttpResponseMessage response = controller.Post(generateLeagueDTO).Result;
+            HttpResponseMessage response = controller.Get(nbPlayers, 1).Result;
 
-            return createdLeagues;
+            var objectContent = response.Content as ObjectContent;
+
+            return (List<League>)objectContent.Value;
         }
 
         // Verifying the Generate valide if all is ok - Case we have more players that can fit on only one League
@@ -492,12 +482,6 @@ namespace FIFATests.ControllerTests
             List<League> createdLeagues = _initGenerateLeagueValidPlayers(14);
             // We expect 3 leagues to be created
             Assert.AreEqual(createdLeagues.Count(), 3);
-            // With the first with 6 players
-            Assert.AreEqual(createdLeagues.ElementAt(0).TeamPlayers.Count(), 6);
-
-            // With the nexts with 4 players
-            Assert.AreEqual(createdLeagues.ElementAt(1).TeamPlayers.Count(), 4);
-            Assert.AreEqual(createdLeagues.ElementAt(2).TeamPlayers.Count(), 4);
         }
 
         // Verifying the Generate valide if all is ok - Case we have 18 players which means 3 teams of 6 players(not 4)
@@ -508,11 +492,6 @@ namespace FIFATests.ControllerTests
             List<League> createdLeagues = _initGenerateLeagueValidPlayers(18);
             // We expect 3 leagues to be created
             Assert.AreEqual(createdLeagues.Count(), 3);
-            // With the two first with 4 players
-            Assert.AreEqual(createdLeagues.ElementAt(0).TeamPlayers.Count(), 6);
-            Assert.AreEqual(createdLeagues.ElementAt(1).TeamPlayers.Count(), 6);
-            // and the last with 6 players
-            Assert.AreEqual(createdLeagues.ElementAt(2).TeamPlayers.Count(), 6);
         }
 
         // Verifying the Generate valide if all is ok - Case we have 20 players which means 4 teams of 2*6 and 2*4 players
@@ -522,12 +501,6 @@ namespace FIFATests.ControllerTests
             List<League> createdLeagues = _initGenerateLeagueValidPlayers(20);
             // We expect 3 leagues to be created
             Assert.AreEqual(createdLeagues.Count(), 4);
-            // With the two first with 6 players
-            Assert.AreEqual(createdLeagues.ElementAt(0).TeamPlayers.Count(), 6);
-            Assert.AreEqual(createdLeagues.ElementAt(1).TeamPlayers.Count(), 6);
-            // and the lasts with 4 players
-            Assert.AreEqual(createdLeagues.ElementAt(2).TeamPlayers.Count(), 4);
-            Assert.AreEqual(createdLeagues.ElementAt(2).TeamPlayers.Count(), 4);
         }
 
         // Verifying the Generate valide if all is ok - Case we have 60 players which means 4 teams of 2*6 and 2*4 players
@@ -537,18 +510,6 @@ namespace FIFATests.ControllerTests
             List<League> createdLeagues = _initGenerateLeagueValidPlayers(64);
             // We expect 3 leagues to be created
             Assert.AreEqual(createdLeagues.Count(), 11);
-            // With the 9 first and the last with 6 players
-            for (int i = 0; i < 11; i++)
-            {
-                if (i != 9)
-                {
-                    Assert.AreEqual(createdLeagues.ElementAt(i).TeamPlayers.Count(), 6);
-                }
-                else
-                {
-                    Assert.AreEqual(createdLeagues.ElementAt(i).TeamPlayers.Count(), 4);
-                }
-            }
         }
 
 

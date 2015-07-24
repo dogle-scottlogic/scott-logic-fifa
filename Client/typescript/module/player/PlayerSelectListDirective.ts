@@ -17,7 +17,7 @@ module FifaLeagueClient.Module.Player.Directives {
 
     export interface IPlayerSelectListScope extends ng.IScope {
         vm : PlayerSelectListController;
-        players:{[Id: number]:SelectablePlayerModel};
+        players:SelectablePlayerModel[];
     }
 
     export function playerSelectListDirective(): ng.IDirective {

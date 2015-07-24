@@ -35,11 +35,11 @@ module FifaLeagueClient.Module.League {
 
 
         // Define the number of leagues (it depend on the number of players)
-        public getLeaguesFilteredList(numberOfPlayer:number): ng.IPromise<LeagueModel[]>{
+        public getLeaguesFilteredList(numberOfPlayer:number, countryId:number): ng.IPromise<LeagueModel[]>{
             var deferred = this.qService.defer();
             var self = this;
 
-            this.httpService.get(this.apiURL+"?numberOfPlayers="+numberOfPlayer).success(function (data, status, headers, config) {
+            this.httpService.get(this.apiURL+"?numberOfPlayers="+numberOfPlayer+"&countryId="+countryId).success(function (data, status, headers, config) {
                 deferred.resolve(data);
             }).error(function (data, status, headers, config) {
                 deferred.reject(config);

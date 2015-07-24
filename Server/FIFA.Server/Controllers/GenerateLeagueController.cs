@@ -36,15 +36,74 @@ namespace FIFA.Server.Controllers
             this.teamRepository = teamRepository;
         }
 
-        [ResponseType(typeof(List<League>))]
-        public async Task<HttpResponseMessage> Get(int numberOfPlayers)
+        // Method checking that the number of players is ok regarding to the rules, if not, return a non empty string with the error
+        // message
+        private String checkNumberOfPlayersRules(int totalOfPlayers, int totalOfTeamAvalaible)
         {
-            List<League> leagues = new List<League>();
-            leagues.Add(new League {Id = 1, Name = "League 1"});
-            leagues.Add(new League { Id = 2, Name = "League 2" });
-            return Request.CreateResponse(HttpStatusCode.OK, leagues);
+            // Their will be at least <minNumberOfPlayers> players
+            if (totalOfPlayers < minNumberOfPlayers)
+            {
+                return "You must choose at least 4 players.";
+            }
+            // If their is less team than players, the server respond an error
+            else if (totalOfTeamAvalaible < totalOfPlayers)
+            {
+                return "Not enough team exists for this country.";
+            }
+            else
+            {
+                return null;
+            }
         }
 
+        [ResponseType(typeof(List<League>))]
+        public async Task<HttpResponseMessage> Get(int numberOfPlayers, int countryId)
+        {
+
+            // retrieving the teams associated to the country
+            List<Team> teams = new List<Team>(await this.getTeamsAssociatedToTheCountry(countryId));
+            
+            // Checking that everything is ok for the league generation
+            string errorString = checkNumberOfPlayersRules(numberOfPlayers, teams.Count());
+
+            // returning an error if errorString is not empty
+            if (errorString != null)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, errorString);
+            } else { 
+
+                List<League> leagues = new List<League>();
+                int leagueNumber = 1;
+            
+                // For each <maxNumberOfPlayersByLeague>, we create an other league
+                while (numberOfPlayers > 0)
+                {
+                    string leagueName = "League " + leagueNumber;
+
+                    // If numberOfPlayers / maxNumberOfPlayersByLeague > 2, we remove the max number of players
+                    if ((numberOfPlayers / maxNumberOfPlayersByLeague) >= 2)
+                    {
+                        numberOfPlayers -= maxNumberOfPlayersByLeague;
+                    }
+                    else if (numberOfPlayers > maxNumberOfPlayersByLeague)
+                    {
+                        numberOfPlayers -= minNumberOfPlayers;
+                    }
+                    else
+                    {
+                        numberOfPlayers = 0;
+                    }
+
+                    leagues.Add(new League {Id = leagueNumber, Name = leagueName });
+
+                    leagueNumber++;
+
+                }
+                return Request.CreateResponse(HttpStatusCode.OK, leagues);
+            }
+
+        }
+        
         /// <summary>
         ///     Generate the league(s)
         /// </summary>
@@ -76,27 +135,22 @@ namespace FIFA.Server.Controllers
                 // retrieving the teams associated to the country
                 List<Team> teams = new List<Team>(await this.getTeamsAssociatedToTheCountry(season.CountryId));
 
-                // Counting the total of players inserted
+                // Counting the total of players inserted and verifying that all the leagues are correctly filled
                 int totalOfPlayers = 0;
                 foreach(var playerLeagues in item.PlayerLeagues)
                 {
+                    if(playerLeagues.league == null || playerLeagues.league.Name == "")
+                    {
+                        return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "All the leagues must have a name.");
+                    }
                     totalOfPlayers += playerLeagues.Players.Count();
                 }
 
+                string errorString = checkNumberOfPlayersRules(totalOfPlayers, teams.Count());
                 // Their will be at least <minNumberOfPlayers> players
-                if (totalOfPlayers < minNumberOfPlayers)
+                if (errorString != null)
                 {
-                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "You must choose at least 4 players.");
-                }
-                // The number of player should be even
-                else if (totalOfPlayers % 2 != 0)
-                {
-                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "You must choose an even number of players.");
-                }
-                // If their is less team than players, the server respond an error
-                else if (teams.Count() < totalOfPlayers)
-                {
-                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Not enough team exists for this country.");
+                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, errorString);
                 }
                 else if (ModelState.IsValid)
                 {
@@ -121,9 +175,12 @@ namespace FIFA.Server.Controllers
             foreach(PlayerAssignLeagueModel playerleague in playerleagues)
             {
 
-                string leagueName = playerleague.league.Name;
-                // First we create the league attached to the players
-                League createdLeague = await this.createLeagueWithTeams(season.Id, leagueName, playerleague.Players, teams, rand);
+                if(playerleague.Players != null && playerleague.Players.Count > 0)
+                {
+                    string leagueName = playerleague.league.Name;
+                    // We create the league attached to the players only if their is at least one player into
+                    League createdLeague = await this.createLeagueWithTeams(season.Id, leagueName, playerleague.Players, teams, rand);
+                }
             }
 
             var response = Request.CreateResponse<int>(HttpStatusCode.Created, season.Id);

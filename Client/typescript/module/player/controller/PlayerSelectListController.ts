@@ -12,8 +12,7 @@ module FifaLeagueClient.Module.Player {
     constructor(scope:Directives.IPlayerSelectListScope, playerService : PlayerService){
         super(scope);
         this.mainService = playerService;
-        this.fillPlayers();
-        this.scope.players = {};
+        this.scope.players = [];
     }
 
     // call the service in order to get the list of players
@@ -35,9 +34,9 @@ module FifaLeagueClient.Module.Player {
     protected fillPlayersSuccessCallBack = (players:PlayerModel[]) => {
       var self = this;
       // filling the list of the players (all unselected by default)
-      angular.forEach(players, function(value: PlayerModel, key) {
-        self.scope.players[value.Id] = new Directives.SelectablePlayerModel(value);
-      });
+      for(var i = 0;i<players.length;i++){
+        self.scope.players.push(new Directives.SelectablePlayerModel(players[i]));
+      }
     }
 
     protected fillPlayersErrorCallBack = (config) => {
@@ -45,30 +44,30 @@ module FifaLeagueClient.Module.Player {
     }
 
     // select a player
-    public selectPlayer = (Id:number) => {
-      this.scope.players[Id].selected = true;
+    public selectPlayer = (player: Directives.SelectablePlayerModel) => {
+      player.selected = true;
     }
 
     // unselect a player
-    public unSelectPlayer = (Id:number) => {
-      this.scope.players[Id].selected = false;
+    public unSelectPlayer = (player: Directives.SelectablePlayerModel) => {
+      player.selected = false;
     }
 
     // Select all players
     public selectAllPlayers = () => {
       var self = this;
-      angular.forEach(self.scope.players, function(value: Directives.SelectablePlayerModel, key) {
-        self.scope.players[value.player.Id].selected = true;
-      });
+      for(var i = 0;i<self.scope.players.length;i++){
+        self.scope.players[i].selected = true;;
+      }
     }
 
 
     // Unselect all players
     public unSelectAllPlayers = () => {
       var self = this;
-      angular.forEach(self.scope.players, function(value: Directives.SelectablePlayerModel, key) {
-        self.scope.players[value.player.Id].selected = false;
-      });
+      for(var i = 0;i<self.scope.players.length;i++){
+        self.scope.players[i].selected = false;;
+      }
     }
 
 
@@ -76,12 +75,14 @@ module FifaLeagueClient.Module.Player {
     public existAtLeast(selectParam:boolean):boolean{
       var self = this;
       var exist:boolean = false;
-      for(var key in self.scope.players){
-        if(self.scope.players[key].selected == selectParam){
+
+      for(var i = 0;i<self.scope.players.length;i++){
+        if(self.scope.players[i].selected == selectParam){
           exist = true;
           break;
         }
       }
+
       return exist;
     }
 

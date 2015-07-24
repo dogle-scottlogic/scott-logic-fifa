@@ -1,4 +1,4 @@
-<div class="gridview" cg-busy="vm.loadingPromise">
+<div class="gridview" cg-busy="vm.loadingPromise" ng-init="vm.fillPlayers()">
     <table class="table table-striped table-bordered">
       <thead>
         <tr>
@@ -7,13 +7,13 @@
         </tr>
       </thead>
       <tbody>
-        <tr ng-repeat="playerselection in players | orderBy:'-player.Name'">
+        <tr ng-repeat="playerselection in players">
           <td width="50%"><div ng-hide="playerselection.selected">
             {{playerselection.player.Name}}
-            <button ng-click="vm.selectPlayer(playerselection.player.Id)" type="button" class="btn btn-primary right btn-custom">Select</button>
+            <button ng-click="vm.selectPlayer(playerselection)" type="button" class="btn btn-primary right btn-custom">Select</button>
           </div></td>
           <td><div ng-show="playerselection.selected">
-            <button ng-click="vm.unSelectPlayer(playerselection.player.Id)" type="button" class="btn btn-danger left btn-custom">Unselect</button>
+            <button ng-click="vm.unSelectPlayer(playerselection)" type="button" class="btn btn-danger left btn-custom">Unselect</button>
             &nbsp {{playerselection.player.Name}}
           </div></td>
         </tr>

@@ -143,10 +143,13 @@ module FifaLeagueClient.Module.League {
       var self = this;
       self.errors = {};
 
-      this.loadingPromise =
-        self.mainService.getLeaguesFilteredList(this.playerAssignLeague.length)
-            .then(self.fillLeaguesSuccessCallBack)
-            .catch(self.fillLeaguesErrorCallBack);
+      if(this.countryId != null){
+        this.loadingPromise =
+          self.mainService.getLeaguesFilteredList(this.playerAssignLeague.length, this.countryId)
+              .then(self.fillLeaguesSuccessCallBack)
+              .catch(self.fillLeaguesErrorCallBack);
+      }
+
     }
 
     // fill the players - if the callback is a success
