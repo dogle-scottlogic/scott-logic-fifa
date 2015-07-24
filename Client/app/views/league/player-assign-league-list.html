@@ -1,0 +1,22 @@
+<div class="gridview" cg-busy="vm.loadingPromise">
+    <table class="table table-striped table-bordered">
+      <thead>
+        <tr>
+            <th>Players</th>
+            <th>League Selected</th>
+        </tr>
+      </thead>
+      <tbody ng-repeat="playerleague in vm.scope.players">
+        <td>
+          {{playerleague.player.Name}}
+        </td>
+        <td>
+          <select class="form-control" ng-model="playerleague.leagueId"
+                  ng-options="league.Id as league.Name for league in vm.scope.leagues"
+                  ng-required='true'>
+              <option value=""></option>
+          </select>
+        </td>
+      </tbody>
+    </table>
+</div>

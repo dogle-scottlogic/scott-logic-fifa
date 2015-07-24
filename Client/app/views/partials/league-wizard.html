@@ -23,6 +23,15 @@
         <form class="simple-form" ng-submit="vm.validatePlayerSelectionStep()">
           <div class="alert alert-danger" role="alert" ng-repeat="value in vm.errors['item.Global']">{{value}}</div>
           <playerselectlist players="vm.playerSelection"></playerselectlist>
+          <input type="submit" class="btn btn-primary" value="Assign to leagues" />
+        </form>
+    </wz-step>
+    <wz-step title="Assigning players to league">
+        <h1>Assigning players to league</h1>
+        <p>Please assign the players to a league </p>
+        <form class="simple-form" ng-submit="vm.validateAssignPlayerToLeagueStep()">
+          <div class="alert alert-danger" role="alert" ng-repeat="value in vm.errors['item.Global']">{{value}}</div>
+          <playerassignleaguelist leagues="vm.leagues" players="vm.playerAssignLeague"></playerassignleaguelist>
           <input type="submit" class="btn btn-primary" value="Generate league" />
         </form>
     </wz-step>

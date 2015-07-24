@@ -13,6 +13,9 @@ module FifaLeagueClient.Module.League {
       // variable shown
       countryId: number;
       playerSelection:Player.Directives.SelectablePlayerModel;
+      playerAssignLeague:Directives.PlayerAssignLeague[];
+      leagues:LeagueModel[];
+
       generateLeague: GenerateLeagueDTOModel;
 
       showWizard:boolean;
@@ -30,6 +33,7 @@ module FifaLeagueClient.Module.League {
         this.wizardHandler= wizardHandler;
         this.mainService = generateLeagueService;
         this.generateLeague = new GenerateLeagueDTOModel(null);
+        this.playerAssignLeague=[];
         this.showWizard = true;
     }
 
@@ -69,13 +73,43 @@ module FifaLeagueClient.Module.League {
     public validatePlayerSelectionStep():void{
         this.errors = {};
         var selectedPlayers = this.getListPlayers(true);
-        this.generateLeague.Players = selectedPlayers;
+        this.playerAssignLeague=[];
 
-        // Pushing the datas on the server
-        this.loadingPromise =
-            this.mainService.generateLeague(this.generateLeague)
-              .then(this.handleGenerateLeagueSuccess)
-              .catch(this.handleGenerateLeagueErrors);
+        // Transfering them into playerLeague
+        for(var i=0;i<selectedPlayers.length;i++){
+          var pl = new Directives.PlayerAssignLeague(selectedPlayers[i]);
+          this.playerAssignLeague.push(pl);
+        }
+
+        // Filling the leagues in consequence
+        this.fillLeagues(this.playerAssignLeague);
+    }
+
+    // Assigning players to league
+    public validateAssignPlayerToLeagueStep():void{
+      this.errors = {};
+
+      this.generateLeague.PlayerLeagues = [];
+      // tranforming the selections in player assignable
+      for(var i=0; i<this.leagues.length;i++){
+          var league = this.leagues[i];
+          var players = [];
+          // for each leagues, we retrieve the players associated
+          for(var j=0; j< this.playerAssignLeague.length;j++){
+            if(this.playerAssignLeague[j].leagueId == league.Id){
+              players.push(this.playerAssignLeague[j].player);
+            }
+          }
+          // we add this list of players with the league
+          this.generateLeague.PlayerLeagues.push(new PlayerAssignLeagueModel(league, players));
+      }
+
+
+      // Pushing the datas on the server
+      this.loadingPromise =
+          this.mainService.generateLeague(this.generateLeague)
+            .then(this.handleGenerateLeagueSuccess)
+            .catch(this.handleGenerateLeagueErrors);
     }
 
 
@@ -101,6 +135,32 @@ module FifaLeagueClient.Module.League {
         }
       });
       return listOfPlayers;
+    }
+
+
+    // call the service in order to get the number of leagues in function of the number of players
+    public fillLeagues = (playerAssignLeague:Directives.PlayerAssignLeague[]) => {
+      var self = this;
+      self.errors = {};
+
+      this.loadingPromise =
+        self.mainService.getLeaguesFilteredList(this.playerAssignLeague.length)
+            .then(self.fillLeaguesSuccessCallBack)
+            .catch(self.fillLeaguesErrorCallBack);
+    }
+
+    // fill the players - if the callback is a success
+    protected fillLeaguesSuccessCallBack = (leagues:LeagueModel[]) => {
+      var self = this;
+      // filling the list of the leagues
+      this.leagues = leagues;
+      if(self.wizardHandler.wizard() != null){
+        self.wizardHandler.wizard().next();
+      }
+    }
+
+    protected fillLeaguesErrorCallBack = (config) => {
+      this.errors = config.errors;
     }
 
 

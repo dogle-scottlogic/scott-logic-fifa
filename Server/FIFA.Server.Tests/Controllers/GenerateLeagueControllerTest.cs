@@ -124,10 +124,10 @@ namespace FIFATests.ControllerTests
         public void GenerateFailureLeagueLessThanFourPlayers()
         {
             GenerateLeagueDTO generateLeagueDTO = new GenerateLeagueDTO();
-            generateLeagueDTO.Players = new List<Player>();
+            generateLeagueDTO.Players = new List<PlayerAssignLeagueModel>();
             for (int i = 0; i < 3; i++)
             {
-                generateLeagueDTO.Players.Add(new Player());
+                generateLeagueDTO.Players.Add(new PlayerAssignLeagueModel());
             }
 
             // Filling mock rull with repository
@@ -165,10 +165,10 @@ namespace FIFATests.ControllerTests
         public void GenerateFailureLeagueNotEvenPlayers()
         {
             GenerateLeagueDTO generateLeagueDTO = new GenerateLeagueDTO();
-            generateLeagueDTO.Players = new List<Player>();
+            generateLeagueDTO.Players = new List<PlayerAssignLeagueModel>();
             for (int i = 0; i < 5; i++)
             {
-                generateLeagueDTO.Players.Add(new Player());
+                generateLeagueDTO.Players.Add(new PlayerAssignLeagueModel());
             }
 
             // Filling mock rull with repository
@@ -205,10 +205,10 @@ namespace FIFATests.ControllerTests
         public void GenerateFailureNotEnoughTeamForPlayers()
         {
             GenerateLeagueDTO generateLeagueDTO = new GenerateLeagueDTO();
-            generateLeagueDTO.Players = new List<Player>();
+            generateLeagueDTO.Players = new List<PlayerAssignLeagueModel>();
             for (int i = 0; i < 4; i++)
             {
-                generateLeagueDTO.Players.Add(new Player());
+                generateLeagueDTO.Players.Add(new PlayerAssignLeagueModel());
             }
 
             List<Team> teams = new List<Team>();
@@ -251,10 +251,10 @@ namespace FIFATests.ControllerTests
         public void GenerateFailureIfModelStateNotValid()
         {
             GenerateLeagueDTO generateLeagueDTO = new GenerateLeagueDTO();
-            generateLeagueDTO.Players = new List<Player>();
+            generateLeagueDTO.Players = new List<PlayerAssignLeagueModel>();
             for (int i = 0; i < 4; i++)
             {
-                generateLeagueDTO.Players.Add(new Player());
+                generateLeagueDTO.Players.Add(new PlayerAssignLeagueModel());
             }
 
             List<Team> teams = new List<Team>();

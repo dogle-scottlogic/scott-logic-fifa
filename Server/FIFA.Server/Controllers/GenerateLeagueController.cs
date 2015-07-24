@@ -35,7 +35,15 @@ namespace FIFA.Server.Controllers
             this.seasonRepository = seasonRepository;
             this.teamRepository = teamRepository;
         }
-        
+
+        [ResponseType(typeof(List<League>))]
+        public async Task<HttpResponseMessage> Get(int numberOfPlayers)
+        {
+            List<League> leagues = new List<League>();
+            leagues.Add(new League {Id = 1, Name = "League 1"});
+            leagues.Add(new League { Id = 2, Name = "League 2" });
+            return Request.CreateResponse(HttpStatusCode.OK, leagues);
+        }
 
         /// <summary>
         ///     Generate the league(s)
@@ -43,7 +51,7 @@ namespace FIFA.Server.Controllers
         /// <param name="item">The league with the players</param>
         /// <returns>Return a leagueModel if created and its uri to retrieve it</returns>
         /// 
-        // POST api/League
+            // POST api/League
         [ResponseType(typeof(League))]
         public async Task<HttpResponseMessage> Post(GenerateLeagueDTO item)
         {
@@ -68,25 +76,32 @@ namespace FIFA.Server.Controllers
                 // retrieving the teams associated to the country
                 List<Team> teams = new List<Team>(await this.getTeamsAssociatedToTheCountry(season.CountryId));
 
+                // Counting the total of players inserted
+                int totalOfPlayers = 0;
+                foreach(var playerLeagues in item.PlayerLeagues)
+                {
+                    totalOfPlayers += playerLeagues.Players.Count();
+                }
+
                 // Their will be at least <minNumberOfPlayers> players
-                if (item.Players.Count() < minNumberOfPlayers)
+                if (totalOfPlayers < minNumberOfPlayers)
                 {
                     return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "You must choose at least 4 players.");
                 }
                 // The number of player should be even
-                else if (item.Players.Count() % 2 != 0)
+                else if (totalOfPlayers % 2 != 0)
                 {
                     return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "You must choose an even number of players.");
                 }
                 // If their is less team than players, the server respond an error
-                else if (teams.Count() < item.Players.Count())
+                else if (teams.Count() < totalOfPlayers)
                 {
                     return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Not enough team exists for this country.");
                 }
                 else if (ModelState.IsValid)
                 {
                     // Generate the league
-                    return await this.GenerateLeagues(season, teams, new List<Player>(item.Players));
+                    return await this.GenerateLeagues(season, teams, new List<PlayerAssignLeagueModel>(item.PlayerLeagues));
                 }
                 else
                 {
@@ -97,54 +112,18 @@ namespace FIFA.Server.Controllers
         }
         
         // Method generating the league
-        private async Task<HttpResponseMessage> GenerateLeagues(Season season, List<Team> teams, List<Player> players)
+        private async Task<HttpResponseMessage> GenerateLeagues(Season season, List<Team> teams, List<PlayerAssignLeagueModel> playerleagues)
         {
 
             Random rand = new Random();
 
-            // We mix randomly the list of players (maybe in a future we ll have to determine the order in function of the ranks)
-            int nbPlayers = players.Count();
-            List<Player> playerListRemaining = new List<Player>();
-            for (int i = 0; i < nbPlayers; i++)
+            // For each player leagu in player leagues, we genereage a league
+            foreach(PlayerAssignLeagueModel playerleague in playerleagues)
             {
-                // we pick randomly a player and add it to the list
-                int pickedPlayer = rand.Next(0,players.Count()-1);
-                playerListRemaining.Add(players.ElementAt(pickedPlayer));
-                players.RemoveAt(pickedPlayer);
-            }
 
-
-            int leagueNumber = 1;
-
-            // For each <maxNumberOfPlayersByLeague>, we create an other league
-            while(playerListRemaining.Count() > 0){
-
-                string leagueName = "League " + leagueNumber;
-
-                List<Player> playerToAddInThisLeague = new List<Player>();
-                // If the list of remaining player / maxNumberOfPlayersByLeague > 2, we extract the max number of players
-                if ((playerListRemaining.Count() / maxNumberOfPlayersByLeague) >= 2)
-                {
-                    playerToAddInThisLeague.AddRange(playerListRemaining.GetRange(0, maxNumberOfPlayersByLeague));
-                    playerListRemaining.RemoveRange(0, maxNumberOfPlayersByLeague);
-                }
-                else if (playerListRemaining.Count() > maxNumberOfPlayersByLeague)
-                {
-                    playerToAddInThisLeague.AddRange(playerListRemaining.GetRange(0, minNumberOfPlayers));
-                    playerListRemaining.RemoveRange(0, minNumberOfPlayers);
-                }
-                else
-                {
-                    // Get the last one
-                    playerToAddInThisLeague.AddRange(playerListRemaining.GetRange(0, playerListRemaining.Count()));
-                    playerListRemaining.RemoveRange(0, playerListRemaining.Count());
-                }
-
+                string leagueName = playerleague.league.Name;
                 // First we create the league attached to the players
-                League createdLeague = await this.createLeagueWithTeams(season.Id, leagueName, playerToAddInThisLeague, teams, rand);
-                
-                leagueNumber++;
-
+                League createdLeague = await this.createLeagueWithTeams(season.Id, leagueName, playerleague.Players, teams, rand);
             }
 
             var response = Request.CreateResponse<int>(HttpStatusCode.Created, season.Id);
