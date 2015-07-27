@@ -19,7 +19,7 @@ module FifaLeagueClient.Module.Results {
             },
             controller: MatchModalLinkDirectiveControleur,
             controllerAs: "vm",
-            templateUrl: './views/results/match-modal-link.html',
+            templateUrl: 'views/results/match-modal-link.html',
             link: function(scope:IMyScope, modal, element, attrs) {
             }
         }

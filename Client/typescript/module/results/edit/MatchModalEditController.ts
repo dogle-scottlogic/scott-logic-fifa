@@ -7,29 +7,29 @@ module FifaLeagueClient.Module.Results {
 		resultViewService: ResultViewService;
     modalInstance;
 
-		id: number;
 		match: MatchResultViewModel;
 
-		static $inject = ["$scope", 'resultViewService', 'matchResultsService', '$modalInstance', 'id'];
+		static $inject = ["$scope", 'resultViewService', 'matchResultsService', '$modalInstance', 'Id'];
 
 
-		constructor(scope, resultViewService:ResultViewService, matchResultsService: MatchResultsService, $modalInstance, id) {
+		constructor(scope, resultViewService:ResultViewService, matchResultsService: MatchResultsService, $modalInstance, Id) {
 			super(scope);
 			this.resultViewService = resultViewService;
 			this.matchResultsService = matchResultsService;
 			this.modalInstance = $modalInstance;
-			this.id = id;
+			this.match = new MatchResultViewModel(null);
+			this.match.Id = Id;
 			this.loadMatch();
 		}
 
 		private loadMatch = () => {
 			var self = this;
-			if(self.id != null){
-				this.loadingPromise =
-					this.resultViewService.getMatchResultView(this.id)
+			if(self.match.Id != null){
+				self.loadingPromise =
+					self.resultViewService.getMatchResultView(self.match.Id)
 						.then(function(data) {
 							self.match = data;
-						}).catch(this.onError);
+						}).catch(self.onError);
 			}
 		}
 
@@ -42,17 +42,18 @@ module FifaLeagueClient.Module.Results {
 		}
 
 		public saveResult = () => {
+			var self = this;
 			var result = new MatchResultDTO();
-			result.homePlayerId = this.match.homeTeamPlayer.Id;
-			result.scoreHome = this.match.homeTeamPlayer.nbGoals;
-			result.awayPlayerId = this.match.awayTeamPlayer.Id;
-			result.scoreAway = this.match.awayTeamPlayer.nbGoals;
-			result.date = this.match.Date;
+			result.homePlayerId = self.match.homeTeamPlayer.Id;
+			result.scoreHome = self.match.homeTeamPlayer.nbGoals;
+			result.awayPlayerId = self.match.awayTeamPlayer.Id;
+			result.scoreAway = self.match.awayTeamPlayer.nbGoals;
+			result.date = self.match.Date;
 
-		this.loadingPromise =
-			this.matchResultsService.addResult(result)
-				.then(this.onSaveScoreSuccess)
-				.catch(this.onError);
+		self.loadingPromise =
+			self.matchResultsService.addResult(result)
+				.then(self.onSaveScoreSuccess)
+				.catch(self.onError);
 		}
 
     // cancel
