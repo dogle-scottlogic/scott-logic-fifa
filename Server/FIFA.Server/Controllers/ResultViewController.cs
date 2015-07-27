@@ -27,5 +27,19 @@ namespace FIFA.Server.Controllers
             List<ResultViewModel> matches = await this.matchViewRepository.GetAll(mf);
             return Request.CreateResponse(HttpStatusCode.OK, matches);
         }
+
+        // Get the result of a match
+        public async Task<HttpResponseMessage> Get(int id)
+        {
+
+            MatchResultViewModel item = await this.matchViewRepository.Get(id);
+
+            if (item == null)
+            {
+                return Request.CreateResponse(HttpStatusCode.NotFound);
+            }
+
+            return Request.CreateResponse(HttpStatusCode.OK, item);
+        }
     }
 }

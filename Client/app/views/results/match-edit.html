@@ -1,0 +1,35 @@
+<div class="modal-header">
+    <h3 class="modal-title">Editing a match</h3>
+</div>
+<form class="simple-form" ng-submit="vm.saveResult()" cg-busy="vm.loadingPromise">
+  <div class="modal-body">
+    <div class="clear"></div>
+    <div class="alert alert-danger" role="alert" ng-repeat="value in vm.errors['item.Global']">{{value}}</div>
+
+    <table width="100%">
+      <tr>
+        <td>
+          <h3>Home</h3>
+          {{vm.match.homeTeamPlayer.PlayerName}} ({{vm.match.homeTeamPlayer.TeamName}})
+        </td>
+          <td colspan="2">
+          <h3>Score</h3>
+          <input type="text" style="width: 2em" ng-model="vm.match.homeTeamPlayer.nbGoals"/> - <input type="text" style="width: 2em" ng-model="vm.match.awayTeamPlayer.nbGoals"/>
+          </td>
+        <td>
+          <h3>Away</h3>
+          {{vm.match.awayTeamPlayer.PlayerName}} ({{vm.match.awayTeamPlayer.TeamName}})
+        </td>
+    </tr>
+      <tr>
+        <td colspan="3">
+          <h3>Date</h3>
+          <input type="date" ng-model="vm.match.Date" required />
+        </td>
+     </tr>
+   </table>
+    <div class="modal-footer">
+    <input type="submit" class="btn btn-primary" value="Save" />
+    <input type="button" class="btn btn-danger btn-custom" value="Cancel" ng-click="vm.cancel()" />
+  </div>
+</form>

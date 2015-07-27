@@ -66,22 +66,30 @@ export class CountryResultViewModel {
   }
 
 	export class MatchResultViewModel {
+		public Id:number;
 		public leagueId: number;
 		public leagueName: string;
 		public Date: Date;
 
 		public homeTeamPlayer: TeamPlayerResultViewModel;
-		public awayTeamPlayerName: TeamPlayerResultViewModel;
+		public awayTeamPlayer: TeamPlayerResultViewModel;
 
-		contructor(data){
-			if (data != null){
-				this.leagueId = data.Id;
-				this.leagueName = data.Name;
-				this.Date = data.Date;
-				this.homeTeamPlayer = data.homeTeamPlayer;
-				this.awayTeamPlayerName = data.awayTeamPlayerName;
-			}
+
+		// build the model directly from the data returned by the service
+		constructor(data){
+				if(data != null){
+					this.Id = data.Id;
+					this.leagueId = data.leagueId;
+					this.leagueName = data.leagueName;
+					if(data.Date != null){
+						this.Date = new Date(data.Date);
+					}
+					this.homeTeamPlayer = data.homeTeamPlayer;
+					this.awayTeamPlayer = data.awayTeamPlayer;
+				}
 		}
+
+
 	}
 
 	export class TeamPlayerResultViewModel {

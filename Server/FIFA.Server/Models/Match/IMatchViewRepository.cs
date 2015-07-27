@@ -9,5 +9,6 @@ namespace FIFA.Server.Models
     public interface IMatchViewRepository
     {
         Task<List<ResultViewModel>> GetAll(MatchViewFilter filter);
+        Task<MatchResultViewModel> Get(int id);
     }
 }

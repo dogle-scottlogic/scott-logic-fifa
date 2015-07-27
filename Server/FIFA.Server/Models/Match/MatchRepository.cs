@@ -44,7 +44,7 @@ namespace FIFA.Server.Models
         // Get one Match by its ID
         public async Task<Match> Get(int id)
         {
-            return await db.Matches.FindAsync(id);
+            return await db.Matches.Where(m => m.Id == id).Include(m => m.Scores).FirstAsync();
         }
 
 

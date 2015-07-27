@@ -27,7 +27,8 @@
                               <tr ng-repeat="match in leagueMatch.matches" >
                                   <td width="50%">{{match.homeTeamPlayer.PlayerName}} ({{match.homeTeamPlayer.TeamName}})</td>
                                   <td class="text-nowrap">v</td>
-                                  <td width="50%">{{match.awayTeamPlayerName.PlayerName}} ({{match.awayTeamPlayerName.TeamName}})</td>
+                                  <td width="50%">{{match.awayTeamPlayer.PlayerName}} ({{match.awayTeamPlayer.TeamName}})</td>
+                                  <td><matchmodallink showeditlink="true" id="match.Id" callbackupdate="vm.loadResultViewList()"></matchmodallink></td>
                               </tr>
                           </table>
                   </accordion-group>

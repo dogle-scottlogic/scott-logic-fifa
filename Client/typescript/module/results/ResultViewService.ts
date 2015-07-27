@@ -57,6 +57,23 @@ module FifaLeagueClient.Module.Results {
             return deferred.promise;
         }
 
+        // Get a match result view
+        public getMatchResultView(Id:number): ng.IPromise<MatchResultViewModel> {
+            var deferred = this.qService.defer();
+
+            var self = this;
+            this.httpService.get(this.apiURLWithSlash+Id)
+                .success(function (data, status, headers, config) {
+                    deferred.resolve(new MatchResultViewModel(data));
+                })
+                .error(function (data, status, headers, config) {
+                    deferred.reject(config);
+                });
+
+            return deferred.promise;
+        }
+
+
         // Method converting the data into a resultView
         protected convertDataToResultView = (data): ResultViewModel => {
             return new ResultViewModel(data);
