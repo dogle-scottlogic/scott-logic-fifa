@@ -11,7 +11,6 @@ module FifaLeagueClient.Module.League {
       intervalService;
 
       // variable shown
-      countryId: number;
       playerSelection:Player.Directives.SelectablePlayerModel;
       playerAssignLeague:Directives.PlayerAssignLeague[];
       leagues:LeagueModel[];
@@ -42,7 +41,6 @@ module FifaLeagueClient.Module.League {
       var self = this;
       self.showWizard = false;
       self.countBeforeResult = 10;
-      this.generatedSeasonId = this.generateLeague.SeasonId;
 
       self.intervalService(function(){
         self.countBeforeResult--;
@@ -115,6 +113,7 @@ module FifaLeagueClient.Module.League {
 
     // Go to the next step if the add was a success
     protected handleGenerateLeagueSuccess = (data) => {
+        this.generatedSeasonId = data;
         if(this.wizardHandler.wizard() != null){
           this.wizardHandler.wizard().next();
         }
@@ -143,9 +142,9 @@ module FifaLeagueClient.Module.League {
       var self = this;
       self.errors = {};
 
-      if(this.countryId != null){
+      if(this.generateLeague.CountryId != null){
         this.loadingPromise =
-          self.mainService.getLeaguesFilteredList(this.playerAssignLeague.length, this.countryId)
+          self.mainService.getLeaguesFilteredList(this.playerAssignLeague.length, this.generateLeague)
               .then(self.fillLeaguesSuccessCallBack)
               .catch(self.fillLeaguesErrorCallBack);
       }

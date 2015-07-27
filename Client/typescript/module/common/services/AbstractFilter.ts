@@ -4,6 +4,7 @@ module FifaLeagueClient.Module.Common.Services {
 
         query:string;
 
+
         public addRequestParameter(name:string, value:string):AbstractFilter{
             if(value!=null){
                 this.chainQuery();

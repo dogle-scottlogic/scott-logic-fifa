@@ -4,16 +4,22 @@
         <h1>Selecting a country</h1>
         <p>Please choose the country for the league</p>
         <form class="simple-form" ng-submit="vm.validateCountrySelectionStep()">
-          <countryselect selectedcountry="vm.countryId" required='true'></countryselect>
+          <countryselect selectedcountry="vm.generateLeague.CountryId" required='true'></countryselect>
           <input type="submit" class="btn btn-primary" value="Continue" />
         </form>
     </wz-step>
     <wz-step title="Selecting a season">
         <h1>Selecting a season</h1>
-        <p>Please choose a season for the league</p>
-        <countryshow countryid='vm.countryId' parentcontroller="vm"></countryshow>
+        <p>Please fill a season name</p>
+        <countryshow countryid='vm.generateLeague.CountryId' parentcontroller="vm"></countryshow>
         <form class="simple-form" ng-submit="vm.validateSeasonSelectionStep()">
-          <seasonselect selectedseason="vm.generateLeague.SeasonId" filtercountry='vm.countryId' filterhavingleague='false' required='true' parentcontroller="vm"></seasonselect>
+          <input type="text" ng-model="vm.generateLeague.SeasonName" class="form-control"
+             placeholder="Season name"
+             tooltip="Enter the name of the season"
+             tooltip-placement="top"
+             tooltip-trigger="mouseenter"
+             tooltip-enable="!vm.generateLeague.SeasonName"
+             required/>
           <input type="submit" class="btn btn-primary" value="Continue" />
         </form>
     </wz-step>
