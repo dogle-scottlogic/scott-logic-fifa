@@ -51,12 +51,56 @@ namespace FIFA.Server.Models
                                 team = tp.Team,
                                 nbPlayedMatches = l.Matches.Count(m => m.Played == true
                                                     && m.Scores.Any(sc => sc.TeamPlayer == tp)),
-                                nbGoals = l.Matches.Where(m => m.Played == true
+                                nbGoalsFor = l.Matches.Where(m => m.Played == true
                                             && m.Scores.Any(sc => sc.TeamPlayer == tp)
                                             )
                                                 .Select(m => m.Scores
                                                     .Where(sc => sc.TeamPlayer == tp)
                                                     .Select(sc => sc.Goals)
+                                                    .DefaultIfEmpty(0)
+                                                    .Sum()
+                                                    )
+                                                .DefaultIfEmpty(0)
+                                                .Sum(),
+                               nbGoalsAgainst = l.Matches.Where(m => m.Played == true
+                                            && m.Scores.Any(sc => sc.TeamPlayer == tp)
+                                            )
+                                                .Select(m => m.Scores
+                                                    .Where(sc => sc.TeamPlayer != tp)
+                                                    .Select(sc => sc.Goals)
+                                                    .DefaultIfEmpty(0)
+                                                    .Sum()
+                                                    )
+                                                .DefaultIfEmpty(0)
+                                                .Sum(),
+                                nbWin = l.Matches.Where(m => m.Played == true
+                                            && m.Scores.Any(sc => sc.TeamPlayer == tp)
+                                            )
+                                                .Select(m => m.Scores
+                                                    .Where(sc => sc.TeamPlayer == tp && sc.Goals > m.Scores.Where(sc2 => sc2.TeamPlayer != tp).Select(sc2 => sc2.Goals).FirstOrDefault())
+                                                    .Select(sc => 1)
+                                                    .DefaultIfEmpty(0)
+                                                    .Sum()
+                                                    )
+                                                .DefaultIfEmpty(0)
+                                                .Sum(),
+                                nbDraw = l.Matches.Where(m => m.Played == true
+                                            && m.Scores.Any(sc => sc.TeamPlayer == tp)
+                                            )
+                                                .Select(m => m.Scores
+                                                    .Where(sc => sc.TeamPlayer == tp && sc.Goals == m.Scores.Where(sc2 => sc2.TeamPlayer != tp).Select(sc2 => sc2.Goals).FirstOrDefault())
+                                                    .Select(sc => 1)
+                                                    .DefaultIfEmpty(0)
+                                                    .Sum()
+                                                    )
+                                                .DefaultIfEmpty(0)
+                                                .Sum(),
+                                nbLost = l.Matches.Where(m => m.Played == true
+                                           && m.Scores.Any(sc => sc.TeamPlayer == tp)
+                                            )
+                                                .Select(m => m.Scores
+                                                    .Where(sc => sc.TeamPlayer == tp && sc.Goals < m.Scores.Where(sc2 => sc2.TeamPlayer != tp).Select(sc2 => sc2.Goals).FirstOrDefault())
+                                                    .Select(sc => 1)
                                                     .DefaultIfEmpty(0)
                                                     .Sum()
                                                     )
@@ -99,7 +143,8 @@ namespace FIFA.Server.Models
                             }
                         )
                         .OrderByDescending(tp => tp.nbPoints)
-                        .ThenByDescending(tp => tp.nbGoals)
+                        .ThenByDescending(tp => tp.nbGoalsFor)
+                        .ThenBy(tp => tp.nbGoalsAgainst)
                         .ThenBy(tp => tp.nbPlayedMatches)
                         .ThenBy(tp => tp.player.Name)
                     })
@@ -126,6 +171,7 @@ namespace FIFA.Server.Models
                             position++;
                         }
                         previousNbPoints = teamPlayer.nbPoints;
+                        teamPlayer.nbGoalsDiff = teamPlayer.nbGoalsFor - teamPlayer.nbGoalsAgainst;
                         teamPlayer.position = position;
                     }
                 }
