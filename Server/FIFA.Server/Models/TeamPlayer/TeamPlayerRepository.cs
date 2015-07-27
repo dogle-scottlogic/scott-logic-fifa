@@ -156,6 +156,11 @@ namespace FIFA.Server.Models
             // Retrieve the average goals for a season / teamPlayer
             var averageGoal = getAverageGoalVM(filteredMatches, teamPlayerId);
 
+            // Retrieve the number of win for a season / teamPlayer
+            var nbWin = getNbWin(filteredMatches, teamPlayerId);
+            var nbDraw = getNbDraw(filteredMatches, teamPlayerId);
+            var nbLoss = getNbLoss(filteredMatches, teamPlayerId);
+
             var query = db.TeamPlayers.Where(tp => tp.Id == teamPlayerId)
                 .Select(
                     tp => new TeamPlayerSeasonStatisticViewModel
@@ -171,10 +176,61 @@ namespace FIFA.Server.Models
                                 nbAverageGoals = averageGoal,
                                 lastPlayedMatch = lastPlayedMatchQuery.FirstOrDefault(),
                                 nextMatch = nextMatchQuery.FirstOrDefault(),
+                                nbWin = nbWin,
+                                nbDraw = nbDraw,
+                                nbLoss = nbLoss
                     }
                 );
 
             return await query.FirstOrDefaultAsync();
+        }
+
+        public int getNbWin(IQueryable<Match> filteredMatches, int teamPlayerId)
+        {
+            filteredMatches = filteredMatches.Where(m => m.Played == true);
+
+            // Getting the total of goals for this teamPlayer
+            int numberOfWin = filteredMatches.Select(m => m.Scores
+                                        .Where(sc => sc.TeamPlayer.Id == teamPlayerId 
+                                        && sc.Goals > m.Scores.Where(sc2 => sc2.TeamPlayer.Id != sc.TeamPlayer.Id).Select(sc2 => sc2.Goals).FirstOrDefault())
+                                        .Select(sc => 1)
+                                        .DefaultIfEmpty(0).Sum()
+                                        )
+                                        .DefaultIfEmpty(0).Sum();
+            
+            return numberOfWin;
+        }
+
+        public int getNbDraw(IQueryable<Match> filteredMatches, int teamPlayerId)
+        {
+            filteredMatches = filteredMatches.Where(m => m.Played == true);
+
+            // Getting the total of goals for this teamPlayer
+            int numberOfDraw = filteredMatches.Select(m => m.Scores
+                                        .Where(sc => sc.TeamPlayer.Id == teamPlayerId
+                                        && sc.Goals == m.Scores.Where(sc2 => sc2.TeamPlayer.Id != sc.TeamPlayer.Id).Select(sc2 => sc2.Goals).FirstOrDefault())
+                                        .Select(sc => 1)
+                                        .DefaultIfEmpty(0).Sum()
+                                        )
+                                        .DefaultIfEmpty(0).Sum();
+
+            return numberOfDraw;
+        }
+
+        public int getNbLoss(IQueryable<Match> filteredMatches, int teamPlayerId)
+        {
+            filteredMatches = filteredMatches.Where(m => m.Played == true);
+
+            // Getting the total of goals for this teamPlayer
+            int numberOfLoss = filteredMatches.Select(m => m.Scores
+                                        .Where(sc => sc.TeamPlayer.Id == teamPlayerId
+                                        && sc.Goals < m.Scores.Where(sc2 => sc2.TeamPlayer.Id != sc.TeamPlayer.Id).Select(sc2 => sc2.Goals).FirstOrDefault())
+                                        .Select(sc => 1)
+                                        .DefaultIfEmpty(0).Sum()
+                                        )
+                                        .DefaultIfEmpty(0).Sum();
+
+            return numberOfLoss;
         }
 
         // Retrieve the number of goals done by a teamplayer on a season
