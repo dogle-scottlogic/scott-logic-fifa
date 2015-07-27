@@ -19,7 +19,7 @@ module FifaLeagueClient.Module.Results {
         	var self = this;
 
             this.httpService.post(this.apiURL, result).success(function (data, status, headers, config) {
-                deferred.resolve(result);
+                deferred.resolve(data);
             }).error(function (data, status, headers, config) {
                 deferred.reject(config);
             });
