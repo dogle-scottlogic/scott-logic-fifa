@@ -125,35 +125,55 @@ namespace FIFA.Server.Models
         }
 
         /**
+         * Create the season with the teams and in function of the list of team players
+         */ 
+         public async Task<Season> createSeasonWithLeagues(Season seasonInCreation, List<League> leaguesInCreation)
+        {
+            seasonInCreation = db.Seasons.Add(seasonInCreation);
+            await db.SaveChangesAsync();
+
+            // for each league of the season we create the teamplayers if they don't already exists
+            foreach (League leagueInCreation in leaguesInCreation)
+            {
+                leagueInCreation.Season = seasonInCreation;
+                League createdLeague = await createLeagueWithTeamPlayers(leagueInCreation);
+            }
+            await db.SaveChangesAsync();
+
+
+            return seasonInCreation;
+        }
+
+        /**
          * Create teamPlayers attached to the league
          */
-        public async Task<League> createLeagueWithTeamPlayers(League leagueInCreation, List<TeamPlayer> teamPlayers)
+        private async Task<League> createLeagueWithTeamPlayers(League leagueInCreation)
         {
-            leagueInCreation.TeamPlayers = new List<TeamPlayer>();
+            List <TeamPlayer> teamPlayersCreated = new List<TeamPlayer>();
             // for each team players, we see in database if it already exists, if so, we add it to the leage without creating it before
-            foreach (TeamPlayer tp in teamPlayers)
+            foreach (TeamPlayer tp in leagueInCreation.TeamPlayers)
             {
                 TeamPlayer dbTeamPlayer = this.db.TeamPlayers.Where(tpWhere => tpWhere.PlayerId == tp.PlayerId 
                     && tpWhere.TeamId == tp.TeamId).FirstOrDefault();
                 if (dbTeamPlayer != null)
                 {
-                    leagueInCreation.TeamPlayers.Add(dbTeamPlayer);
+                    teamPlayersCreated.Add(dbTeamPlayer);
                 }
                 else
                 {
                     // Add the team players to the season
-                    leagueInCreation.TeamPlayers.Add(tp);
+                    teamPlayersCreated.Add(tp);
                 }
 
             }
-            
+            leagueInCreation.TeamPlayers = teamPlayersCreated;
+
             // we update the league then
             leagueInCreation = this.db.Leagues.Add(leagueInCreation);
             await db.SaveChangesAsync();
 
             // Then we create the matches and the scores
             leagueInCreation.Matches = createMatchAndScore(leagueInCreation.TeamPlayers);
-            
             db.Entry(leagueInCreation).State = EntityState.Modified;
             await db.SaveChangesAsync();
 

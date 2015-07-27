@@ -9,6 +9,9 @@ module FifaLeagueClient.Module.Team {
 			public seasonId:number;
 			public seasonName:String;
 			public nbAverageGoals:number;
+			public nbWin:number;
+			public nbDraw:number;
+			public nbLoss:number;
 
 	    public lastPlayedMatch: MatchStatisticViewModel;
 	    public nextMatch: MatchStatisticViewModel;
@@ -22,6 +25,9 @@ module FifaLeagueClient.Module.Team {
 			        this.seasonId = data.seasonId;
 			        this.seasonName = data.seasonName;
 			        this.nbAverageGoals = data.nbAverageGoals;
+							this.nbWin = data.nbWin;
+							this.nbDraw = data.nbDraw;
+							this.nbLoss = data.nbLoss;
 
 			        this.lastPlayedMatch = data.lastPlayedMatch;
 							this.nextMatch = data.nextMatch;

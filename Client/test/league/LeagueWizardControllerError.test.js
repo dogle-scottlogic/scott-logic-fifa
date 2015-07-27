@@ -41,7 +41,8 @@ describe('Testing the LeagueWizardController in error', function() {
     it('Try having the teams but have an error', function () {
 
       // And that we clicked a button or something
-      generateLeagueController.countryId = 1;
+      generateLeagueController.generateLeague.CountryId = 1;
+      generateLeagueController.generateLeague.SeasonName = "Test";
       generateLeagueController.validatePlayerSelectionStep();
       verifyPromiseAndFlush(generateLeagueController, $httpBackend);
       expect(generateLeagueController.errors["item.Global"]).toEqual([ '500 : ', 'A league already exists' ]);

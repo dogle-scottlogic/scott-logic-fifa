@@ -7,24 +7,37 @@
           <td>
             <table width="100%" class="sub-table">
               <tr>
-                <td width="50%">Last Game in {{vm.teamPlayerStatisticViewModel.lastPlayedMatch.leagueName}}</td>
-                <td width="50%">Next Game in {{vm.teamPlayerStatisticViewModel.nextMatch.leagueName}}</td>
+                <td width="50%"><span ng-show="vm.teamPlayerStatisticViewModel.lastPlayedMatch">Last Game in {{vm.teamPlayerStatisticViewModel.lastPlayedMatch.leagueName}}</span></td>
+                <td width="50%"><span ng-show="vm.teamPlayerStatisticViewModel.nextMatch">Next Game in {{vm.teamPlayerStatisticViewModel.nextMatch.leagueName}}</span></td>
               </tr>
               <tr>
-                <td>{{vm.teamPlayerStatisticViewModel.lastPlayedMatch.homeTeam}} {{vm.teamPlayerStatisticViewModel.lastPlayedMatch.homeNbGoals}} -
-              {{vm.teamPlayerStatisticViewModel.lastPlayedMatch.awayNbGoals}} {{vm.teamPlayerStatisticViewModel.lastPlayedMatch.awayTeam}}</td>
-                <td>{{vm.teamPlayerStatisticViewModel.nextMatch.homeTeam}} v {{vm.teamPlayerStatisticViewModel.nextMatch.awayTeam}}</td>
+                <td><span ng-show="vm.teamPlayerStatisticViewModel.lastPlayedMatch">
+                  {{vm.teamPlayerStatisticViewModel.lastPlayedMatch.homeTeam}} {{vm.teamPlayerStatisticViewModel.lastPlayedMatch.homeNbGoals}} -
+              {{vm.teamPlayerStatisticViewModel.lastPlayedMatch.awayNbGoals}} {{vm.teamPlayerStatisticViewModel.lastPlayedMatch.awayTeam}}
+                    </span>
+              </td>
+                <td><span ng-show="vm.teamPlayerStatisticViewModel.nextMatch">
+                  {{vm.teamPlayerStatisticViewModel.nextMatch.homeTeam}} v {{vm.teamPlayerStatisticViewModel.nextMatch.awayTeam}}
+                </span></td>
               </tr>
               <tr>
-                <td>{{vm.teamPlayerStatisticViewModel.lastPlayedMatch.dateMatch | date :'EEEE dd MMMM yyyy'}}</td>
-                <td>{{vm.teamPlayerStatisticViewModel.nextMatch.dateMatch | date :'EEEE dd MMMM yyyy'}}</td>
+                <td><span ng-show="vm.teamPlayerStatisticViewModel.lastPlayedMatch">
+                  {{vm.teamPlayerStatisticViewModel.lastPlayedMatch.dateMatch | date :'EEEE dd MMMM yyyy'}}
+                </span>
+                </td>
+                <td><span ng-show="vm.teamPlayerStatisticViewModel.nextMatch">
+                  {{vm.teamPlayerStatisticViewModel.nextMatch.dateMatch | date :'EEEE dd MMMM yyyy'}}
+                </span></td>
               </tr>
             </table>
           </td>
         <tr>
         <tr>
           <td colspan="2">
-            Average goals per match this season : {{vm.teamPlayerStatisticViewModel.nbAverageGoals}}
+            Average goals per match this season : {{vm.teamPlayerStatisticViewModel.nbAverageGoals}} &nbsp
+            Number of win : {{vm.teamPlayerStatisticViewModel.nbWin}} &nbsp
+            Number of draw : {{vm.teamPlayerStatisticViewModel.nbDraw}} &nbsp
+            Number of loss : {{vm.teamPlayerStatisticViewModel.nbLoss}}
           </td>
         </tr>
     </table>

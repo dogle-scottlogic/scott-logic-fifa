@@ -24,16 +24,18 @@ namespace FIFA.Server.Controllers
         ILeagueRepository leagueRepository;
         ISeasonRepository seasonRepository;
         ITeamRepository teamRepository;
+        ICountryRepository countryRepository;
         
         /// <summary>
         ///     Constructor
         /// </summary>
         /// <returns></returns>
-        public GenerateLeagueController(ILeagueRepository leagueRepository, ISeasonRepository seasonRepository, ITeamRepository teamRepository)
+        public GenerateLeagueController(ILeagueRepository leagueRepository, ISeasonRepository seasonRepository, ITeamRepository teamRepository, ICountryRepository countryRepository)
         {
             this.leagueRepository = leagueRepository;
             this.seasonRepository = seasonRepository;
             this.teamRepository = teamRepository;
+            this.countryRepository = countryRepository;
         }
 
         // Method checking that the number of players is ok regarding to the rules, if not, return a non empty string with the error
@@ -57,12 +59,28 @@ namespace FIFA.Server.Controllers
         }
 
         [ResponseType(typeof(List<League>))]
-        public async Task<HttpResponseMessage> Get(int numberOfPlayers, int countryId)
+        public async Task<HttpResponseMessage> Get(int numberOfPlayers, [FromUri]GenerateLeagueDTO item = null)
         {
 
             // retrieving the teams associated to the country
-            List<Team> teams = new List<Team>(await this.getTeamsAssociatedToTheCountry(countryId));
-            
+            List<Team> teams = new List<Team>(await this.getTeamsAssociatedToTheCountry(item.CountryId));
+
+            if (item == null)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Item is empty");
+
+            }
+            else if (!await this.isCountryExist(item.CountryId))
+            {
+                return this.createErrorResponseCountryDoesntExists();
+            }
+            else if (await this.seasonRepository.isSeasonNameExist(item.CountryId, item.SeasonName, null))
+            {
+                return this.createErrorResponseSeasonNameExists();
+            }
+            else
+            {
+
             // Checking that everything is ok for the league generation
             string errorString = checkNumberOfPlayersRules(numberOfPlayers, teams.Count());
 
@@ -100,6 +118,7 @@ namespace FIFA.Server.Controllers
 
                 }
                 return Request.CreateResponse(HttpStatusCode.OK, leagues);
+                }
             }
 
         }
@@ -119,21 +138,21 @@ namespace FIFA.Server.Controllers
             {
                 return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Item is empty");
 
-            } 
-            else if (!await this.isSeasonExist(item.SeasonId))
-            {
-                return this.createErrorResponseSeasonDoesntExists();
             }
-            else if (await this.isLeagueAlreadyExistInThisSeason(item.SeasonId))
+            else if (!await this.isCountryExist(item.CountryId))
             {
-                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Creation impossible some leagues already exists for this season");
+                return this.createErrorResponseCountryDoesntExists();
+            }
+            else if (await this.seasonRepository.isSeasonNameExist(item.CountryId, item.SeasonName, null))
+            {
+                return this.createErrorResponseSeasonNameExists();
             }else{
 
                 // get the season
-                Season season = await this.seasonRepository.Get(item.SeasonId);
+                Season season = new Season {CountryId = item.CountryId, Name = item.SeasonName };
                 
                 // retrieving the teams associated to the country
-                List<Team> teams = new List<Team>(await this.getTeamsAssociatedToTheCountry(season.CountryId));
+                List<Team> teams = new List<Team>(await this.getTeamsAssociatedToTheCountry(item.CountryId));
 
                 // Counting the total of players inserted and verifying that all the leagues are correctly filled
                 int totalOfPlayers = 0;
@@ -170,18 +189,21 @@ namespace FIFA.Server.Controllers
         {
 
             Random rand = new Random();
+            List<League> leaguesInCreation = new List<League>();
 
             // For each player leagu in player leagues, we genereage a league
-            foreach(PlayerAssignLeagueModel playerleague in playerleagues)
+            foreach (PlayerAssignLeagueModel playerleague in playerleagues)
             {
-
                 if(playerleague.Players != null && playerleague.Players.Count > 0)
                 {
                     string leagueName = playerleague.league.Name;
                     // We create the league attached to the players only if their is at least one player into
-                    League createdLeague = await this.createLeagueWithTeams(season.Id, leagueName, playerleague.Players, teams, rand);
+                    League createdLeague = await this.createLeagueWithTeams(leagueName, playerleague.Players, teams, rand);
+                    leaguesInCreation.Add(createdLeague);
                 }
             }
+
+            season = await this.leagueRepository.createSeasonWithLeagues(season, leaguesInCreation);
 
             var response = Request.CreateResponse<int>(HttpStatusCode.Created, season.Id);
 
@@ -192,18 +214,17 @@ namespace FIFA.Server.Controllers
         /**
          * Create a league with the teamplayers
          */
-        private async Task<League> createLeagueWithTeams(int seasonId, string leagueName, IEnumerable<Player> players, List<Team> teams, Random rand)
+        private async Task<League> createLeagueWithTeams(string leagueName, IEnumerable<Player> players, List<Team> teams, Random rand)
         {
             League leagueInCreation = new League();
             leagueInCreation.Name = leagueName;
-            leagueInCreation.SeasonId = seasonId;
 
             List<TeamPlayer> teamPlayers = new List<TeamPlayer>();
 
             // for each players, we choose randomly a team
             foreach (Player player in players)
             {
-                // picking a team randomly from the list of teams an add to the player
+                // picking a team randomly from the list of teams and add to the player
                 int teamPosition = rand.Next(0, teams.Count() - 1);
                 Team team = teams.ElementAt(teamPosition);
                 // remove from the teamlist the selected team
@@ -218,8 +239,11 @@ namespace FIFA.Server.Controllers
                 teamPlayers.Add(tp);
 
             }
+            leagueInCreation.TeamPlayers = teamPlayers;
 
-            return await this.leagueRepository.createLeagueWithTeamPlayers(leagueInCreation, teamPlayers);
+            return leagueInCreation;
+
+
         }
         
 
@@ -230,34 +254,33 @@ namespace FIFA.Server.Controllers
             teamFilter.CountryId = countryId;
             return await this.teamRepository.GetAllWithFilter(teamFilter);
         }
+
+
+        /**
+         * Method verifying if a country exist in the item
+         **/
+        private async Task<bool> isCountryExist(int CountryId)
+        {
+            Country country = await this.countryRepository.Get(CountryId);
+            return (country != null);
+        }
+
+        /**
+         * Creating an error message indicating that the country doesn't exist
+         **/
+        private const string countryDoesntExistsError = "The country doesn't exist";
+        private HttpResponseMessage createErrorResponseCountryDoesntExists()
+        {
+            return Request.CreateErrorResponse(HttpStatusCode.BadRequest, countryDoesntExistsError);
+        }
         
         /**
-         * Method verifying if a season exist in the item
+         * Creating an error message indicating that the season name already exists for this country
          **/
-        private async Task<bool> isSeasonExist(int seasonId)
+        private const string seasonNameExistsError = "The season name already exists for this country";
+        private HttpResponseMessage createErrorResponseSeasonNameExists()
         {
-            Season season = await this.seasonRepository.Get(seasonId);
-            return (season != null);
-        }
-
-        /**
-         * Method verifying if at least one league is attached to the season
-         **/
-        private async Task<bool> isLeagueAlreadyExistInThisSeason(int seasonId)
-        {
-            LeagueFilter lf = new LeagueFilter();
-            lf.SeasonId = seasonId;
-            IEnumerable<League> leagues = await this.leagueRepository.GetAllWithFilter(lf);
-            return (leagues != null && leagues.Count() > 0);
-        }
-
-        /**
-         * Creating an error message indicating that the season doesn't exist
-         **/
-        private const string seasonDoesntExistsError = "The season doesn't exist";
-        private HttpResponseMessage createErrorResponseSeasonDoesntExists()
-        {
-            return Request.CreateErrorResponse(HttpStatusCode.BadRequest, seasonDoesntExistsError);
+            return Request.CreateErrorResponse(HttpStatusCode.BadRequest, seasonNameExistsError);
         }
 
 

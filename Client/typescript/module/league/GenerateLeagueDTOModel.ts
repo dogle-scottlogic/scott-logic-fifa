@@ -14,17 +14,30 @@ module FifaLeagueClient.Module.League {
 
     }
 
-    export class GenerateLeagueDTOModel {
+    export class GenerateLeagueDTOModel extends Common.Services.AbstractFilter {
 
-        public SeasonId:number;
+        public CountryId:number;
+        public SeasonName:string;
         public PlayerLeagues:PlayerAssignLeagueModel[];
 
         // build the model directly from the data returned by the service
         constructor(data){
+            super();
             if(data != null){
-                this.SeasonId = data.SeasonId;
+                this.CountryId = data.CountryId;
+                this.SeasonName = data.SeasonName;
                 this.PlayerLeagues = data.PlayerLeagues;
             }
+        }
+
+        // Add the request with the names
+        public getParameters(query:string):string{
+           this.query = query;
+
+           this.addRequestNumberParameter("CountryId", this.CountryId)
+              .addRequestParameter("SeasonName", this.SeasonName);
+
+            return this.query;
         }
     }
 

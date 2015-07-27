@@ -38,7 +38,12 @@ module FifaLeagueClient.Module.SeasonTableView {
 			public Id: number;
 			public position: number;
 			public nbPlayedMatches: number;
-			public nbGoals: number;
+			public nbGoalsFor: number;
+			public nbGoalsAgainst: number;
+			public nbGoalsDiff: number;
+			public nbWin: number;
+			public nbDraw: number;
+			public nbLost: number;
 			public nbPoints: number;
 			public player:Player.PlayerModel;
 			public team: Team.TeamModel;
@@ -49,7 +54,12 @@ module FifaLeagueClient.Module.SeasonTableView {
 					if(data != null){
 							this.position = data.position;
 							this.nbPlayedMatches = data.nbPlayedMatches;
-							this.nbGoals = data.nbGoals;
+							this.nbGoalsFor = data.nbGoalsFor;
+							this.nbGoalsAgainst = data.nbGoalsAgainst;
+							this.nbGoalsDiff = data.nbGoalsDiff;
+							this.nbWin = data.nbWin;
+							this.nbDraw = data.nbDraw;
+							this.nbLost = data.nbLost;
 							this.nbPoints = data.nbPoints;
 							this.player = data.player;
 							this.team = data.team;

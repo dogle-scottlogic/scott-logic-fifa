@@ -39,8 +39,8 @@ describe('Testing the LeagueWizardController', function() {
     it('Should fill the league list', function () {
 
        // Facking the selected players
-       leagueWizardController.countryId = 1;
-       leagueWizardController.generateLeague.SeasonId = 5;
+       leagueWizardController.generateLeague.CountryId = 1;
+       leagueWizardController.generateLeague.SeasonName = "Test";
        var player1 = new FifaLeagueClient.Module.Player.PlayerModel({Id:1,Name:"Roger"});
        var player2 = new FifaLeagueClient.Module.Player.PlayerModel({Id:2,Name:"Robert"});
        leagueWizardController.playerSelection = [new FifaLeagueClient.Module.Player.Directives.SelectablePlayerModel(player1),
