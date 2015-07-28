@@ -1,17 +1,8 @@
-<div ng-init="vm.loadResultViewList()" cg-busy="vm.loadingPromise">
+<div cg-busy="vm.loadingPromise">
   <div class="clear"></div>
   <div class="alert alert-danger" role="alert" ng-repeat="value in vm.errors['item.Global']">{{value}}</div>
   <div class="grid-view">
     <h1>Latest results</h1>
-    <form class="simple-form" ng-submit="vm.loadResultViewList()">
-      Show me:
-      <countryselect selectedcountry="vm.resultViewFilter.CountryId"></countryselect>
-      <seasonselect selectedseason="vm.resultViewFilter.SeasonId" filtercountry="vm.resultViewFilter.CountryId" filterhavingleague='true'></seasonselect>
-      <leagueselect selectedleague="vm.resultViewFilter.LeagueId" filtercountry="vm.resultViewFilter.CountryId" filterseason="vm.resultViewFilter.SeasonId"></leagueselect>
-			From : <input type="date" ng-model="vm.resultViewFilter.DateFrom" /> To : <input type="date" ng-model="vm.resultViewFilter.DateTo" />
-      <input type="submit" class="btn btn-primary right" value="Update" />
-    </form>
-    <br>
     <accordion close-others="true">
         <accordion-group  ng-repeat="resultView in vm.resultViewList" ng-init="status.open = $first" is-open="status.open">
                 <accordion-heading>

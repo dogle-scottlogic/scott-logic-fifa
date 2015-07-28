@@ -6,6 +6,8 @@ module FifaLeagueClient.Module.SeasonTableView.Directives {
         vm : SeasonTableViewShowController;
     		filter: SeasonTableFilter;
         show:boolean;
+        resultviewfilter:Results.ResultViewFilter;
+        copyFilterAndLoad;
     }
 
     export function seasonTableViewShowDirective(): ng.IDirective {
@@ -13,6 +15,7 @@ module FifaLeagueClient.Module.SeasonTableView.Directives {
             restrict: "E",
             scope: {
               filter:'=',
+              resultviewfilter:'=',
               show:'='
             },
             controller: SeasonTableViewShowController,
@@ -22,17 +25,33 @@ module FifaLeagueClient.Module.SeasonTableView.Directives {
             {
               // Reload the season if its ID changed and we ask to show
               scope.$watch('filter', function(newfilter, oldfilter) {
-                        if (newfilter !== oldfilter && scope.show) {
-                          scope.vm.loadSeasonTableViewList(newfilter);
+                        if (newfilter.isEqual(oldfilter) ) {
+                          scope.copyFilterAndLoad();
+                        }
+              }, true);
+
+              scope.$watch('resultviewfilter', function(newresultviewfilter, oldresultviewfilter) {
+                        if (newresultviewfilter != null && !newresultviewfilter.isEqual(oldresultviewfilter)) {
+                          // Copying the datas into the scope.filter
+                          scope.filter.CountryId = newresultviewfilter.CountryId;
+                          scope.filter.SeasonId = newresultviewfilter.SeasonId;
+                          scope.filter.LeagueId = newresultviewfilter.LeagueId;
+                          scope.copyFilterAndLoad();
                         }
               }, true);
 
                 // Reload the season if its shown
                 scope.$watch('show', function(newShow, oldshow) {
-                          if (scope.show) {
-                            scope.vm.loadSeasonTableViewList(scope.filter);
-                          }
+                          scope.copyFilterAndLoad();
                 }, true);
+
+
+              // copy the filter into the controller
+              scope.copyFilterAndLoad = function(){
+                if (scope.show) {
+                  scope.vm.loadSeasonTableViewList(scope.filter);
+                }
+              }
             }
         }
     }

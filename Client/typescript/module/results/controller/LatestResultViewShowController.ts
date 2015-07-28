@@ -7,9 +7,6 @@ module FifaLeagueClient.Module.Results {
 
 		constructor(scope, resultViewService: ResultViewService) {
 			super(scope, resultViewService);
-			this.resultViewFilter.PlayedMatch = true;
-			// Initializing the limit to 3
-			this.resultViewFilter.LimitResult = 3;
 
 		}
 	}

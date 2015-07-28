@@ -32,13 +32,14 @@ namespace FIFA.Server.Models
 
             // Getting all the seasons having at least one match havent been played
             var currentSeasons = filter.FilterSeasonTable(db.Seasons);
+            var currentLeagues = filter.FilterLeagueTable(db.Leagues);
 
             var leagueTableView = currentSeasons.Select(
                 s => new SeasonTableViewModel
                 {
                     Id = s.Id,
                     Name = s.Name,
-                    LeagueTables = s.Leagues.Select(l => new LeagueTableViewModel
+                    LeagueTables = currentLeagues.Where(l => l.SeasonId == s.Id).Select(l => new LeagueTableViewModel
                     {
                         Id = l.Id,
                         Name = l.Name,

@@ -19,6 +19,14 @@ namespace FIFA.Server.Models
 
         public bool? HasRemainingMatchToPlay { get; set; }
 
+        public IQueryable<League> FilterLeagueTable(IQueryable<League> query)
+        {
+            if (this.LeagueId != null)
+            {
+                query = query.Where(l => l.Id == this.LeagueId);
+            }
+            return query;
+        }
 
         public IQueryable<Season> FilterSeasonTable(IQueryable<Season> query)
         {
@@ -39,11 +47,6 @@ namespace FIFA.Server.Models
             }
 
 
-            if (this.LeagueId != null)
-            {
-                query = query.Where(s => s.Leagues.Any(l => l.Id == this.LeagueId));
-            }
-
             if (this.HasRemainingMatchToPlay != null)
             {
                 if (this.HasRemainingMatchToPlay.Value)
@@ -54,6 +57,11 @@ namespace FIFA.Server.Models
                 {
                     query = query.Where(s => s.Leagues.All(l => l.Matches.All(m => m.Played == true)));
                 }
+            }
+
+            if (this.LeagueId != null)
+            {
+                query = query.Where(s => s.Leagues.Any(l => l.Id == this.LeagueId));
             }
 
 
