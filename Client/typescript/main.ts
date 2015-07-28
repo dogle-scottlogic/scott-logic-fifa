@@ -1,5 +1,5 @@
 /// <reference path="../typings/tsd.d.ts"/>
-
+/// <reference path="module/common/services/AbstractFilter.ts" />
 /// <reference path="module/common/services/Config.ts" />
 /// <reference path="module/common/services/HTTPErrorInterceptorService.ts" />
 /// <reference path="module/country/CountryModule.ts" />
