@@ -73,6 +73,29 @@ namespace FIFA.Server.Models
                                                     )
                                                 .DefaultIfEmpty(0)
                                                 .Sum(),
+                                nbGoalsDiff = l.Matches.Where(m => m.Played == true
+                                            && m.Scores.Any(sc => sc.TeamPlayer == tp)
+                                            )
+                                                .Select(m => m.Scores
+                                                    .Where(sc => sc.TeamPlayer == tp)
+                                                    .Select(sc => sc.Goals)
+                                                    .DefaultIfEmpty(0)
+                                                    .Sum()
+                                                    )
+                                                .DefaultIfEmpty(0)
+                                                .Sum()
+                                                -
+                                          l.Matches.Where(m => m.Played == true
+                                            && m.Scores.Any(sc => sc.TeamPlayer == tp)
+                                            )
+                                                .Select(m => m.Scores
+                                                    .Where(sc => sc.TeamPlayer != tp)
+                                                    .Select(sc => sc.Goals)
+                                                    .DefaultIfEmpty(0)
+                                                    .Sum()
+                                                    )
+                                                .DefaultIfEmpty(0)
+                                                .Sum(),
                                 nbWin = l.Matches.Where(m => m.Played == true
                                             && m.Scores.Any(sc => sc.TeamPlayer == tp)
                                             )
@@ -143,8 +166,8 @@ namespace FIFA.Server.Models
                             }
                         )
                         .OrderByDescending(tp => tp.nbPoints)
+                        .ThenByDescending(tp => tp.nbGoalsDiff)
                         .ThenByDescending(tp => tp.nbGoalsFor)
-                        .ThenBy(tp => tp.nbGoalsAgainst)
                         .ThenBy(tp => tp.nbPlayedMatches)
                         .ThenBy(tp => tp.player.Name)
                     })
@@ -171,7 +194,6 @@ namespace FIFA.Server.Models
                             position++;
                         }
                         previousNbPoints = teamPlayer.nbPoints;
-                        teamPlayer.nbGoalsDiff = teamPlayer.nbGoalsFor - teamPlayer.nbGoalsAgainst;
                         teamPlayer.position = position;
                     }
                 }
