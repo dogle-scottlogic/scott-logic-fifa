@@ -84,6 +84,28 @@ namespace FIFA.Server.Models
                 return false;
             }
 
+
+            ICollection<League> leagues = db.Leagues.Where(l => l.SeasonId == id).ToList();
+
+            // we remove all the leagues of the season
+            foreach (League league in leagues)
+            {
+                // but first we remove all the matches of the league
+                var query = db.Matches.Where(m => m.League.Id == league.Id);
+
+                if(query.Count() > 0)
+                {
+                    ICollection<Match> matches = query.ToList();
+
+                    foreach(Match match in matches)
+                    {
+                    db.Matches.Remove(match);
+                    }
+                }
+
+                db.Leagues.Remove(league);
+            }
+
             db.Seasons.Remove(Season);
             await db.SaveChangesAsync();
 
