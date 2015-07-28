@@ -4,3 +4,6 @@ lib/
 app/lib/
 .idea
 app/leagueManager.js
+dist/
+app/script.js
+app/style.css
