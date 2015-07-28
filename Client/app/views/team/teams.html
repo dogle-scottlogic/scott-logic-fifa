@@ -14,7 +14,9 @@
             </thead>
             <tbody>
               <tr ng-repeat="team in vm.teams">
-                  <td>{{team.Name}}</td>
+                  <td><span tooltip="The world’s most successful club" ng-show="team.Name=='Rangers'">{{team.Name}}</span>
+                    <span ng-hide="team.Name=='Rangers'">{{team.Name}}</span>
+                  </td>
                   <td>{{team.Country.Name}}</td>
                   <td align="right">
                   <a ng-href="#/teams/edit/{{team.Id}}" type="button" class="btn btn-primary middle">Edit</a>
