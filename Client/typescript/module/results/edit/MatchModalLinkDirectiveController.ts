@@ -18,7 +18,7 @@ module FifaLeagueClient.Module.Results {
             this.openModalUpdate(this.scope, this.modal, this.callbackupdate, this, this.scope.id);
         }
 
-        public openModalUpdate (scope, modal, callBackParam, callbackObj, id) {
+        public openModalUpdate (scope, modal, callBackParam, callbackObj, Id) {
             var self = this;
 
             var modalInstance = modal.open({
@@ -28,8 +28,8 @@ module FifaLeagueClient.Module.Results {
                 controllerAs: 'vm',
                 size: 800,
                 resolve: {
-                    id: function () {
-                        return id;
+                    Id: function () {
+                        return Id;
                     }
                 }
             });
