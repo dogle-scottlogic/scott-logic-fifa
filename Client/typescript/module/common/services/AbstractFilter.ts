@@ -4,6 +4,9 @@ module FifaLeagueClient.Module.Common.Services {
 
         query:string;
 
+        public getParameters(query:string):string{
+          return query;
+        }
 
         public addRequestParameter(name:string, value:string):AbstractFilter{
             if(value!=null){
@@ -46,6 +49,16 @@ module FifaLeagueClient.Module.Common.Services {
             if(this.query != ""){
                 this.query = this.query.concat("&");
             }
+        }
+
+        // Verify if a filter is equal to an other
+        public isEqual(filterToCompare:AbstractFilter):boolean{
+          if(filterToCompare == null){
+            return true;
+          }else{
+              var queryToCompare = filterToCompare.getParameters("");
+              return queryToCompare == this.getParameters("");
+          }
         }
 
     }

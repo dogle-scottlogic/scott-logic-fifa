@@ -5,14 +5,29 @@ module FifaLeagueClient.Module.Dashboard {
 
 		static $inject = ["$scope"];
 
+		resultViewFilter: Results.ResultViewFilter;
 		seasonTableFilter:SeasonTableView.SeasonTableFilter;
-		showSeasonTableView: boolean;
+		showList: boolean;
 
 		constructor(scope) {
 			super(scope);
+
 			this.seasonTableFilter = new SeasonTableView.SeasonTableFilter();
 			this.seasonTableFilter.HasRemainingMatchToPlay = true;
-			this.showSeasonTableView = true;
+
+			this.resultViewFilter = new Results.ResultViewFilter();
+
+      // We force the filters played matches and limit to 3
+			this.resultViewFilter.PlayedMatch = true;
+			// Initializing the limit to 3
+			this.resultViewFilter.LimitResult = 3;
+
+			this.showList = true;
+		}
+
+
+		public refreshList = function(){
+			this.resultViewFilter = this.resultViewFilter;
 		}
 
 	}

@@ -77,7 +77,23 @@ describe('Testing the SeasonTableViewShowDirective', function() {
         verifyPromiseAndFlush(element.isolateScope().vm, $httpBackend);
         // Check that the compiled element contains the templated content
         expect(element.html()).toContain(dataRepository[0].Name);
+        expect(element.html()).not.toContain(dataRepository[1].Name);
     });
+
+    it('Show filtered by result view', function() {
+        var scope = $rootScope.$new();
+        scope.filter = new FifaLeagueClient.Module.Results.ResultViewFilter();
+        scope.filter.CountryId = 1;
+        var html = angular.element('<seasontableviewshow resultviewfilter="filter" show="true"></seasontableviewshow>');
+        var element = $compile(html)(scope);
+
+        $rootScope.$digest();
+        verifyPromiseAndFlush(element.isolateScope().vm, $httpBackend);
+        // Check that the compiled element contains the templated content
+        expect(element.html()).toContain(dataRepository[0].Name);
+        expect(element.html()).not.toContain(dataRepository[1].Name);
+    });
+
 
   });
 

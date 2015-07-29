@@ -58,6 +58,11 @@ getresultByCountryId = function(dataRepository, countryId){
 // mocking the backend
 resultView_mockHTTPBackend = function(config, $httpBackend, $q, dataRepository){
 
+  $httpBackend.whenGET(config.backend+"api/ResultView/")
+      .respond(function (method, url, data, headers) {
+          return [200,dataRepository];
+      });
+
     var mockedResultViewGetList = $httpBackend.whenGET(config.backend+"api/ResultView?PlayedMatch=true")
         .respond(function (method, url, data, headers) {
             return [200,dataRepository];

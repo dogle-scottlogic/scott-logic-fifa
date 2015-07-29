@@ -1,3 +1,10 @@
 <h1>Dashboard</h1>
-<latestresultviewshow></latestresultviewshow>
-<seasontableviewshow filter="vm.seasonTableFilter" show="vm.showSeasonTableView"></seasontableviewshow>
+<form class="simple-form">
+  Show me:
+  <countryselect selectedcountry="vm.resultViewFilter.CountryId"></countryselect>
+  <seasonselect selectedseason="vm.resultViewFilter.SeasonId" filtercountry="vm.resultViewFilter.CountryId" filterhavingleague='true'></seasonselect>
+  <leagueselect selectedleague="vm.resultViewFilter.LeagueId" filtercountry="vm.resultViewFilter.CountryId" filterseason="vm.resultViewFilter.SeasonId"></leagueselect>
+  From : <input type="date" ng-model="vm.resultViewFilter.DateFrom" /> To : <input type="date" ng-model="vm.resultViewFilter.DateTo" />
+</form>
+<latestresultviewshow filter="vm.resultViewFilter" show="vm.showList"></latestresultviewshow>
+<seasontableviewshow filter="vm.seasonTableFilter" show="vm.showList" resultviewfilter="vm.resultViewFilter"></seasontableviewshow>
