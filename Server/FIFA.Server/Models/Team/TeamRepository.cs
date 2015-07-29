@@ -78,20 +78,7 @@ namespace FIFA.Server.Models
         {
             if (filter != null)
             {
-                if (filter.Id != 0)
-                {
-                    query = query.Where(m => m.Id == filter.Id);
-                }
-
-                if (!String.IsNullOrEmpty(filter.Name))
-                {
-                    query = query.Where(m => m.Name.Contains(filter.Name));
-                }
-
-                if (filter.CountryId != null)
-                {
-                    query = query.Where(m => m.CountryId == filter.CountryId);
-                }
+                query = filter.FilterTeams(query);
             }
 
             return query;

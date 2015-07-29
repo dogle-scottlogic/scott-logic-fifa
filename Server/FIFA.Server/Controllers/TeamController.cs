@@ -30,9 +30,21 @@ namespace FIFA.Server.Controllers
         /// 
         // GET api/Team
         [ResponseType(typeof(IEnumerable<Team>))]
-        public async Task<HttpResponseMessage> GetAll()
+        public async Task<HttpResponseMessage> GetAll([FromUri] TeamFilter teamFilter = null)
         {
-            return await base.GetAll();
+
+            IEnumerable<Team> list;
+
+            if (teamFilter == null)
+            {
+                list = await base.repository.GetAll();
+            }
+            else
+            {
+                list = await base.repository.GetAllWithFilter(teamFilter);
+            }
+
+            return Request.CreateResponse(HttpStatusCode.OK, list);
         }
 
         /// <summary>
