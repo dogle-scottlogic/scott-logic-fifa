@@ -1,9 +1,9 @@
-<ul class="error">
-    <li ng-repeat="value in vm.errors['item.Name']">{{value}}</li>
-</ul>
-
+<label>Country</label>
+<countryselect selectedcountry="vm.team.CountryId" required='true'></countryselect>
 <label>Name</label>
-<input type="text" ng-model="vm.team.Name" 
+<div class="clear"></div>
+<div class="alert alert-danger" role="alert" ng-repeat="value in vm.errors['item.Name']">{{value}}</div>
+<input type="text" ng-model="vm.team.Name"
    class="form-control"
    id="teamName"
    placeholder="Team Name"
@@ -12,7 +12,3 @@
    tooltip-trigger="mouseenter"
    tooltip-enable="!vm.team.Name"
    required/>
-<label>Country</label>
-<countryselect selectedcountry="vm.team.CountryId" required='true'></countryselect>
-
-  
