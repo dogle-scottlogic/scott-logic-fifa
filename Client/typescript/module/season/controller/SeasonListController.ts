@@ -5,6 +5,7 @@ module FifaLeagueClient.Module.Season {
 
 		seasonService: SeasonService;
 		seasons: SeasonModel[];
+		filter:SeasonFilter;
 
 		static $inject = ["$scope", 'seasonService', '$location'];
 
@@ -12,16 +13,22 @@ module FifaLeagueClient.Module.Season {
 			super(scope);
 			this.seasonService = seasonService;
 			this.seasons = [];
+			this.filter = new SeasonFilter()
 		}
 
 		public showSeasons = () => {
 			this.getSeasonList();
 		}
 
+		public onCountrySelected = (countryId:number) => {
+			this.filter.CountryId = countryId;
+			this.getSeasonList();
+		}
+
 		public getSeasonList = () =>{
 			this.errors = {};
 			this.loadingPromise =
-				this.seasonService.getSeasonList()
+				this.seasonService.getSeasonFilteredList(this.filter)
 					.then(this.onGetSeasonsSuccess)
 					.catch(this.onError);
 		}

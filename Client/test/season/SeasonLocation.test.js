@@ -18,8 +18,8 @@ describe('Testing the season locations', function() {
         // Fake seasonService Implementation returning a promise
         $provide.value('countryService', countryService);
       });
-      // defining the method getSeasonList for the service used by the controller
-      seasonService.getSeasonList = function(){
+      // defining the method getSeasonFilteredList for the service used by the controller
+      seasonService.getSeasonFilteredList = function(){
       }
 
       seasonService.getSeason = function(id){
@@ -28,6 +28,7 @@ describe('Testing the season locations', function() {
       countryService.getCountryFilteredList = function(){
 
       }
+
 
   });
 
@@ -57,10 +58,11 @@ describe('Testing the season locations', function() {
       expect(route.current.templateUrl).toEqual('views/season/seasons.html');
     });
 
-    it('Location /seasons shall call seasonService.getSeasonList() in order to init the list', function() {
+    it('Location /seasons shall call seasonService.getSeasonFilteredList() in order to init the list', function() {
 
-      // Spying the seasonService for the method getSeasonList which will return a promise
-      spyOn(seasonService, 'getSeasonList').and.returnValue(defer.promise);
+      // Spying the seasonService for the method getSeasonFilteredList which will return a promise
+      spyOn(seasonService, 'getSeasonFilteredList').and.returnValue(defer.promise);
+      spyOn(countryService, 'getCountryFilteredList').and.returnValue(defer.promise);
       // Creating a fake view in order to have then the location diplayed in this
       var html = angular.element('<ng-view></ng-view>');
       var element = compile(html)(rootScope.$new());
@@ -70,8 +72,9 @@ describe('Testing the season locations', function() {
       rootScope.$apply();
       rootScope.$digest();
 
-      // Verfiying that on init the getSeasonList of the service is called
-      expect(seasonService.getSeasonList).toHaveBeenCalled();
+      // Verfiying that on init the getSeasonFilteredList of the service is called
+      expect(seasonService.getSeasonFilteredList).toHaveBeenCalled();
+      expect(countryService.getCountryFilteredList).toHaveBeenCalled();
     });
 
     it('Location /seasons/add shall link to views/season/season-add.html and FifaLeagueClient.Module.Season.SeasonAddController', function() {
@@ -103,9 +106,9 @@ describe('Testing the season locations', function() {
 
     it('Location /seasons/edit/1 shall call seasonService.getSeason() in order to init the season', function() {
 
-      // Spying the seasonService for the method getSeasonList which will return a promise
+      // Spying the seasonService for the method getSeasonFilteredList which will return a promise
       spyOn(seasonService, 'getSeason').and.returnValue(defer.promise);
-      // Spying the countryService for the method getSeasonList which will return a promise
+      // Spying the countryService for the method getSeasonFilteredList which will return a promise
       spyOn(countryService, 'getCountryFilteredList').and.returnValue(defer.promise);
 
       // Creating a fake view in order to have then the location diplayed in this
@@ -117,7 +120,7 @@ describe('Testing the season locations', function() {
       rootScope.$apply();
       rootScope.$digest();
 
-      // Verfiying that on init the getSeasonList of the service is called
+      // Verfiying that on init the getSeasonFilteredList of the service is called
       expect(seasonService.getSeason).toHaveBeenCalledWith('1');
       // Verfiying that on init the getCountryList of the service is called
       expect(countryService.getCountryFilteredList).toHaveBeenCalled();
