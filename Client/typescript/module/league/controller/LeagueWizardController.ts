@@ -156,6 +156,14 @@ module FifaLeagueClient.Module.League {
       var self = this;
       // filling the list of the leagues
       this.leagues = leagues;
+
+      // If their is only one league, we automatically select this one for the players
+      if(this.leagues.length == 1){
+        for(var i=0; i< this.playerAssignLeague.length;i++){
+          this.playerAssignLeague[i].leagueId = this.leagues[0].Id;
+        }
+      }
+
       if(self.wizardHandler.wizard() != null){
         self.wizardHandler.wizard().next();
       }
