@@ -16,6 +16,8 @@ module FifaLeagueClient.Module.Dashboard {
 			this.seasonTableFilter.HasRemainingMatchToPlay = true;
 
 			this.resultViewFilter = new Results.ResultViewFilter();
+
+      // We force the filters played matches and limit to 3
 			this.resultViewFilter.PlayedMatch = true;
 			// Initializing the limit to 3
 			this.resultViewFilter.LimitResult = 3;

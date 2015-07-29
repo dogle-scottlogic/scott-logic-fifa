@@ -36,7 +36,11 @@ module FifaLeagueClient.Module.Results.Directives {
               // copy the filter into the controller
               scope.copyFilterAndLoad = function(){
                 if (scope.show) {
-                  scope.vm.resultViewFilter = scope.filter;
+
+                  if(scope.filter != null){
+                    scope.vm.resultViewFilter = scope.filter;
+                  }
+
                   scope.vm.loadResultViewList();
                 }
               }

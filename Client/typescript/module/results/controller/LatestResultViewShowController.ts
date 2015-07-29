@@ -7,7 +7,6 @@ module FifaLeagueClient.Module.Results {
 
 		constructor(scope, resultViewService: ResultViewService) {
 			super(scope, resultViewService);
-
 		}
 	}
 }

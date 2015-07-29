@@ -25,18 +25,20 @@ module FifaLeagueClient.Module.SeasonTableView.Directives {
             {
               // Reload the season if its ID changed and we ask to show
               scope.$watch('filter', function(newfilter, oldfilter) {
-                        if (newfilter.isEqual(oldfilter) ) {
+                        if (newfilter != null && !newfilter.isEqual(oldfilter) ) {
                           scope.copyFilterAndLoad();
                         }
               }, true);
 
               scope.$watch('resultviewfilter', function(newresultviewfilter, oldresultviewfilter) {
-                        if (newresultviewfilter != null && !newresultviewfilter.isEqual(oldresultviewfilter)) {
+                        if (newresultviewfilter != null){
+                          if(scope.filter == null){
+                            scope.filter = new SeasonTableFilter();
+                          }
                           // Copying the datas into the scope.filter
                           scope.filter.CountryId = newresultviewfilter.CountryId;
                           scope.filter.SeasonId = newresultviewfilter.SeasonId;
                           scope.filter.LeagueId = newresultviewfilter.LeagueId;
-                          scope.copyFilterAndLoad();
                         }
               }, true);
 
