@@ -2,20 +2,20 @@
   <div class="clear"></div>
   <div class="alert alert-danger" role="alert" ng-repeat="value in vm.errors['item.Global']">{{value}}</div>
   <div class="grid-view">
-    <h1>Latest results</h1>
-    <accordion close-others="true">
-        <accordion-group  ng-repeat="resultView in vm.resultViewList" ng-init="status.open = $first" is-open="status.open">
+    <div class="rubric-title">Latest results</div>
+    <accordion close-others="true" ng-hide="vm.resultViewList.length==0">
+        <accordion-group  ng-repeat="resultView in vm.resultViewList" ng-init="status.open = $first" is-open="status.open" class="accordion-panel">
                 <accordion-heading>
                   <div>
                     {{resultView.Date | date :'EEEE dd MMMM yyyy'}}
                     <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
                   </div>
                 </accordion-heading>
-                <div ng-repeat="countryMatch in resultView.countryMatches">
+                <div ng-repeat="countryMatch in resultView.countryMatches" class="table-responsive">
                   <div ng-repeat="seasonMatch in countryMatch.seasonMatches">
                     <div ng-repeat="leagueMatch in seasonMatch.leagueMatches">
                       <table class="table table-striped table-bordered">
-                          <thead>
+                          <thead class="league-thead">
                             <tr>
                                 <th colspan="3">{{countryMatch.Name}} / {{seasonMatch.Name}} - {{leagueMatch.Name}}
                                 </th>
@@ -35,4 +35,7 @@
               </div>
         </accordion-group>
     </accordion>
+    <div ng-show="vm.resultViewList.length==0">
+      <h2>No result</h2>
+    </div>
 </div>

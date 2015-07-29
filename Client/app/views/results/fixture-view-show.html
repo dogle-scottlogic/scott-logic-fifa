@@ -14,9 +14,9 @@
       <div ng-repeat="resultView in vm.resultViewList" ng-init="resultViewFirst = $first">
         <h2>{{resultView.Date | date :'EEEE dd MMMM yyyy'}}</h2>
         <div ng-repeat="countryMatch in resultView.countryMatches" ng-init="countryViewFirst = $first">
-          <div ng-repeat="seasonMatch in countryMatch.seasonMatches" ng-init="sessionViewFirst = $first">
+          <div ng-repeat="seasonMatch in countryMatch.seasonMatches" ng-init="sessionViewFirst = $first" class="table-responsive">
                   <accordion-group ng-repeat="leagueMatch in seasonMatch.leagueMatches"
-                  ng-init="status.open = resultViewFirst && countryViewFirst && sessionViewFirst && $first" is-open="status.open">
+                  ng-init="status.open = resultViewFirst && countryViewFirst && sessionViewFirst && $first" is-open="status.open" class="accordion-panel">
                           <accordion-heading>
                             <div>
                               {{countryMatch.Name}} / {{seasonMatch.Name}} - {{leagueMatch.Name}}

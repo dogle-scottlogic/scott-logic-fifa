@@ -2,15 +2,52 @@
   margin-top: 0;
 }
 
-#accordion > .panel {
-  margin-top: 0;
+.rubric-title{
+  background-color: @dark-yellow;
+  font: @header-font;
+  font-size: 2.5em;
+  font-weight: bold;
+  padding-left: 20px;
 }
 
-a.accordion-title {
-  text-decoration: none;
-}
+.accordion-panel {
+    border: none;
+
+    .panel-heading {
+       background-color: @table-bg-accent;
+       .panel-title {
+         > a {
+           text-decoration: none;
+         }
+       }
+     }
+   .panel-heading:hover {
+          background-color: @table-bg-less-accent;
+         }
+
+
+    .panel-body {
+     padding: 0px;
+  }
+ }
+
+ .accordion-panel:nth-child(even) {
+     .panel-heading {
+        background-color: @table-bg-less-accent;
+      }
+  }
 
 .league-thead {
   background-color: @dark-gray;
   color: white;
+}
+
+.table-multipletbody-striped {
+  > tbody:nth-child(odd) > tr{
+    background-color: @table-bg-accent;
+  }
+  }
+
+.clickable{
+  cursor: pointer;
 }
