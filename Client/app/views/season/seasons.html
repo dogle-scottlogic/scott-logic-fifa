@@ -1,5 +1,6 @@
 <div class="gridview" ng-init="vm.showSeasons()" cg-busy="vm.loadingPromise">
     <h2>Seasons</h2>
+    <a href="#/leaguewizard" class="btn btn-primary right">Add Season</a>
     <div class="clear"></div>
     <div class="alert alert-danger" role="alert" ng-repeat="value in vm.errors['item.Global']">{{value}}</div>
     <countryselect on-select="vm.onCountrySelected(country)"></countryselect><br>
