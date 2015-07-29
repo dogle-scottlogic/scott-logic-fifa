@@ -173,7 +173,7 @@ gulp.task('browser-sync', function () {
     var filesToWatch = [
         htmlSrc,
         typescriptSrc,
-        lessSrc
+        "less/*.less"
     ];
 
     gulp.watch(filesToWatch, ['build-sync']);

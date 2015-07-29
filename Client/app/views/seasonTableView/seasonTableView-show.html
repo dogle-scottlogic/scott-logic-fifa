@@ -2,55 +2,54 @@
   <div class="clear"></div>
   <div class="alert alert-danger" role="alert" ng-repeat="value in vm.errors['item.Global']">{{value}}</div>
   <div class="grid-view">
-    <h2>Season table</h2>
-
+    <div class="rubric-title">Season table</div>
     <accordion close-others="true">
-        <accordion-group  ng-repeat="seasonTableView in vm.seasonTableViewList" ng-init="status.open = $first" is-open="status.open">
+        <accordion-group  ng-repeat="seasonTableView in vm.seasonTableViewList" ng-init="status.open = $first" is-open="status.open" class="accordion-panel">
                 <accordion-heading>
-                  <div>
+                  <div class="accordion-head">
                     {{seasonTableView.Name}}
                     <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
                   </div>
                 </accordion-heading>
-                <div ng-repeat="leagueTableView in seasonTableView.LeagueTables">
-                      <table class="table table-striped table-bordered">
+                <div ng-repeat="leagueTableView in seasonTableView.LeagueTables" class="table-responsive">
+                      <table class="table table-multipletbody-striped table-bordered table-hover">
                           <thead>
-                            <tr>
+                            <tr class="league-thead">
                                 <th colspan="11">{{leagueTableView.Name}}
                                 </th>
                             </tr>
                               <tr>
-                                  <th></th>
+                                  <th class="hidden-xs hidden-sm"></th>
                                   <th>Position</th>
                                   <th>Team</th>
                                   <th><span tooltip="Matches played">P</span></th>
-                                  <th><span tooltip="Matches won">W</span></th>
-                                  <th><span tooltip="Matches drawn">D</span></th>
-                                  <th><span tooltip="Matches lost">L</span></th>
-                                  <th><span tooltip="Matches goals for">GS</span></th>
-                                  <th><span tooltip="Matches goals against">GC</span>
+                                  <th class="hidden-xs"><span tooltip="Matches won">W</span></th>
+                                  <th class="hidden-xs"><span tooltip="Matches drawn">D</span></th>
+                                  <th class="hidden-xs"><span tooltip="Matches lost">L</span></th>
+                                  <th class="hidden-xs hidden-sm"><span tooltip="Matches goals for">GS</span></th>
+                                  <th class="hidden-xs hidden-sm"><span tooltip="Matches goals against">GC</span>
                                   </th>
                                   <th><span tooltip="Goal difference">GD</span></th>
                                   <th><span tooltip="Points">Pts</span></th>
                               </tr>
                           </thead>
                           <tbody ng-repeat="teamPlayer in leagueTableView.TeamPlayers">
-                              <tr>
-                                  <td>
-                                  <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': teamPlayer.show, 'glyphicon-chevron-right': !teamPlayer.show}"
-                                  ng-click="vm.showTeamPlayerStatistic(teamPlayer)"></i>
+                              <tr ng-click="vm.showTeamPlayerStatistic(teamPlayer)" class="clickable">
+                                  <td class="hidden-xs hidden-sm">
+                                  <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': teamPlayer.show, 'glyphicon-chevron-right': !teamPlayer.show}"></i>
                                   </td>
                                   <td>{{teamPlayer.position}}</td>
                                   <td>{{teamPlayer.player.Name}} ({{teamPlayer.team.Name}})</td>
                                   <td>{{teamPlayer.nbPlayedMatches}}</td>
-                                  <td>{{teamPlayer.nbWin}}</td>
-                                  <td>{{teamPlayer.nbDraw}}</td>
-                                  <td>{{teamPlayer.nbLost}}</td>
-                                  <td>{{teamPlayer.nbGoalsFor}}</td>
-                                  <td>{{teamPlayer.nbGoalsAgainst}}</th>
+                                  <td class="hidden-xs">{{teamPlayer.nbWin}}</td>
+                                  <td class="hidden-xs">{{teamPlayer.nbDraw}}</td>
+                                  <td class="hidden-xs">{{teamPlayer.nbLost}}</td>
+                                  <td class="hidden-xs hidden-sm">{{teamPlayer.nbGoalsFor}}</td>
+                                  <td class="hidden-xs hidden-sm">{{teamPlayer.nbGoalsAgainst}}</th>
                                   <td>{{teamPlayer.nbGoalsDiff}}</td>
                                   <td>{{teamPlayer.nbPoints}}</td>
                               </tr>
+
                               <tr ng-show="teamPlayer.show">
                                 <td colspan="11">
                                   <teamplayerstatisticviewshow seasonid="seasonTableView.Id" teamplayerid="teamPlayer.Id" show="teamPlayer.show"></teamplayerstatisticviewshow>
@@ -62,4 +61,7 @@
               </div>
         </accordion-group>
     </accordion>
+    <div ng-show="vm.seasonTableViewList.length==0">
+      <h2>No season</h2>
+    </div>
 </div>

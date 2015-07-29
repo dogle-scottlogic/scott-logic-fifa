@@ -1,10 +1,36 @@
-<h1>Dashboard</h1>
-<form class="simple-form">
-  Show me:
-  <countryselect selectedcountry="vm.resultViewFilter.CountryId"></countryselect>
-  <seasonselect selectedseason="vm.resultViewFilter.SeasonId" filtercountry="vm.resultViewFilter.CountryId" filterhavingleague='true'></seasonselect>
-  <leagueselect selectedleague="vm.resultViewFilter.LeagueId" filtercountry="vm.resultViewFilter.CountryId" filterseason="vm.resultViewFilter.SeasonId"></leagueselect>
-  From : <input type="date" ng-model="vm.resultViewFilter.DateFrom" /> To : <input type="date" ng-model="vm.resultViewFilter.DateTo" />
-</form>
-<latestresultviewshow filter="vm.resultViewFilter" show="vm.showList"></latestresultviewshow>
-<seasontableviewshow filter="vm.seasonTableFilter" show="vm.showList" resultviewfilter="vm.resultViewFilter"></seasontableviewshow>
+<form class="form-inline">
+  <div class="container-fluid form-group">
+      <div class="form-group">
+        <label>Show me:</label>
+      </div>
+      <div class="form-group">
+        <label class="sr-only" for="country">Country:</label>
+        <countryselect selectedcountry="vm.resultViewFilter.CountryId"></countryselect>
+      </div>
+        <div class="form-group">
+          <label class="sr-only" for="season">Season:</label>
+        <seasonselect selectedseason="vm.resultViewFilter.SeasonId" filtercountry="vm.resultViewFilter.CountryId" filterhavingleague='true'></seasonselect>
+      </div>
+        <div class="form-group">
+          <label class="sr-only" for="league">League:</label>
+        <leagueselect selectedleague="vm.resultViewFilter.LeagueId" filtercountry="vm.resultViewFilter.CountryId" filterseason="vm.resultViewFilter.SeasonId"></leagueselect>
+      </div>
+        <div class="form-group">
+          <label> From : </label>
+          <input class="form-control" type="date" ng-model="vm.resultViewFilter.DateFrom" />
+        </div>
+        <div class="form-group">
+          <label> To :</label>
+          <input class="form-control" type="date" ng-model="vm.resultViewFilter.DateTo" />
+        </div>
+  </div>
+</form><br>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-6" >
+      <latestresultviewshow filter="vm.resultViewFilter" show="vm.showList"></latestresultviewshow>
+  </div>
+  <div class="col-md-6" >
+      <seasontableviewshow filter="vm.seasonTableFilter" show="vm.showList" resultviewfilter="vm.resultViewFilter"></seasontableviewshow>
+  </div>
+</div>

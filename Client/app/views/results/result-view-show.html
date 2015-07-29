@@ -13,7 +13,7 @@
     </form>
     <br>
     <accordion close-others="true">
-        <accordion-group  ng-repeat="resultView in vm.resultViewList" ng-init="status.open = $first" is-open="status.open">
+        <accordion-group  ng-repeat="resultView in vm.resultViewList" ng-init="status.open = $first" is-open="status.open" class="accordion-panel">
                 <accordion-heading>
                   <div>
                     {{resultView.Date | date :'EEEE dd MMMM yyyy'}}
@@ -22,9 +22,9 @@
                 </accordion-heading>
                 <div ng-repeat="countryMatch in resultView.countryMatches">
                   <div ng-repeat="seasonMatch in countryMatch.seasonMatches">
-                    <div ng-repeat="leagueMatch in seasonMatch.leagueMatches">
+                    <div ng-repeat="leagueMatch in seasonMatch.leagueMatches" class="table-responsive">
                       <table class="table table-striped table-bordered">
-                          <thead>
+                          <thead class="league-thead">
                             <tr>
                                 <th colspan="4">{{countryMatch.Name}} / {{seasonMatch.Name}} - {{leagueMatch.Name}}
                                 </th>
