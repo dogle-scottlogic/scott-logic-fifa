@@ -6,17 +6,39 @@
             <th>League Selected</th>
         </tr>
       </thead>
-      <tbody ng-repeat="playerleague in vm.scope.players">
-        <td>
-          {{playerleague.player.Name}}
-        </td>
-        <td>
-          <select class="form-control" ng-model="playerleague.leagueId"
-                  ng-options="league.Id as league.Name for league in vm.scope.leagues"
-                  ng-required='true'>
-              <option value=""></option>
-          </select>
-        </td>
+      <tbody>
+        <tr>
+          <td colspan="2"><h2>Unselected League</h2></td>
+        </tr>
+        <tr ng-repeat="playerleague in vm.getPlayersForLeague(null)">
+          <td>
+            {{playerleague.player.Name}}
+          </td>
+          <td>
+            <select class="form-control" ng-model="playerleague.leagueId"
+                    ng-options="league.Id as league.Name for league in vm.scope.leagues"
+                    ng-required='true'>
+                <option value=""></option>
+            </select>
+          </td>
+        </tr>
+      </tbody>
+      <tbody ng-repeat="league in vm.scope.leagues">
+        <tr>
+          <td colspan="2"><h2>{{league.Name}}</h2></td>
+        </tr>
+        <tr ng-repeat="playerleague in vm.getPlayersForLeague(league.Id)">
+          <td>
+            {{playerleague.player.Name}}
+          </td>
+          <td>
+            <select class="form-control" ng-model="playerleague.leagueId"
+                    ng-options="league.Id as league.Name for league in vm.scope.leagues"
+                    ng-required='true'>
+                <option value=""></option>
+            </select>
+          </td>
+        </tr>
       </tbody>
     </table>
 </div>

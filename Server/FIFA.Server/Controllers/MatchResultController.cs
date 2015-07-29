@@ -46,7 +46,7 @@ namespace FIFA.Server.Controllers
                     awayScore.Goals = matchResult.ScoreAway;
                     var resultUpdateAway = await scoreRepository.UpdateFromMatchResult(awayScore);
 
-                    if (resultUpdateHome && resultUpdateHome)
+                    if (resultUpdateHome && resultUpdateAway)
                     {
                         // also set the match to 'played'
                         match.Played = true;

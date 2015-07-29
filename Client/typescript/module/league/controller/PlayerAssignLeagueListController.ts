@@ -18,6 +18,18 @@ module FifaLeagueClient.Module.League {
       playerleague.leagueId = league.Id;
     }
 
+    // Get Players for a league
+    public getPlayersForLeague = function(leagueId:number) {
+      var players = [];
+      for(var i = 0; i<this.scope.players.length;i++){
+        var player = this.scope.players[i];
+        if(player.leagueId == leagueId){
+          players.push(player);
+        }
+      }
+      return players;
+    }
+
 
   }
 
