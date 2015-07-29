@@ -5,6 +5,7 @@ module FifaLeagueClient.Module.Team {
 		teamService: TeamService;
 
 		teams: TeamModel[];
+		filter:TeamFilter;
 
 		static $inject = ["$scope", 'teamService', '$location'];
 
@@ -12,16 +13,22 @@ module FifaLeagueClient.Module.Team {
 			super(scope);
 			this.teamService = teamService;
 			this.teams = [];
+			this.filter = new TeamFilter();
 		}
 
 		public showTeams = () => {
 			this.getTeamList();
 		}
 
+		public onCountrySelected = (countryId:number) => {
+			this.filter.CountryId = countryId;
+			this.getTeamList();
+		}
+
 		public getTeamList = () =>{
 			this.errors = {};
 			this.loadingPromise =
-				this.teamService.getTeamList()
+				this.teamService.getTeamFilteredList(this.filter)
 					.then(this.onGetTeamsSuccess)
 					.catch(this.onError);
 		}
