@@ -184,7 +184,7 @@ gulp.task('browser-sync', function () {
 // This task setup the paths used for production, it have be the first task launched
 gulp.task('setupAndBuild:production', function(){
   // The dest path is now dist
-  destPath = "dist/";
+  destPath = "../Server/FIFA.Server/Client/";
   isDevelopment = "false";
   gulp.run('dependency');
   gulp.run('build');

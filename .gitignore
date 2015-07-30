@@ -166,3 +166,4 @@ Client/app/leagueManager.js
 Server/FIFA.Server/App_Data/
 Server/packages/
 Server/FIFA.Server/Areas/HelpPage/
+Server/FIFA.Server/Client/
