@@ -1,15 +1,32 @@
+<form class="form-inline" ng-submit="vm.loadResultViewList()">
+    <div class="container-fluid form-group">
+      <div class="form-group">
+        <label>Show me:</label>
+      </div>
+      <div class="form-group" >
+        <label class="sr-only" for="country">Country</label>
+        <countryselect selectedcountry="vm.resultViewFilter.CountryId" filterhasremainingmatchtoplay="true"></countryselect>
+      </div>
+      <div class="form-group" >
+        <label class="sr-only" for="season">Season</label>
+        <seasonselect selectedseason="vm.resultViewFilter.SeasonId" filtercountry="vm.resultViewFilter.CountryId" filterhavingleague='true' filterhasremainingmatchtoplay="true"></seasonselect>
+      </div>
+      <div class="form-group" >
+        <label class="sr-only" for="league">League</label>
+        <leagueselect selectedleague="vm.resultViewFilter.LeagueId" filtercountry="vm.resultViewFilter.CountryId" filterseason="vm.resultViewFilter.SeasonId" filterhasremainingmatchtoplay="true"></leagueselect>
+      </div>
+      <div class="form-group" >
+        <label class="sr-only" for="Update">Update</label>
+        <input type="submit" class="btn btn-primary" value="Update" />
+      </div>
+    </div>
+</form><br>
+
 <div ng-init="vm.loadResultViewList()" cg-busy="vm.loadingPromise">
   <div class="clear"></div>
   <div class="alert alert-danger" role="alert" ng-repeat="value in vm.errors['item.Global']">{{value}}</div>
   <div class="grid-view">
-    <h1>Fixtures</h1>
-    <form class="simple-form" ng-submit="vm.loadResultViewList()">
-      Show me:
-      <countryselect selectedcountry="vm.resultViewFilter.CountryId" filterhasremainingmatchtoplay="true"></countryselect>
-      <seasonselect selectedseason="vm.resultViewFilter.SeasonId" filtercountry="vm.resultViewFilter.CountryId" filterhavingleague='true' filterhasremainingmatchtoplay="true"></seasonselect>
-      <leagueselect selectedleague="vm.resultViewFilter.LeagueId" filtercountry="vm.resultViewFilter.CountryId" filterseason="vm.resultViewFilter.SeasonId" filterhasremainingmatchtoplay="true"></leagueselect>
-      <input type="submit" class="btn btn-primary" value="Update" />
-    </form>
+    <div class="rubric-title">Fixtures</div>
     <accordion close-others="true">
       <div ng-repeat="resultView in vm.resultViewList" ng-init="resultViewFirst = $first">
         <h2>{{resultView.Date | date :'EEEE dd MMMM yyyy'}}</h2>

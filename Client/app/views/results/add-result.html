@@ -1,73 +1,106 @@
-<form ng-submit="vm.saveResult()">
-<div class="alert alert-dismissible alert-success" ng-show="vm.displaySuccess">
-  <button type="button" class="close" data-dismiss="alert">×</button>
-  Score added!
+<div class="form-group">
+  <div class="alert alert-dismissible alert-success" ng-show="vm.displaySuccess">
+    <button type="button" class="close" data-dismiss="alert">×</button>
+    <label>Score added!</label>
+  </div>
 </div>
-<div class="clear"></div>
-<div class="alert alert-danger" role="alert" ng-repeat="value in vm.errors['item.Global']">{{value}}</div>
-<div class="form-group" ng-init="vm.initFields()" cg-busy="vm.loadingPromise">
 
-    <div class="row">
-      <div class="col-md-4" >
-        <h1>Add a result</h1>
+<div class="form-inline">
+    <div class="container-fluid form-group">
+      <div class="form-group">
+        <label>Show me:</label>
       </div>
-    </div>
+      <div class="form-group" >
+        <label class="sr-only" for="country">Country</label>
+        <countryselect selectedcountry="vm.matchFilter.CountryId" on-select="vm.refreshHomePlayerListFromCountry(country)" filterhasremainingmatchtoplay="true"></countryselect>
+      </div>
+      <div class="form-group" >
+        <label class="sr-only" for="season">Season</label>
+        <seasonselect selectedseason="vm.matchFilter.SeasonId" filtercountry="vm.matchFilter.CountryId" filterhavingleague='true' filterhasremainingmatchtoplay="true"
+        on-select="vm.refreshHomePlayerListFromSeason(season)"></seasonselect>
+      </div>
+      <div class="form-group" >
+        <label class="sr-only" for="league">League</label>
+        <leagueselect selectedleague="vm.matchFilter.LeagueId" filtercountry="vm.matchFilter.CountryId" filterseason="vm.matchFilter.SeasonId" filterhasremainingmatchtoplay="true"
+        on-select="vm.refreshHomePlayerListFromLeague(league)"></leagueselect>
+     </div>
+   </div>
+</div><br>
 
   <div class="row">
-    <div class="col-md-4" >
-      <label>Country</label>
-      <countryselect selectedcountry="vm.matchFilter.CountryId" on-select="vm.refreshHomePlayerListFromCountry(country)" filterhasremainingmatchtoplay="true"></countryselect>
-      <label>Season</label>
-      <seasonselect selectedseason="vm.matchFilter.SeasonId" filtercountry="vm.matchFilter.CountryId" filterhavingleague='true' filterhasremainingmatchtoplay="true"
-      on-select="vm.refreshHomePlayerListFromSeason(season)"></seasonselect>
-      <label>League</label>
-      <leagueselect selectedleague="vm.matchFilter.LeagueId" filtercountry="vm.matchFilter.CountryId" filterseason="vm.matchFilter.SeasonId" filterhasremainingmatchtoplay="true"
-      on-select="vm.refreshHomePlayerListFromLeague(league)"></leagueselect>
+    <div class="col-xs-12" >
+      <div class="rubric-title" >
+        Add a result
+      </div>
     </div>
   </div>
 
-	<div class="row">
-		<div class="col-md-2" >
-			<h3>Home</h3>
-			<select ng-model="vm.selectedHomePlayerId"
-					ng-options="tp.Id as tp.DisplayName for tp in vm.homePlayers"
-					ng-change="vm.retrieveOpponents()"
-					required>
-				<option value=""></option>
-			</select>
-		</div>
+<form ng-submit="vm.saveResult()" class="container-fluid" ng-init="vm.initFields()" cg-busy="vm.loadingPromise">
 
-		<div class="col-md-1">
-			<h3>Away</h3>
+      <div class="form-group">
+        <label class="sr-only" for="error">Errors:</label>
+        <div class="clear"></div>
+        <div class="alert alert-danger" role="alert" ng-repeat="value in vm.errors['item.Global']">{{value}}</div>
+      </div>
 
-			<select ng-model="vm.selectedAwayPlayerId"
-					ng-options="tp.Id as tp.DisplayName for tp in vm.awayPlayers"
-					required>
-				<option value=""></option>
-			</select>
-		</div>
-	</div>
+      <div class="row">
+        <div class="col-md-6 col-sm-6 col-xs-12">
+          <div class="form-group">
+      			<label>Date</label>
+      				<input type="date" class="form-control" ng-model="vm.matchDate" required />
+      		</div>
+        </div>
+      </div>
 
-	<div class="row">
-		<div class="col-md-2">
-			<h3>Score</h3>
-			<div>
-				<input type="text" style="width: 2em" ng-model="vm.goalsHome"/> - <input type="text" style="width: 2em" ng-model="vm.goalsAway"/>
-			</div>
-		</div>
+      <div class="row">
+        <div class="col-md-3 col-sm-3 col-xs-6">
+          <div class="form-group">
+      			<label>Home</label>
+      			<select ng-model="vm.selectedHomePlayerId" class="form-control"
+      					ng-options="tp.Id as tp.DisplayName for tp in vm.homePlayers"
+      					ng-change="vm.retrieveOpponents()"
+      					required>
+      				<option value=""></option>
+      			</select>
+      		</div>
+        </div>
 
-		<div class="col-md-1">
-			<h3>Date</h3>
-			<div>
-				<input type="date" ng-model="vm.matchDate" required />
-			</div>
-		</div>
-	</div>
+        <div class="col-md-3 col-sm-3 col-xs-6">
+          <div class="form-group">
+      			<label>Away</label>
+      			<select ng-model="vm.selectedAwayPlayerId" class="form-control"
+      					ng-options="tp.Id as tp.DisplayName for tp in vm.awayPlayers"
+      					required>
+      				<option value=""></option>
+      			</select>
+      		</div>
+        </div>
+      </div>
 
-	<div class="row" style="margin-top: 20px">
-		<div class="col-md-1">
-			<input type="submit" class="btn btn-primary" value="Add"/>
-		</div>
-	</div>
-</div>
+      <div class="form-group">
+        <div class="row">
+          <div class="col-md-3 col-sm-3 col-xs-6">
+            <div class="form-group right">
+          			<label>Home Goals</label>
+        				<input type="text" class="form-control" style="width: 4em" ng-model="vm.goalsHome"/>
+            </div>
+          </div>
+          <div class="col-md-3 col-sm-3 col-xs-6">
+            <div class="form-group">
+        			   <label>Away Goals</label>
+                <input type="text" class="form-control" style="width: 4em" ng-model="vm.goalsAway"/>
+            </div>
+          </div>
+      	</div>
+      </div>
+
+      <div class="row">
+        <div class="col-xs-6">
+          <div class="form-group">
+            <label class="sr-only" for="Add">Add:</label>
+      			<input type="submit" class="btn btn-primary" value="Add"/>
+      		</div>
+        </div>
+      </div>
+
 </form>
