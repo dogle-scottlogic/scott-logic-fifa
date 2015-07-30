@@ -40,8 +40,4 @@ module FifaLeagueClient {
           });
     }]);
 
-    // Adding the default template for the busy message
-    angular.module('FifaLeagueApp').value('cgBusyDefaults',{
-        templateUrl:'views/partials/busy-template.html'
-    });
 }
