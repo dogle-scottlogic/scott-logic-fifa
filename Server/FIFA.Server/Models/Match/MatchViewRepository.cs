@@ -27,42 +27,29 @@ namespace FIFA.Server.Models
 
             // Getting all the played matches
             var matchQuery = getMatchResultViewModel(filteredMatchQuery);
+            
+            // Get the list of the matches
+            var matches = await matchQuery.OrderBy(mv => mv.homeTeamPlayer.PlayerName)
+                                                                .ThenBy(mv => mv.homeTeamPlayer.TeamName)
+                                                                .ThenBy(mv => mv.awayTeamPlayer.PlayerName)
+                                                                .ThenBy(mv => mv.awayTeamPlayer.TeamName).ToListAsync();
 
-            // Getting all the dates of the filteredMatchQuery
-            var matchDates = getDistinctMatchDates(filteredMatchQuery);
+            // Grouping the matches by date
+            var groupedMatches = matchQuery.GroupBy(m => DbFunctions.TruncateTime(m.Date)).ToList().Select(mq => mq).ToList();
 
-
-            // Grouping all the matches by date then by season ID then by league ID
-            var resultView = matchDates
-                .Select(dOTM => new ResultViewModel
-                {
-                    Date = dOTM,
-                    countryMatches = 
-                        matchQuery
-                        .Where(mq => DbFunctions.TruncateTime(mq.Date) == dOTM)
-                        .GroupBy(mq => mq.CountryId)
-                        .Select(
-                            cv => new CountryResultViewModel
-                            {
-                                Id = cv.FirstOrDefault().CountryId,
-                                Name = cv.FirstOrDefault().CountryName,
-                                Date = cv.FirstOrDefault().Date.Value,
-                                seasonMatches = cv.ToList()
-                                    .GroupBy(l => l.SeasonId)
-                                    .Select(
-                                            sv => new SeasonResultViewModel
-                                            {
-                                                Id = sv.FirstOrDefault().SeasonId,
-                                                Name = sv.FirstOrDefault().SeasonName,
-                                                Date = sv.FirstOrDefault().Date.Value,
-                                                leagueMatches = sv.ToList()
-                                                .GroupBy(svg => svg.LeagueId)
+            // we group by the league Id
+            var leagueMatches = groupedMatches.Select(
+                                                gm => gm.GroupBy(svg => svg.LeagueId)
                                                 .Select(
                                                         lq => new LeagueResultViewModel
                                                         {
+                                                            CountryId = lq.FirstOrDefault().CountryId,
+                                                            CountryName = lq.FirstOrDefault().CountryName,
+                                                            SeasonId = lq.FirstOrDefault().SeasonId,
+                                                            SeasonName = lq.FirstOrDefault().SeasonName,
                                                             Id = lq.FirstOrDefault().LeagueId,
                                                             Name = lq.FirstOrDefault().LeagueName,
-                                                            Date = lq.FirstOrDefault().Date.Value,
+                                                            Date = lq.FirstOrDefault().Date,
                                                             matches = lq.ToList()
                                                             .OrderBy(mv => mv.homeTeamPlayer.PlayerName)
                                                             .ThenBy(mv => mv.homeTeamPlayer.TeamName)
@@ -70,70 +57,57 @@ namespace FIFA.Server.Models
                                                             .ThenBy(mv => mv.awayTeamPlayer.TeamName)
                                                         }
                                                )
-                                               .OrderBy(l => l.Name)
+                                               .OrderBy(l => l.Name).ToList()
+                                               );
+
+            // we group by the Season ID
+            var seasonMatches = leagueMatches.Select(
+                                       lm => lm.GroupBy(svg => svg.SeasonId)
+                                            .Select(
+                                                    lq => new SeasonResultViewModel
+                                                    {
+                                                        CountryId = lq.FirstOrDefault().CountryId,
+                                                        CountryName = lq.FirstOrDefault().CountryName,
+                                                        Id = lq.FirstOrDefault().SeasonId,
+                                                        Name = lq.FirstOrDefault().SeasonName,
+                                                        Date = lq.FirstOrDefault().Date,
+                                                        leagueMatches = lq.ToList()
+                                                    }
+                                           )
+                                           .OrderBy(l => l.Name).ToList()
+                                   );
+
+
+            // we group by the Country ID
+            var countryMatches = seasonMatches.Select(
+                                    sm => sm.GroupBy(svg => svg.CountryId)
+                                    .Select(
+                                            lq => new CountryResultViewModel
+                                            {
+                                                Id = lq.FirstOrDefault().CountryId,
+                                                Name = lq.FirstOrDefault().CountryName,
+                                                Date = lq.FirstOrDefault().Date,
+                                                seasonMatches = lq.ToList()
                                             }
-                                        )
-                                        .OrderBy(sv => sv.Name)
-                            }
-                        )
-                        .OrderBy(cv => cv.Name)
-                    }
-                    )
-                    .OrderByDescending(mv => mv.Date.Value);
-
-            // Get the list of the matches
-            /*List<MatchResultViewModel> matches = await this.ReturnResult(matchQuery.OrderBy(mv => mv.Date)
-                                                                .ThenBy(mv => mv.CountryName)
-                                                                .ThenBy(mv => mv.SeasonName)
-                                                                .ThenBy(mv => mv.LeagueName)
-                                                                .ThenBy(mv => mv.homeTeamPlayer.PlayerName)
-                                                                .ThenBy(mv => mv.homeTeamPlayer.TeamName)
-                                                                .ThenBy(mv => mv.awayTeamPlayer.PlayerName)
-                                                                .ThenBy(mv => mv.awayTeamPlayer.TeamName)
-                                                                , filter);*/
-
-           /* List<ResultViewModel> result = new List<ResultViewModel>();
-            result.countryMatches
-            List<ResultViewModel> countries = new List<ResultViewModel>();
-            CountryResultViewModel currentCountry = null;
-            SeasonResultViewModel currentLeague = null;
-            LeagueResultViewModel currentSeason = null;
-
-            foreach (var match in matches)
-            {
-                if(currentCountry == null)
-                {
-                    currentCountry = new CountryResultViewModel { Id = match.CountryId, Name = match.CountryName, Date = match.Date };
-                }else if(currentCountry.Id != match.CountryId)
-                {
-                    result.Add()
-                    currentCountry = new CountryResultViewModel { Id = match.CountryId, Name = match.CountryName, Date = match.Date };
-                }
-
-                currentLeagueId = match.LeagueId;
-                currentSeasonId = match.SeasonId;
-                List<CountryResultViewModel> countries = new List<CountryResultViewModel>();
-
-                SeasonResultViewModel
-                LeagueResultViewModel
+                                   )
+                                   .OrderBy(l => l.Name).ToList()
+                                   );
 
 
-            }*/
-
-            // Finally returning result
-            List<ResultViewModel> result = await this.ReturnResult(resultView, filter);
-
-            return result;
+            // Finnaly we group by the Date
+            var resultView = countryMatches.Select(
+                                            lq => new ResultViewModel
+                                            {
+                                                Date = lq.FirstOrDefault().Date,
+                                                countryMatches = lq.ToList()
+                                            }
+                                   )
+                                   .OrderByDescending(l => l.Date).ToList();
+            
+            return await this.ReturnResult(resultView, filter);
 
         }
-
-
-        // Returning the dates of the matches
-        public IQueryable<DateTime?> getDistinctMatchDates(IQueryable<Match> matchQuery)
-        {
-            return matchQuery.Select(m => DbFunctions.TruncateTime(m.Date)).Distinct();
-        }
-        
+                
 
         // Returning a MatchResultViewModel from matchQuery
         public IQueryable<MatchResultViewModel> getMatchResultViewModel(IQueryable<Match> matchQuery)
@@ -185,16 +159,16 @@ namespace FIFA.Server.Models
 
 
     // Returning the list with limited result or not depending on the filter
-        private async Task<List<ResultViewModel>> ReturnResult(IQueryable<ResultViewModel> resultView, MatchViewFilter filter)
+        private async Task<List<ResultViewModel>> ReturnResult(List<ResultViewModel> resultView, MatchViewFilter filter)
         {
             if (filter != null && filter.LimitResult != null)
             {
                 var result = resultView.Take(filter.LimitResult.Value);
-                return await result.ToListAsync();
+                return result.ToList();
             }
             else
             {
-                return await resultView.ToListAsync();
+                return resultView.ToList();
             }
         }
 
