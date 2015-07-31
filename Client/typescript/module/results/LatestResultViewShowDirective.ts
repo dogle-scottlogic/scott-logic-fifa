@@ -5,8 +5,7 @@ module FifaLeagueClient.Module.Results.Directives {
     interface IMyScope extends ng.IScope {
         vm : LatestResultViewShowController;
         filter : Results.ResultViewFilter;
-        show : boolean;
-        copyFilterAndLoad;
+        parentvm : Common.Controllers.AbstractController;
     }
 
     export function LatestResultViewShowDirective(): ng.IDirective {
@@ -14,38 +13,27 @@ module FifaLeagueClient.Module.Results.Directives {
             restrict: "E",
             scope: {
               filter:'=',
-              show:'='
+              parentvm:'='
             },
             controller: LatestResultViewShowController,
             controllerAs: "vm",
             templateUrl: 'views/results/latest-result-view-show.html',
-            link: function (scope:IMyScope, $elm, $attr)
-            {
-              // Reload the list if the filter change
-              scope.$watch('filter', function(newfilter, oldfilter) {
-                    if (newfilter != null && !newfilter.isEqual(oldfilter)) {
-                      scope.copyFilterAndLoad();
-                    }
-              }, true);
 
-              // Reload the season if its shown
-              scope.$watch('show', function(newShow, oldshow) {
-                  scope.copyFilterAndLoad();
-              }, true);
-
-              // copy the filter into the controller
-              scope.copyFilterAndLoad = function(){
-                if (scope.show) {
-
-                  if(scope.filter != null){
-                    scope.vm.resultViewFilter = scope.filter;
-                  }
-
-                  scope.vm.loadResultViewList();
-                }
-              }
-
-            }
+            compile: function(element, attributes){
+               return {
+                   post: function(scope:IMyScope, $elm, $attr){
+                     // Add the parent if it has been added
+                     if(scope.parentvm != null){
+                       scope.parentvm.addChild(scope.vm);
+                     }
+                     // Link the filter with the filter of the controller
+                     if(scope.filter != null){
+                      scope.vm.resultViewFilter = scope.filter;
+                     }
+                     scope.vm.loadList();
+                   }
+               }
+           }
         }
     }
 

@@ -40,7 +40,7 @@ describe('Testing the SeasonTableViewShowController in error', function() {
   // Get test
     it('Try getting a season but have an error', function () {
       // And that we clicked a button or something
-      seasonTableViewShowController.loadSeasonTableViewList();
+      seasonTableViewShowController.loadList();
       verifyPromiseAndFlush(seasonTableViewShowController, $httpBackend);
       expect(seasonTableViewShowController.errors["item.Global"]).toEqual([ 'The server is unreachable' ]);
     });

@@ -1,4 +1,4 @@
-<form class="form-inline">
+<form class="form-inline" ng-submit="vm.copyFilterAndRefreshChildList()">
   <div class="container-fluid form-group">
       <div class="form-group">
         <label>Show me:</label>
@@ -23,14 +23,18 @@
           <label> To :</label>
           <input class="form-control" type="date" ng-model="vm.resultViewFilter.DateTo" />
         </div>
+        <div class="form-group" >
+          <label class="sr-only" for="Update">Update</label>
+          <input type="submit" class="btn btn-primary" value="Update" />
+        </div>
   </div>
 </form><br>
 <div class="container-fluid">
   <div class="row">
     <div class="col-md-6" >
-        <latestresultviewshow filter="vm.resultViewFilter" show="vm.showList"></latestresultviewshow>
+        <latestresultviewshow filter="vm.resultViewFilter" parentvm="vm"></latestresultviewshow>
     </div>
     <div class="col-md-6" >
-        <seasontableviewshow filter="vm.seasonTableFilter" show="vm.showList" resultviewfilter="vm.resultViewFilter"></seasontableviewshow>
+        <seasontableviewshow filter="vm.seasonTableFilter" parentvm="vm"></seasontableviewshow>
     </div>
   </div>

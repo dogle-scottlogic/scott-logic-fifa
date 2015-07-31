@@ -1,7 +1,7 @@
 /// <reference path="../../common/controllers/AbstractController.ts" />
 module FifaLeagueClient.Module.Results {
 
-	export class AbstractResultViewShowController extends Common.Controllers.AbstractController {
+	export class AbstractResultViewShowController extends Common.Controllers.AbstractListController {
 		mainService: ResultViewService;
 		resultViewList: ResultViewModel[];
 
@@ -17,12 +17,13 @@ module FifaLeagueClient.Module.Results {
 
     /** LOADING THE RESULT VIEW **/
     // loading the result view from database
-    public loadResultViewList = () => {
-      this.resetErrors();
-      this.loadingPromise =
-          this.mainService.getResultViewFilteredList(this.resultViewFilter)
-            .then(this.handleLoadSuccess)
-            .catch(this.handleLoadErrors);
+    public loadList = function() {
+			var self = this;
+      self.resetErrors();
+      self.loadingPromise =
+          self.mainService.getResultViewFilteredList(self.resultViewFilter)
+            .then(self.handleLoadSuccess)
+            .catch(self.handleLoadErrors);
     }
 
     // Do nothing if the creation is successfull

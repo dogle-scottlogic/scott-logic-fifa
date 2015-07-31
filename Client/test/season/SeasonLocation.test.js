@@ -5,6 +5,7 @@ describe('Testing the season locations', function() {
 
   var seasonService = {};
   var countryService = {};
+  var seasonTableViewService = {};
   var location, rootScope, compile;
   var route;
   var defer;
@@ -17,6 +18,9 @@ describe('Testing the season locations', function() {
         $provide.value('seasonService', seasonService);
         // Fake seasonService Implementation returning a promise
         $provide.value('countryService', countryService);
+        // Fake SeasonTableViewService Implementation returning a promise
+        $provide.value('seasonTableViewService', seasonTableViewService);
+
       });
       // defining the method getSeasonFilteredList for the service used by the controller
       seasonService.getSeasonFilteredList = function(){
@@ -26,6 +30,10 @@ describe('Testing the season locations', function() {
       }
 
       countryService.getCountryFilteredList = function(){
+
+      }
+
+      seasonTableViewService.getSeasonTableViewFilteredList = function(seasonTableFilter){
 
       }
 
@@ -106,6 +114,7 @@ describe('Testing the season locations', function() {
 
     it('Location /seasons/edit/1 shall call seasonService.getSeason() in order to init the season', function() {
 
+      spyOn(seasonTableViewService, 'getSeasonTableViewFilteredList').and.returnValue(defer.promise);
       // Spying the seasonService for the method getSeasonFilteredList which will return a promise
       spyOn(seasonService, 'getSeason').and.returnValue(defer.promise);
       // Spying the countryService for the method getSeasonFilteredList which will return a promise

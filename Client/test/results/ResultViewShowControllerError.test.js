@@ -43,7 +43,7 @@ describe('Testing the ResultViewShowController in error', function() {
   // Get test
     it('Try getting the list of results but having an error', function () {
       // And that we clicked a button or something
-      resultViewShowController.loadResultViewList();
+      resultViewShowController.loadList();
       verifyPromiseAndFlush(resultViewShowController, $httpBackend);
       expect(resultViewShowController.errors["item.Global"]).toEqual([ 'The server is unreachable' ]);
     });

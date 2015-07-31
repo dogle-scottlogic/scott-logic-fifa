@@ -1,11 +1,12 @@
-/// <reference path="../common/controllers/AbstractController.ts" />
+/// <reference path="../common/controllers/AbstractListController.ts" />
 
 module FifaLeagueClient.Module.SeasonTableView {
 
-	export class SeasonTableViewShowController extends Common.Controllers.AbstractController {
+	export class SeasonTableViewShowController extends Common.Controllers.AbstractListController {
 
 		mainService: SeasonTableViewService;
 		seasonTableViewList: SeasonTableViewModel[];
+		filter:SeasonTableFilter;
 
 		static $inject = ["$scope", 'seasonTableViewService'];
 
@@ -16,10 +17,10 @@ module FifaLeagueClient.Module.SeasonTableView {
 
 		/** LOADING THE Season VIEW SHOW **/
 		// loading the result view from database
-		public loadSeasonTableViewList = (filter:SeasonTableFilter) => {
+		public loadList = () => {
 			this.resetErrors();
 			this.loadingPromise =
-					this.mainService.getSeasonTableViewFilteredList(filter)
+					this.mainService.getSeasonTableViewFilteredList(this.filter)
 						.then(this.handleLoadSuccess)
 						.catch(this.handleLoadErrors);
 		}

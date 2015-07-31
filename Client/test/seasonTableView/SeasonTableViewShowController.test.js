@@ -40,7 +40,7 @@ describe('Testing the SeasonTableViewShowController', function() {
     it('should get get the datarepository', function () {
 
       // And that we clicked a button or something
-      seasonTableViewShowController.loadSeasonTableViewList();
+      seasonTableViewShowController.loadList();
       verifyPromiseAndFlush(seasonTableViewShowController, $httpBackend);
 
       var seasonTableViewList = seasonTableViewShowController.seasonTableViewList;

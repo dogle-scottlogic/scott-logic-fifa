@@ -4,10 +4,8 @@ module FifaLeagueClient.Module.SeasonTableView.Directives {
 
     interface IMyScope extends ng.IScope {
         vm : SeasonTableViewShowController;
-    		filter: SeasonTableFilter;
-        show:boolean;
-        resultviewfilter:Results.ResultViewFilter;
-        copyFilterAndLoad;
+        filter:SeasonTableView.SeasonTableFilter;
+        parentvm : Common.Controllers.AbstractController;
     }
 
     export function seasonTableViewShowDirective(): ng.IDirective {
@@ -15,46 +13,24 @@ module FifaLeagueClient.Module.SeasonTableView.Directives {
             restrict: "E",
             scope: {
               filter:'=',
-              resultviewfilter:'=',
-              show:'='
+              parentvm:'='
             },
             controller: SeasonTableViewShowController,
             controllerAs: "vm",
             templateUrl: 'views/seasonTableView/seasonTableView-show.html',
-            link: function (scope:IMyScope, $elm, $attr)
-            {
-              // Reload the season if its ID changed and we ask to show
-              scope.$watch('filter', function(newfilter, oldfilter) {
-                        if (newfilter != null && !newfilter.isEqual(oldfilter) ) {
-                          scope.copyFilterAndLoad();
-                        }
-              }, true);
-
-              scope.$watch('resultviewfilter', function(newresultviewfilter, oldresultviewfilter) {
-                        if (newresultviewfilter != null){
-                          if(scope.filter == null){
-                            scope.filter = new SeasonTableFilter();
-                          }
-                          // Copying the datas into the scope.filter
-                          scope.filter.CountryId = newresultviewfilter.CountryId;
-                          scope.filter.SeasonId = newresultviewfilter.SeasonId;
-                          scope.filter.LeagueId = newresultviewfilter.LeagueId;
-                        }
-              }, true);
-
-                // Reload the season if its shown
-                scope.$watch('show', function(newShow, oldshow) {
-                          scope.copyFilterAndLoad();
-                }, true);
-
-
-              // copy the filter into the controller
-              scope.copyFilterAndLoad = function(){
-                if (scope.show) {
-                  scope.vm.loadSeasonTableViewList(scope.filter);
-                }
-              }
-            }
+            compile: function(element, attributes){
+               return {
+                   post: function(scope:IMyScope, $elm, $attr){
+                     // Add the parent if it has been added
+                     if(scope.parentvm != null){
+                       scope.parentvm.addChild(scope.vm);
+                     }
+                     // Link the filter with the filter of the controller
+                     scope.vm.filter = scope.filter;
+                     scope.vm.loadList();
+                   }
+               }
+           }
         }
     }
 

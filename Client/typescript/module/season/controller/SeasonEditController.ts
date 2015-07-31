@@ -20,6 +20,8 @@ module FifaLeagueClient.Module.Season {
 			this.SeasonService = SeasonService;
 			this.locationService = location;
 			this.id = $routeParams.id;
+			this.seasonTableFilter = new SeasonTableView.SeasonTableFilter();
+			this.seasonTableFilter.SeasonId = this.id;
 			this.loadSeason();
 		}
 
@@ -30,8 +32,6 @@ module FifaLeagueClient.Module.Season {
 					this.SeasonService.getSeason(this.id)
 						.then(function(data) {
 							self.season = data;
-							self.seasonTableFilter = new SeasonTableView.SeasonTableFilter();
-							self.seasonTableFilter.SeasonId = self.id;
 							self.showSeasonTableView = true;
 						}).catch(this.onError);
 			}
