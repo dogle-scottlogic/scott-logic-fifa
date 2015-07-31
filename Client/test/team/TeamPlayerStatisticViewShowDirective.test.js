@@ -9,6 +9,7 @@ describe('Testing the TeamPlayerStatisticViewShowDirective', function() {
 
   // load the template
   beforeEach(module('templates'));
+  beforeEach(module('cgBusy'));
 
   var $httpBackend;
   var dataRepository;

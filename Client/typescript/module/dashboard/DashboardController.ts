@@ -11,6 +11,7 @@ module FifaLeagueClient.Module.Dashboard {
 
 		constructor(scope) {
 			super(scope);
+			this.showList = false;
 
 			this.seasonTableFilter = new SeasonTableView.SeasonTableFilter();
 			this.seasonTableFilter.HasRemainingMatchToPlay = true;
@@ -25,9 +26,17 @@ module FifaLeagueClient.Module.Dashboard {
 			this.showList = true;
 		}
 
+		public copyFilterAndRefreshChildList = function(){
 
-		public refreshList = function(){
-			this.resultViewFilter = this.resultViewFilter;
+			// We copy the filter to the seasontableFilter before refreshing the lists
+			if(this.resultViewFilter != null && this.seasonTableFilter != null){
+				this.seasonTableFilter.CountryId = this.resultViewFilter.CountryId;
+				this.seasonTableFilter.SeasonId = this.resultViewFilter.SeasonId;
+				this.seasonTableFilter.LeagueId = this.resultViewFilter.LeagueId;
+			}
+			
+			// then we refresh the child lists
+			this.refreshChildList();
 		}
 
 	}

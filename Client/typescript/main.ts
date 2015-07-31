@@ -40,4 +40,9 @@ module FifaLeagueClient {
           });
     }]);
 
+    // Adding the default template for the busy message (helps for the karma unit tests)
+     angular.module('FifaLeagueApp').value('cgBusyDefaults',{
+           templateUrl:'views/partials/busy-template.html'
+       });
+
 }

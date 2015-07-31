@@ -81,9 +81,50 @@ namespace FIFA.Server.Models
                     )
                     .OrderByDescending(mv => mv.Date.Value);
 
+            // Get the list of the matches
+            /*List<MatchResultViewModel> matches = await this.ReturnResult(matchQuery.OrderBy(mv => mv.Date)
+                                                                .ThenBy(mv => mv.CountryName)
+                                                                .ThenBy(mv => mv.SeasonName)
+                                                                .ThenBy(mv => mv.LeagueName)
+                                                                .ThenBy(mv => mv.homeTeamPlayer.PlayerName)
+                                                                .ThenBy(mv => mv.homeTeamPlayer.TeamName)
+                                                                .ThenBy(mv => mv.awayTeamPlayer.PlayerName)
+                                                                .ThenBy(mv => mv.awayTeamPlayer.TeamName)
+                                                                , filter);*/
+
+           /* List<ResultViewModel> result = new List<ResultViewModel>();
+            result.countryMatches
+            List<ResultViewModel> countries = new List<ResultViewModel>();
+            CountryResultViewModel currentCountry = null;
+            SeasonResultViewModel currentLeague = null;
+            LeagueResultViewModel currentSeason = null;
+
+            foreach (var match in matches)
+            {
+                if(currentCountry == null)
+                {
+                    currentCountry = new CountryResultViewModel { Id = match.CountryId, Name = match.CountryName, Date = match.Date };
+                }else if(currentCountry.Id != match.CountryId)
+                {
+                    result.Add()
+                    currentCountry = new CountryResultViewModel { Id = match.CountryId, Name = match.CountryName, Date = match.Date };
+                }
+
+                currentLeagueId = match.LeagueId;
+                currentSeasonId = match.SeasonId;
+                List<CountryResultViewModel> countries = new List<CountryResultViewModel>();
+
+                SeasonResultViewModel
+                LeagueResultViewModel
+
+
+            }*/
+
             // Finally returning result
-            return await this.ReturnResult(resultView, filter);
-            
+            List<ResultViewModel> result = await this.ReturnResult(resultView, filter);
+
+            return result;
+
         }
 
 

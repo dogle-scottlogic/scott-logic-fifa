@@ -3,7 +3,7 @@ describe('Testing the LatestResultViewShowDirective', function() {
       $rootScope,
       defer;
 
-  var resultViewService;
+  var resultViewService = {};
   var instanceResultViewService;
 
   // Load the FifaLeagueApp
@@ -17,12 +17,17 @@ describe('Testing the LatestResultViewShowDirective', function() {
   var dataRepository;
   var $http;
 
-  beforeEach(module(function($provide) {
-      $provide.value('resultViewService', resultViewService);
-    }));
-
   // Mocking the season service
   beforeEach(function() {
+
+    module(function($provide) {
+        // Fake seasonService Implementation returning a promise
+        $provide.value('resultViewService', resultViewService);
+
+      });
+      // defining the method getSeasonFilteredList for the service used by the controller
+      resultViewService.getResultViewFilteredList = function(resultViewFilter){
+      }
 
     // Mocking the datas
     inject(function($injector) {
@@ -32,14 +37,6 @@ describe('Testing the LatestResultViewShowDirective', function() {
       $q = $injector.get('$q');
       $http = $injector.get('$http');
       defer = $q.defer();
-
-      // Mocking the get service
-      resultViewService = {
-        getResultViewFilteredList: function(resultViewFilter){
-          return defer.promise;
-        }
-      };
-
 
     });
 
@@ -57,97 +54,22 @@ describe('Testing the LatestResultViewShowDirective', function() {
 
   describe(' Tests show directive', function(){
 
-    it('Show nothing', function() {
+        it('Show filtered', function() {
 
-        var scope = $rootScope.$new();
-        var html = angular.element('<latestresultviewshow></latestresultviewshow>');
-        var element = $compile(html)(scope);
+            spyOn(instanceResultViewService, 'getResultViewFilteredList').and.returnValue(defer.promise);
 
-        $rootScope.$digest();
+            var scope = $rootScope.$new();
+            scope.filter = new FifaLeagueClient.Module.Results.ResultViewFilter();
+            scope.filter.CountryId = 1;
+            var html = angular.element('<latestresultviewshow filter="filter"></latestresultviewshow>');
+            var element = $compile(html)(scope);
 
-        expect($http.pendingRequests.length).toEqual(0);
-      });
-
-    it('Show all the results', function() {
-
-        spyOn(instanceResultViewService, 'getResultViewFilteredList').and.returnValue(defer.promise);
-
-        var scope = $rootScope.$new();
-        var html = angular.element('<latestresultviewshow show="true"></latestresultviewshow>');
-        var element = $compile(html)(scope);
-
-        $rootScope.$digest();
-        verifyPromiseAndDigest(element.isolateScope().vm, defer, $rootScope);
-        // Check that the compiled element contains the templated content
-        expect(instanceResultViewService.getResultViewFilteredList).toHaveBeenCalledWith(element.isolateScope().vm.resultViewFilter);
-        expect(instanceResultViewService.getResultViewFilteredList.calls.count()).toEqual(1);
-    });
-
-    it('Show filtered', function() {
-
-        spyOn(instanceResultViewService, 'getResultViewFilteredList').and.returnValue(defer.promise);
-
-        var scope = $rootScope.$new();
-        scope.filter = new FifaLeagueClient.Module.Results.ResultViewFilter();
-        scope.filter.CountryId = 1;
-        var html = angular.element('<latestresultviewshow filter="filter" show="true"></latestresultviewshow>');
-        var element = $compile(html)(scope);
-
-        $rootScope.$digest();
-        verifyPromiseAndDigest(element.isolateScope().vm, defer, $rootScope);
-        // Check that the compiled element contains the templated content
-        expect(instanceResultViewService.getResultViewFilteredList).toHaveBeenCalledWith(scope.filter);
-        expect(instanceResultViewService.getResultViewFilteredList.calls.count()).toEqual(1);
-    });
-
-    it('Change filter shall call again the service', function() {
-
-        spyOn(instanceResultViewService, 'getResultViewFilteredList').and.returnValue(defer.promise);
-
-        var scope = $rootScope.$new();
-        scope.filter = new FifaLeagueClient.Module.Results.ResultViewFilter();
-        scope.filter.CountryId = 1;
-        var html = angular.element('<latestresultviewshow filter="filter" show="true"></latestresultviewshow>');
-        var element = $compile(html)(scope);
-
-        $rootScope.$digest();
-        verifyPromiseAndDigest(element.isolateScope().vm, defer, $rootScope);
-        // Check that the compiled element contains the templated content
-        expect(instanceResultViewService.getResultViewFilteredList).toHaveBeenCalledWith(scope.filter);
-
-        // We change the filter
-        scope.filter.CountryId = 2;
-        $rootScope.$digest();
-
-        // Check that the compiled element contains the templated content
-        expect(instanceResultViewService.getResultViewFilteredList.calls.count()).toEqual(2);
-        expect(instanceResultViewService.getResultViewFilteredList).toHaveBeenCalledWith(scope.filter);
-    });
-
-    it("Not changing the filter shouldn't call again the service", function() {
-
-        spyOn(instanceResultViewService, 'getResultViewFilteredList').and.returnValue(defer.promise);
-
-        var scope = $rootScope.$new();
-        scope.filter = new FifaLeagueClient.Module.Results.ResultViewFilter();
-        scope.filter.CountryId = 1;
-        var html = angular.element('<latestresultviewshow filter="filter" show="true"></latestresultviewshow>');
-        var element = $compile(html)(scope);
-
-        $rootScope.$digest();
-        verifyPromiseAndDigest(element.isolateScope().vm, defer, $rootScope);
-        // Check that the compiled element contains the templated content
-        expect(instanceResultViewService.getResultViewFilteredList).toHaveBeenCalledWith(scope.filter);
-
-        // We change the filter
-        scope.filter = new FifaLeagueClient.Module.Results.ResultViewFilter();
-        scope.filter.CountryId = 1;
-
-        $rootScope.$digest();
-        // We expect no pending request in this case
-        expect($http.pendingRequests.length).toEqual(0);
-    });
-
+            $rootScope.$digest();
+            verifyPromiseAndDigest(element.isolateScope().vm, defer, $rootScope);
+            // Check that the compiled element contains the templated content
+            expect(instanceResultViewService.getResultViewFilteredList).toHaveBeenCalledWith(scope.filter);
+            expect(instanceResultViewService.getResultViewFilteredList.calls.count()).toEqual(1);
+        });
 
   });
 

@@ -43,7 +43,7 @@ describe('Testing the ResultViewShowController', function() {
     it('should get a result for the list', function () {
 
       // And that we clicked a button or something
-      resultViewShowController.loadResultViewList();
+      resultViewShowController.loadList();
       verifyPromiseAndFlush(resultViewShowController, $httpBackend);
 
       var resultsLoaded = resultViewShowController.resultViewList;
@@ -55,7 +55,7 @@ describe('Testing the ResultViewShowController', function() {
 
         // And that we clicked a button or something
         resultViewShowController.resultViewFilter.CountryId = 1;
-        resultViewShowController.loadResultViewList();
+        resultViewShowController.loadList();
         verifyPromiseAndFlush(resultViewShowController, $httpBackend);
 
         var resultsLoaded = resultViewShowController.resultViewList;

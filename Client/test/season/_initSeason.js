@@ -106,7 +106,7 @@ season_mockHTTPBackend = function(config, $httpBackend, $q, dataRepository){
             return [200,item];
         });
 
-        
+
     $httpBackend.whenGET(config.backend+"api/Season?HasRemainingMatchToPlay=true")
         .respond(function (method, url, data, headers) {
             return [200,getSeasonfilterhasremainingmatchtoplay(dataRepository)];
