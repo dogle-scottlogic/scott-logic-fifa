@@ -28,12 +28,6 @@ namespace FIFA.Server.Models
             // Getting all the played matches
             var matchQuery = getMatchResultViewModel(filteredMatchQuery);
             
-            // Get the list of the matches
-            var matches = await matchQuery.OrderBy(mv => mv.homeTeamPlayer.PlayerName)
-                                                                .ThenBy(mv => mv.homeTeamPlayer.TeamName)
-                                                                .ThenBy(mv => mv.awayTeamPlayer.PlayerName)
-                                                                .ThenBy(mv => mv.awayTeamPlayer.TeamName).ToListAsync();
-
             // Grouping the matches by date
             var groupedMatches = matchQuery.GroupBy(m => DbFunctions.TruncateTime(m.Date)).ToList().Select(mq => mq).ToList();
 
