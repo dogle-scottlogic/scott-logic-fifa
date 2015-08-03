@@ -1,6 +1,9 @@
 namespace FIFA.Server.Migrations
 {
+    using FIFA.Server.Authentication;
     using FIFA.Server.Models;
+    using Microsoft.AspNet.Identity;
+    using Microsoft.AspNet.Identity.EntityFramework;
     using System;
     using System.Collections.Generic;
     using System.Data.Entity;
@@ -17,6 +20,9 @@ namespace FIFA.Server.Migrations
         protected override void Seed(FIFA.Server.Models.FIFAServerContext context)
         {
             //  This method will be called after migrating to the latest version.
+
+            // Creating the users
+            initUsers(context);
 
             // Populating the countries
             context.Countries.AddOrUpdate(
@@ -180,6 +186,56 @@ namespace FIFA.Server.Migrations
 
             }
             return createdMatches;
+        }
+
+
+        protected List<IdentityUser> initUsers(FIFAServerContext context)
+        {
+            // Initializing the roles for users
+            IdentityRole role = context.Roles.Add(new IdentityRole(AuthenticationRoles.userRole));
+            context.Roles.Add(role);
+
+            IdentityRole adminRole = context.Roles.Add(new IdentityRole(AuthenticationRoles.administratorRole));
+            context.Roles.Add(adminRole);
+            context.SaveChanges();
+
+            // Creating generic users
+            var users = new List<IdentityUser>
+            {
+                new IdentityUser("user1"),
+                new IdentityUser("user2"),
+                new IdentityUser("admin")
+            };
+
+            initUser(users[0], role.Id);
+            context.Users.Add(users[0]);
+            initUser(users[1], role.Id);
+            context.Users.Add(users[1]);
+
+            // adding the Admin role to the admin user
+            initUser(users[2], role.Id);
+            users[2].Roles.Add(new IdentityUserRole { RoleId = adminRole.Id, UserId = users[2].Id });
+            context.Users.Add(users[2]);
+
+            context.SaveChanges();
+
+            return users;
+
+        }
+
+
+        protected void initUser(IdentityUser user, string roleID)
+        {
+            user.Roles.Add(new IdentityUserRole { RoleId = roleID, UserId = user.Id });
+            user.Claims.Add(new IdentityUserClaim
+            {
+                UserId = user.Id,
+                ClaimType = "hasRegistered",
+                ClaimValue = "true"
+            });
+
+            user.PasswordHash = new PasswordHasher().HashPassword("password");
+            user.SecurityStamp = Guid.NewGuid().ToString();
         }
     }
 }

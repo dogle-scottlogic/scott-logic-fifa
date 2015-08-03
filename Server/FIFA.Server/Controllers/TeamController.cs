@@ -11,9 +11,12 @@ using System.Web.Http;
 using System.Web.Http.Description;
 using FIFA.Server.Models;
 using FIFA.Server.Infrastructure;
+using FIFA.Server.Authentication;
 
 namespace FIFA.Server.Controllers
 {
+    [IdentityBasicAuthentication] // Enable authentication via an ASP.NET Identity user name and password
+    [Authorize] // Require authenticated requests.
     [ConfigurableCorsPolicy("localhost")]
     public class TeamController : AbstractCRUDAPIController<Team, int, TeamFilter>
     {
@@ -68,6 +71,7 @@ namespace FIFA.Server.Controllers
         /// 
         // POST api/Team
         [ResponseType(typeof(Team))]
+        [Authorize(Roles = AuthenticationRoles.administratorRole)] // Require authenticated requests.
         public async Task<HttpResponseMessage> Post(Team team)
         {
             // try to get the country, if it returns null, send an error
@@ -89,6 +93,7 @@ namespace FIFA.Server.Controllers
         /// 
         // PUT api/Team/5
         [ResponseType(typeof(Team))]
+        [Authorize(Roles = AuthenticationRoles.administratorRole)] // Require authenticated requests.
         public async Task<HttpResponseMessage> Put(int id, Team team)
         {
             // try to get the country, if it returns null, send an error
@@ -114,6 +119,7 @@ namespace FIFA.Server.Controllers
         /// 
         // DELETE api/Team/5
         [ResponseType(typeof(Team))]
+        [Authorize(Roles = AuthenticationRoles.administratorRole)] // Require authenticated requests.
         public async Task<HttpResponseMessage> Delete(int id)
         {
             return await base.Delete(id);

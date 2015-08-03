@@ -11,9 +11,12 @@ using System.Web.Http.Description;
 using FIFA.Server.Models;
 using System.Threading.Tasks;
 using FIFA.Server.Infrastructure;
+using FIFA.Server.Authentication;
 
 namespace FIFA.Server.Controllers
 {
+    [IdentityBasicAuthentication] // Enable authentication via an ASP.NET Identity user name and password
+    [Authorize] // Require authenticated requests.
     // Controller used to view a table of leagues
     [ConfigurableCorsPolicy("localhost")]
     public class TeamPlayerStatisticViewController : ApiController

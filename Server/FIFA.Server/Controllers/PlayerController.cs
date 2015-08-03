@@ -11,10 +11,13 @@ using System.Web.Http.Description;
 using FIFA.Server.Models;
 using System.Threading.Tasks;
 using FIFA.Server.Infrastructure;
+using FIFA.Server.Authentication;
 
 namespace FIFA.Server.Controllers
 {
 
+    [IdentityBasicAuthentication] // Enable authentication via an ASP.NET Identity user name and password
+    [Authorize] // Require authenticated requests.
     [ConfigurableCorsPolicy("localhost")]
     public class PlayerController : AbstractCRUDAPIController<Player, int, PlayerFilter>
     {
@@ -73,6 +76,7 @@ namespace FIFA.Server.Controllers
         /// 
         // POST api/Country
         [ResponseType(typeof(Player))]
+        [Authorize(Roles = AuthenticationRoles.administratorRole)] // Require authenticated requests.
         public async Task<HttpResponseMessage> Post(Player item)
         {
             if (item != null && await ((IPlayerRepository)repository).isPlayerNameExist(item.Name, null))
@@ -94,6 +98,7 @@ namespace FIFA.Server.Controllers
         /// 
         // PUT api/Player/5
         [ResponseType(typeof(Player))]
+        [Authorize(Roles = AuthenticationRoles.administratorRole)] // Require authenticated requests.
         public async Task<HttpResponseMessage> Put(int id, Player item)
         {
             if (await ((IPlayerRepository)repository).isPlayerNameExist(item.Name, id))
@@ -117,6 +122,7 @@ namespace FIFA.Server.Controllers
         /// 
         // DELETE api/Player/5
         [ResponseType(typeof(Player))]
+        [Authorize(Roles = AuthenticationRoles.administratorRole)] // Require authenticated requests.
         public async Task<HttpResponseMessage> Delete(int id)
         {
             return await base.Delete(id);
