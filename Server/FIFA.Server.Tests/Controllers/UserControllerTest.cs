@@ -49,8 +49,7 @@ namespace FIFATests.ControllerTests
             // Filling mock with data
             mock.As<ICRUDRepository<IdentityUser, string, UserFilter>>().Setup(m => m.Get(It.IsAny<string>()))
                 .Returns<string>(id => Task.FromResult(identityUsers.FirstOrDefault(u => u.Id == id)));
-
-            // Creating the controller which we want to create
+            
             UserController controller = new UserController(mock.Object);
 
             // configuring the context for the controler
@@ -75,8 +74,7 @@ namespace FIFATests.ControllerTests
             // Filling mock with data
             mock.As<ICRUDRepository<IdentityUser, string, UserFilter>>().Setup(m => m.Get(It.IsAny<string>()))
                 .Returns<string>(id => Task.FromResult((IdentityUser)null));
-
-            // Creating the controller which we want to create
+            
             UserController controller = new UserController(mock.Object);
 
             // configuring the context for the controler
@@ -98,8 +96,7 @@ namespace FIFATests.ControllerTests
             // Filling mock with data
             mock.As<ICRUDRepository<IdentityUser, string, UserFilter>>().Setup(m => m.GetAll())
                 .Returns(Task.FromResult(identityUsers));
-
-            // Creating the controller which we want to create
+            
             UserController controller = new UserController(mock.Object);
             fakeContext(controller);
 
@@ -128,7 +125,6 @@ namespace FIFATests.ControllerTests
             mock.As<IUserRepository>().Setup(m => m.isUserNameExist(It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(Task.FromResult(false));
             
-            // Creating the controller which we want to create
             UserController controller = new UserController(mock.Object);
             // configuring the context for the controler
             fakeContext(controller);
@@ -158,13 +154,12 @@ namespace FIFATests.ControllerTests
             mock.As<IUserRepository>().Setup(m => m.isUserNameExist(It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(Task.FromResult(false));
             
-            // Creating the controller which we want to create
             UserController controller = new UserController(mock.Object);
 
             // configuring the context for the controler
             fakeContext(controller);
 
-            // Facking a model error
+            // Faking a model error
             controller.ModelState.AddModelError("key", "errorMessage");
 
             HttpResponseMessage response = controller.Post(identityUser).Result;
@@ -184,8 +179,7 @@ namespace FIFATests.ControllerTests
 
             mock.As<IUserRepository>().Setup(m => m.isUserNameExist(It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(Task.FromResult(true));
-
-            // Creating the controller which we want to create
+            
             UserController controller = new UserController(mock.Object);
 
             // configuring the context for the controler
@@ -209,8 +203,7 @@ namespace FIFATests.ControllerTests
 
             mock.As<IUserRepository>().Setup(m => m.isUserNameExist(It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(Task.FromResult(false));
-
-            // Creating the controller which we want to create
+            
             UserController controller = new UserController(mock.Object);
 
             // configuring the context for the controler
@@ -237,7 +230,6 @@ namespace FIFATests.ControllerTests
             mock.As<IUserRepository>().Setup(m => m.isUserNameExist(It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(Task.FromResult(false));
             
-            // Creating the controller which we want to create
             UserController controller = new UserController(mock.Object);
             // configuring the context for the controler
             fakeContext(controller);
@@ -270,13 +262,12 @@ namespace FIFATests.ControllerTests
 
             mock.As<IUserRepository>().Setup(m => m.isUserNameExist(It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(Task.FromResult(false));
-
-            // Creating the controller which we want to create
+            
             UserController controller = new UserController(mock.Object);
-                // configuring the context for the controller
+            // configuring the context for the controller
             fakeContext(controller);
 
-            // Facking a model error
+            // Faking a model error
             controller.ModelState.AddModelError("key", "errorMessage");
 
                 HttpResponseMessage response = controller.Put("1", identityUser).Result;
@@ -299,8 +290,7 @@ namespace FIFATests.ControllerTests
 
             mock.As<IUserRepository>().Setup(m => m.isUserNameExist(It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(Task.FromResult(false));
-
-            // Creating the controller which we want to create
+            
             UserController controller = new UserController(mock.Object);
             // configuring the context for the controler
             fakeContext(controller);
@@ -326,8 +316,7 @@ namespace FIFATests.ControllerTests
 
             mock.As<IUserRepository>().Setup(m => m.isUserNameExist(It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(Task.FromResult(true));
-
-            // Creating the controller which we want to create
+            
             UserController controller = new UserController(mock.Object);
             // configuring the context for the controler
             fakeContext(controller);
@@ -348,8 +337,7 @@ namespace FIFATests.ControllerTests
             // Creating the rules for mock, always send true in this case
             mock.As<ICRUDRepository<IdentityUser, string, UserFilter>>().Setup(m => m.Remove(It.IsAny<string>()))
                 .Returns(Task.FromResult(true));
-
-            // Creating the controller which we want to create
+            
             UserController controller = new UserController(mock.Object);
             // configuring the context for the controler
             fakeContext(controller);
@@ -369,8 +357,7 @@ namespace FIFATests.ControllerTests
             // Creating the rules for mock, always send true in this case
             mock.As<ICRUDRepository<IdentityUser, string, UserFilter>>().Setup(m => m.Remove(It.IsAny<string>()))
                 .Returns(Task.FromResult(false));
-
-            // Creating the controller which we want to create
+            
             UserController controller = new UserController(mock.Object);
             // configuring the context for the controler
             fakeContext(controller);

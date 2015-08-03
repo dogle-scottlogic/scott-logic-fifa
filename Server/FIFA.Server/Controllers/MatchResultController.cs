@@ -24,7 +24,7 @@ namespace FIFA.Server.Controllers
             this.scoreRepository = scoreRepository;
         }
 
-        [Authorize(Roles = AuthenticationRoles.administratorRole)] // Require authenticated requests.
+        [Authorize(Roles = AuthenticationRoles.AdministratorRole)] // Require authenticated requests.
         public async Task<HttpResponseMessage> Post(MatchResultDTO matchResult) { 
 
             if (matchResult != null)

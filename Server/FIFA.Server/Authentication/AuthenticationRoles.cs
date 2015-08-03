@@ -7,7 +7,7 @@ namespace FIFA.Server.Authentication
 {
     public class AuthenticationRoles
     {
-        public const string userRole = "User";
-        public const string administratorRole = "Admin";
+        public const string UserRole = "User";
+        public const string AdministratorRole = "Admin";
     }
 }

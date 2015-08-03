@@ -192,10 +192,10 @@ namespace FIFA.Server.Migrations
         protected List<IdentityUser> initUsers(FIFAServerContext context)
         {
             // Initializing the roles for users
-            IdentityRole role = context.Roles.Add(new IdentityRole(AuthenticationRoles.userRole));
+            IdentityRole role = context.Roles.Add(new IdentityRole(AuthenticationRoles.UserRole));
             context.Roles.Add(role);
 
-            IdentityRole adminRole = context.Roles.Add(new IdentityRole(AuthenticationRoles.administratorRole));
+            IdentityRole adminRole = context.Roles.Add(new IdentityRole(AuthenticationRoles.AdministratorRole));
             context.Roles.Add(adminRole);
             context.SaveChanges();
 

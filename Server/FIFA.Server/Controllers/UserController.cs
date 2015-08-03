@@ -36,7 +36,7 @@ namespace FIFA.Server.Controllers
         ///     Retrieve a list of Users
         /// </summary>
         /// <returns>Return a list of IdentityUser</returns>
-        [Authorize(Roles = AuthenticationRoles.administratorRole)]
+        [Authorize(Roles = AuthenticationRoles.AdministratorRole)]
         public async Task<HttpResponseMessage> GetAll()
         {
             return await base.GetAll();
@@ -58,7 +58,7 @@ namespace FIFA.Server.Controllers
         /// </summary>
         /// <param name="item">The User to add without id</param>
         /// <returns>Return a IdentityUser if created and its uri to retrieve it</returns>
-        [Authorize(Roles = AuthenticationRoles.administratorRole)]
+        [Authorize(Roles = AuthenticationRoles.AdministratorRole)]
         public async Task<HttpResponseMessage> Post(IdentityUser item)
         {
             if (item != null && await ((IUserRepository)repository).isUserNameExist(item.UserName, null))
@@ -98,7 +98,7 @@ namespace FIFA.Server.Controllers
         /// Status 200 if deleted correctly
         /// Status 404 if not (with User not found message)
         /// </returns>
-        [Authorize(Roles = AuthenticationRoles.administratorRole)]
+        [Authorize(Roles = AuthenticationRoles.AdministratorRole)]
         public async Task<HttpResponseMessage> Delete(string id)
         {
             return await base.Delete(id);
