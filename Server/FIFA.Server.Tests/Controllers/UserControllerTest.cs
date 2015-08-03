@@ -40,7 +40,7 @@ namespace FIFATests.ControllerTests
 
         // Verifying the get(i) method
         [TestMethod]
-        public void RetrieveAIdentityUserInTheRepo()
+        public void RetrieveAnIdentityUserInTheRepo()
         {
             List<IdentityUser> identityUsers = CreateIdentityUserList();
 
@@ -66,7 +66,7 @@ namespace FIFATests.ControllerTests
 
         // Verifying the get(i) method
         [TestMethod]
-        public void RetrieveFailureAIdentityUserInTheRepo()
+        public void RetrieveFailureAnIdentityUserInTheRepo()
         {
             List<IdentityUser> identityUsers = CreateIdentityUserList();
 
@@ -89,7 +89,7 @@ namespace FIFATests.ControllerTests
 
         // Verifying the getAll method
         [TestMethod]
-        public void RetrieveAllidentityUsersInTheRepo()
+        public void RetrieveAllIdentityUsersInTheRepo()
         {
             IEnumerable<IdentityUser> identityUsers = CreateIdentityUserList();
 
