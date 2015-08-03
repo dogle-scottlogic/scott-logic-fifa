@@ -30,172 +30,74 @@ namespace FIFA.Server.Models
                 filter = new SeasonTableFilter();
             }
 
-            // Getting all the seasons having at least one match havent been played
-            var currentSeasons = filter.FilterSeasonTable(db.Seasons);
-            var currentLeagues = filter.FilterLeagueTable(db.Leagues);
+            // Filter the scores
+            var scoreQuery = filter.FilterScores(db.Scores);
 
-            var leagueTableView = currentSeasons.Select(
-                s => new SeasonTableViewModel
-                {
-                    Id = s.Id,
-                    Name = s.Name,
-                    LeagueTables = currentLeagues.Where(l => l.SeasonId == s.Id).Select(l => new LeagueTableViewModel
-                    {
-                        Id = l.Id,
-                        Name = l.Name,
-                        TeamPlayers = l.TeamPlayers
-                        .Select(
-                            tp => new TeamPlayerTableLeagueViewModel
-                            {
-                                Id = tp.Id,
-                                player = tp.Player,
-                                team = tp.Team,
-                                nbPlayedMatches = l.Matches.Count(m => m.Played == true
-                                                    && m.Scores.Any(sc => sc.TeamPlayer == tp)),
-                                nbGoalsFor = l.Matches.Where(m => m.Played == true
-                                            && m.Scores.Any(sc => sc.TeamPlayer == tp)
-                                            )
-                                                .Select(m => m.Scores
-                                                    .Where(sc => sc.TeamPlayer == tp)
-                                                    .Select(sc => sc.Goals)
-                                                    .DefaultIfEmpty(0)
-                                                    .Sum()
-                                                    )
-                                                .DefaultIfEmpty(0)
-                                                .Sum(),
-                               nbGoalsAgainst = l.Matches.Where(m => m.Played == true
-                                            && m.Scores.Any(sc => sc.TeamPlayer == tp)
-                                            )
-                                                .Select(m => m.Scores
-                                                    .Where(sc => sc.TeamPlayer != tp)
-                                                    .Select(sc => sc.Goals)
-                                                    .DefaultIfEmpty(0)
-                                                    .Sum()
-                                                    )
-                                                .DefaultIfEmpty(0)
-                                                .Sum(),
-                                nbGoalsDiff = l.Matches.Where(m => m.Played == true
-                                            && m.Scores.Any(sc => sc.TeamPlayer == tp)
-                                            )
-                                                .Select(m => m.Scores
-                                                    .Where(sc => sc.TeamPlayer == tp)
-                                                    .Select(sc => sc.Goals)
-                                                    .DefaultIfEmpty(0)
-                                                    .Sum()
-                                                    )
-                                                .DefaultIfEmpty(0)
-                                                .Sum()
-                                                -
-                                          l.Matches.Where(m => m.Played == true
-                                            && m.Scores.Any(sc => sc.TeamPlayer == tp)
-                                            )
-                                                .Select(m => m.Scores
-                                                    .Where(sc => sc.TeamPlayer != tp)
-                                                    .Select(sc => sc.Goals)
-                                                    .DefaultIfEmpty(0)
-                                                    .Sum()
-                                                    )
-                                                .DefaultIfEmpty(0)
-                                                .Sum(),
-                                nbWin = l.Matches.Where(m => m.Played == true
-                                            && m.Scores.Any(sc => sc.TeamPlayer == tp)
-                                            )
-                                                .Select(m => m.Scores
-                                                    .Where(sc => sc.TeamPlayer == tp && sc.Goals > m.Scores.Where(sc2 => sc2.TeamPlayer != tp).Select(sc2 => sc2.Goals).FirstOrDefault())
-                                                    .Select(sc => 1)
-                                                    .DefaultIfEmpty(0)
-                                                    .Sum()
-                                                    )
-                                                .DefaultIfEmpty(0)
-                                                .Sum(),
-                                nbDraw = l.Matches.Where(m => m.Played == true
-                                            && m.Scores.Any(sc => sc.TeamPlayer == tp)
-                                            )
-                                                .Select(m => m.Scores
-                                                    .Where(sc => sc.TeamPlayer == tp && sc.Goals == m.Scores.Where(sc2 => sc2.TeamPlayer != tp).Select(sc2 => sc2.Goals).FirstOrDefault())
-                                                    .Select(sc => 1)
-                                                    .DefaultIfEmpty(0)
-                                                    .Sum()
-                                                    )
-                                                .DefaultIfEmpty(0)
-                                                .Sum(),
-                                nbLost = l.Matches.Where(m => m.Played == true
-                                           && m.Scores.Any(sc => sc.TeamPlayer == tp)
-                                            )
-                                                .Select(m => m.Scores
-                                                    .Where(sc => sc.TeamPlayer == tp && sc.Goals < m.Scores.Where(sc2 => sc2.TeamPlayer != tp).Select(sc2 => sc2.Goals).FirstOrDefault())
-                                                    .Select(sc => 1)
-                                                    .DefaultIfEmpty(0)
-                                                    .Sum()
-                                                    )
-                                                .DefaultIfEmpty(0)
-                                                .Sum(),
-                                nbPoints = l.Matches
-                                            // for all played matches by the teamplayer for the league l
-                                            .Where(m => m.Played == true
-                                                && m.Scores.Any(sc => sc.TeamPlayer == tp))
-                                            .Select(
-                                                m =>
-                                                m.Scores
-                                                // which has been played by the player
-                                                .Where(sc => sc.TeamPlayer == tp)
-                                                .Select(
-                                                    sc =>
-                                                    // Wining case - We add <nbWiningPoints> for each match that the player has won 
-                                                    // (ie the number of goals from the adversary < of his score)
-                                                    m.Scores.Where(s2 => s2.TeamPlayer != tp
-                                                    && s2.Match == sc.Match
-                                                    && s2.Goals < sc.Goals)
-                                                    .Select(r => nbWiningPoints)
-                                                    .DefaultIfEmpty(0)
-                                                    .Sum()
-                                                    +
-                                                    // Draw case - We add <nbDrawPoints> for each match that the player is draw 
-                                                    // (ie the number of goals from the adversary == of his score)
-                                                    m.Scores.Where(s2 => s2.TeamPlayer != tp
-                                                    && s2.Match == sc.Match
-                                                    && s2.Goals == sc.Goals)
-                                                    .Select(r => nbDrawPoints)
-                                                    .DefaultIfEmpty(0)
-                                                    .Sum()
-                                                    )
-                                                .DefaultIfEmpty(0)
-                                                .Sum()
-                                            )
-                                            .DefaultIfEmpty(0)
-                                            .Sum()
-                            }
-                        )
-                        .OrderByDescending(tp => tp.nbPoints)
-                        .ThenByDescending(tp => tp.nbGoalsDiff)
-                        .ThenByDescending(tp => tp.nbGoalsFor)
-                        .ThenBy(tp => tp.nbPlayedMatches)
-                        .ThenBy(tp => tp.player.Name)
-                    })
-                    .OrderBy(l => l.Name)
-                }
-                );
+            // build the team playersMatches
+            var teamPlayers = this.buildTeamPlayerMatch(scoreQuery);
 
-            IEnumerable<SeasonTableViewModel> seasons = await leagueTableView
-                                                                .OrderBy(l => l.Name)
-                                                                .ToListAsync();
+            // Grouping the scores by leagues
+            var groupedTeamPlayers = teamPlayers.GroupBy(tp => tp.seasonId).ToList().Select(tp => tp).ToList();
 
+            
+            // Building the results by teamPlayers
+            var matchResults = this.getMatchResultViewModel(groupedTeamPlayers).ToList();
+
+            // Grouping the team playersMatches by leagues
+            var leagueTeamPlayers = matchResults.Select(
+                                 mg => mg
+                                    .GroupBy(tp => tp.leagueId).ToList()
+                                    .Select(
+                                            lq => new LeagueTableViewModel
+                                            {
+                                                Id = lq.FirstOrDefault().leagueId,
+                                                Name = lq.FirstOrDefault().leagueName,
+                                                seasonId = lq.FirstOrDefault().seasonId,
+                                                seasonName = lq.FirstOrDefault().seasonName,
+                                                TeamPlayers = lq.ToList()
+                                            }
+                                   ).OrderBy(l => l.Name).ToList()
+                                   )
+                                   ;
+
+            // Grouping the team playersMatches by seasons
+            var seasonTeamPlayers = leagueTeamPlayers.Select(
+                     lg => new SeasonTableViewModel
+                                {
+                                    Id = lg.FirstOrDefault().seasonId,
+                                    Name = lg.FirstOrDefault().seasonName,
+                                    LeagueTables = lg.ToList()
+                                }
+                       ).OrderBy(l => l.Name).ToList()
+                       ;
+
+            IEnumerable<SeasonTableViewModel> seasons = seasonTeamPlayers.ToList();
+
+            
             // Calculating the position -- easier to do it in a loop
             foreach (var season in seasons)
             {
                 foreach (var league in season.LeagueTables)
                 {
                     int position = 1;
-                    int previousNbPoints = -1;
+                    int? previousNbPoints = null;
+                    int? previousNbGoalsDiff = null;
+                    int? previousNbGoalsFor = null;
                     // For each team player, we compare with the previous nb of points, if it's < the position is increased
                     foreach (var teamPlayer in league.TeamPlayers)
                     {
-                        if (teamPlayer.nbPoints < previousNbPoints)
-                        {
-                            position++;
+                        if(previousNbPoints != null){
+                            if (teamPlayer.nbPoints < previousNbPoints
+                                || teamPlayer.nbGoalsDiff < previousNbGoalsDiff
+                                || teamPlayer.nbGoalsFor < previousNbGoalsFor)
+                            {
+                                position++;
+                            }
                         }
                         previousNbPoints = teamPlayer.nbPoints;
                         teamPlayer.position = position;
+                        previousNbGoalsDiff = teamPlayer.nbGoalsDiff;
+                        previousNbGoalsFor = teamPlayer.nbGoalsFor;
                     }
                 }
             }
@@ -204,6 +106,83 @@ namespace FIFA.Server.Models
             return seasons;
 
         }
-        
+
+        // Returning the matches of a teamPlayer
+        public class TeamPlayerMatch
+        {
+            public int Id { get; set; }
+            public int matchId { get; set; }
+            public int seasonId { get; set; }
+            public string seasonName { get; set; }
+            public int leagueId { get; set; }
+            public string leagueName { get; set; }
+            public Team team { get; set; }
+            public Player player { get; set; }
+            public int nbGoalsFor { get; set; }
+            public int nbGoalsAgainst { get; set; }
+            public Boolean Played { get; set; }
+        }
+
+        // Returning a match view for each scores
+        public IQueryable<TeamPlayerMatch> buildTeamPlayerMatch(IQueryable<Score> sQuery)
+        {
+            return sQuery.Select(
+                    sc => new TeamPlayerMatch
+                    {
+                        seasonId = sc.Match.League.Season.Id,
+                        seasonName = sc.Match.League.Season.Name,
+                        leagueId = sc.Match.League.Id,
+                        leagueName = sc.Match.League.Name,
+                        Id = sc.TeamPlayer.Id,
+                        matchId = sc.Match.Id,
+                        team = sc.TeamPlayer.Team,
+                        player = sc.TeamPlayer.Player,
+                        nbGoalsFor = sc.Goals,
+                        nbGoalsAgainst = sc.Match.Scores.Where(scAgainst => scAgainst.TeamPlayer != sc.TeamPlayer).Select(scAgainst => scAgainst.Goals).FirstOrDefault(),
+                        Played = sc.Match.Played
+                    }
+            );
+        }
+
+
+            // Returning a view of matches from team players
+        public IEnumerable<List<TeamPlayerTableLeagueViewModel>> getMatchResultViewModel(List<IGrouping<int, TeamPlayerMatch>> tpQuery)
+        {
+            return tpQuery.Select(
+                tpg => tpg.GroupBy(tpm => tpm.Id)
+                .Select(
+                        tp => new TeamPlayerTableLeagueViewModel
+                        {
+                            leagueId = tp.FirstOrDefault().leagueId,
+                            leagueName = tp.FirstOrDefault().leagueName,
+                            seasonId = tp.FirstOrDefault().seasonId,
+                            seasonName = tp.FirstOrDefault().seasonName,
+                            Id = tp.FirstOrDefault().Id,
+                            player = tp.FirstOrDefault().player,
+                            team = tp.FirstOrDefault().team,
+                            nbPlayedMatches = tp.Where(m => m.Played == true).Count(m => 1 == 1),
+                            nbGoalsFor = tp.Select(m => m.nbGoalsFor)
+                                            .DefaultIfEmpty(0)
+                                            .Sum(),
+                            nbGoalsAgainst = tp.Select(m => m.nbGoalsAgainst)
+                                            .DefaultIfEmpty(0)
+                                            .Sum(),
+                            nbGoalsDiff = tp.Select(m => m.nbGoalsFor - m.nbGoalsAgainst)
+                                            .DefaultIfEmpty(0)
+                                            .Sum(),
+                            nbWin = tp.Where(m => m.Played == true).Count(m => m.nbGoalsFor > m.nbGoalsAgainst),
+                            nbDraw = tp.Where(m => m.Played == true).Count(m => m.nbGoalsFor == m.nbGoalsAgainst),
+                            nbLost = tp.Where(m => m.Played == true).Count(m => m.nbGoalsFor < m.nbGoalsAgainst),
+                            nbPoints = (tp.Where(m => m.Played == true).Count(m => m.nbGoalsFor > m.nbGoalsAgainst) * 3 + tp.Where(m => m.Played == true).Count(m => m.nbGoalsFor == m.nbGoalsAgainst))
+                        }
+                ).OrderByDescending(tp => tp.nbPoints)
+                .ThenByDescending(tp => tp.nbGoalsDiff)
+                .ThenByDescending(tp => tp.nbGoalsFor)
+                .ThenBy(tp => tp.nbPlayedMatches)
+                .ThenBy(tp => tp.player.Name).ToList()
+                );
+
+        }
+
     }
 }

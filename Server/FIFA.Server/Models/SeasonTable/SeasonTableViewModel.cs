@@ -10,6 +10,11 @@ namespace FIFA.Server.Models
     {
         public int Id { get; set; }
         public int position { get; set; }
+        public int matchId { get; set; }
+        public int seasonId { get; set; }
+        public string seasonName { get; set; }
+        public int leagueId { get; set; }
+        public string leagueName { get; set; }
         public int nbPlayedMatches { get; set; }
         public int nbGoalsFor { get; set; }
         public int nbGoalsAgainst { get; set; }
@@ -26,6 +31,8 @@ namespace FIFA.Server.Models
     // Class showing a league with all the players and the teams
     public class LeagueTableViewModel
     {
+        public int seasonId { get; set; }
+        public string seasonName { get; set; }
         public int Id { get; set; }
         public string Name { get; set; }
         public IEnumerable<TeamPlayerTableLeagueViewModel> TeamPlayers { get; set; }

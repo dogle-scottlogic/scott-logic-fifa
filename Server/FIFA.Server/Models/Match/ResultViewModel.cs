@@ -33,6 +33,10 @@ namespace FIFA.Server.Models
     // Class representing a league with the played matches for a date
     public class LeagueResultViewModel
     {
+        public int CountryId { get; set; }
+        public string CountryName { get; set; }
+        public int SeasonId { get; set; }
+        public string SeasonName { get; set; }
         public int Id { get; set; }
         public string Name { get; set; }
         public DateTime? Date { get; set; }
@@ -43,6 +47,8 @@ namespace FIFA.Server.Models
     // Class representing a season with the played matches in a league for a date
     public class SeasonResultViewModel
     {
+        public int CountryId { get; set; }
+        public string CountryName { get; set; }
         public int Id { get; set; }
         public string Name { get; set; }
         public DateTime? Date { get; set; }

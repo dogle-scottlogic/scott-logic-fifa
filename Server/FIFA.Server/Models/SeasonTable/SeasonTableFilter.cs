@@ -67,5 +67,45 @@ namespace FIFA.Server.Models
 
             return query;
         }
+
+        public IQueryable<Score> FilterScores(IQueryable<Score> query)
+        {
+
+            if (this.Id != null)
+            {
+                query = query.Where(sc => sc.Match.Id == this.Id);
+            }
+
+            if (this.CountryId != null)
+            {
+                query = query.Where(sc => sc.Match.League.Season.SeasonCountry.Id == this.CountryId);
+            }
+
+
+            if (this.SeasonId != null)
+            {
+                query = query.Where(sc => sc.Match.League.Season.Id == this.SeasonId);
+            }
+
+            if (this.LeagueId != null)
+            {
+                query = query.Where(sc => sc.Match.League.Id == this.LeagueId);
+            }
+
+
+            if (this.HasRemainingMatchToPlay != null)
+            {
+                if (this.HasRemainingMatchToPlay.Value)
+                {
+                    query = query.Where(sc => sc.Match.League.Matches.Any(lm => lm.Played == false));
+                }
+                else
+                {
+                    query = query.Where(sc => sc.Match.League.Matches.All(lm => lm.Played == true));
+                }
+            }
+            
+            return query;
+        }
     }
 }
