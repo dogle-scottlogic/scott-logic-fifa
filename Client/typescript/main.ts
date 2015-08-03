@@ -10,13 +10,14 @@
 /// <reference path="module/results/ResultsModule.ts" />
 /// <reference path="module/dashboard/DashboardModule.ts" />
 /// <reference path="module/seasonTableView/SeasonTableViewModule.ts" />
+/// <reference path="module/login/LoginModule.ts" />
 
 module FifaLeagueClient {
     export var mainModule = angular.module("FifaLeagueApp", ['ngRoute',
         Module.Common.HTTPErrorHandleModuleName, Module.Common.devConfig, Module.Player.moduleName,
         Module.Country.moduleName, Module.Season.moduleName, Module.Team.moduleName,
         Module.League.moduleName, Module.Results.moduleName,
-        Module.Dashboard.moduleName, Module.SeasonTableView.moduleName
+        Module.Dashboard.moduleName, Module.SeasonTableView.moduleName, Module.Login.moduleName
     ]).config(["$routeProvider",
     function routes($routeProvider: ng.route.IRouteProvider){
       $routeProvider.when('/teams', {

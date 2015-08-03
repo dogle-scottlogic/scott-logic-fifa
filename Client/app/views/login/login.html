@@ -1,0 +1,37 @@
+<div class="login">
+    <h2>Login</h2>
+    <hr />
+    <form class="simple-form" ng-submit="vm.login()" ng-hide="vm.loginData.isAuth">
+        <tr>
+            <td colspan="2" class="error">
+                <ul class="error">
+                    <li ng-repeat="value in vm.errors['item.Global']">{{value}}</li>
+                </ul>
+            </td>
+        </tr>
+        <tr>
+            <td>Login</td>
+
+                <input type="text" ng-model="vm.loginData.userName" required />
+                <ul class="error">
+                    <li ng-repeat="value in vm.errors['item.userName']">{{value}}</li>
+                </ul>
+            </td>
+        </tr>
+        <tr>
+            <td>Password:</td>
+            <td>
+                <input type="password" ng-model="vm.loginData.password" required />
+                <ul class="error">
+                    <li ng-repeat="value in vm.errors['item.password']">{{value}}</li>
+                </ul>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2"><input type="submit" value="Login" /></td>
+        </tr>
+    </form><br>
+    <div ng-show="vm.loginData.isAuth">
+        Welcome {{vm.loginData.userName}} !
+    </div>
+</div>

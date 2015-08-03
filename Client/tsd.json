@@ -22,6 +22,9 @@
     },
     "underscore/underscore.d.ts": {
       "commit": "be03157bace6e6465e63f13073d7b68e8ea1303c"
+    },
+    "angular-local-storage/angular-local-storage.d.ts": {
+      "commit": "885910f7868ec24fbc8ab8d6db354325f8b27aa6"
     }
   }
 }

@@ -127,6 +127,12 @@ var files = [
            dest: 'lib/angular-wizard/'
        },
        {
+           cwd: 'angular-local-storage/dist/',
+           src: ['angular-local-storage.js'],
+           srcProd: ['angular-local-storage.min.js'],
+           dest: 'lib/angular-local-storage/'
+       },
+       {
            cwd: fontSrc,
            src: ['*.*'],
            srcProd: ['*.*'],

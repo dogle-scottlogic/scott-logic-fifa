@@ -12,7 +12,7 @@ namespace FIFA.Server.Controllers
 {
     [IdentityBasicAuthentication] // Enable authentication via an ASP.NET Identity user name and password
     [Authorize] // Require some form of authentication
-    [ConfigurableCorsPolicy("authentication")]
+    [ConfigurableCorsPolicy("localhost")]
     public class AuthenticationController : ApiController
     {
 
