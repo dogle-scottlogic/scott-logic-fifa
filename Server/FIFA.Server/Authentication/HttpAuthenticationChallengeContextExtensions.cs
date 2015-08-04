@@ -23,7 +23,8 @@ namespace FIFA.Server.Authentication
                 throw new ArgumentNullException("context");
             }
 
-            context.Result = new AddChallengeOnUnauthorizedResult(challenge, context.Result);
+            // Desactivating the popup showing the authentication popup in order to use the one in the client side
+            // context.Result = new AddChallengeOnUnauthorizedResult(challenge, context.Result);
         }
     }
 }

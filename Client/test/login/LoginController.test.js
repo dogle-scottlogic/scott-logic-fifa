@@ -2,7 +2,7 @@ describe('Testing the LoginController', function() {
   beforeEach(module(FifaLeagueClient.Module.Login.moduleName));
   beforeEach(module(FifaLeagueClient.Module.Common.HTTPErrorHandleModuleName));
 
-  var loginController;
+  var loginController, location;
   var loginService = {};
   var defer, rootScope;
 
@@ -20,6 +20,7 @@ describe('Testing the LoginController', function() {
       $q = $injector.get('$q');
       defer = $q.defer();
       rootScope = $injector.get('$rootScope');
+      location = $injector.get('$location');
 
     });
 
@@ -65,6 +66,8 @@ describe('Testing the LoginController', function() {
         verifyPromiseAndDigest(loginController, defer, rootScope);
         // We expect that the auth should be at true
         expect(loginController.loginData.isAuth).toEqual(true);
+        // The location should change
+        expect(location.path()).toBe('/');
       });
 
       it('Login error', function () {

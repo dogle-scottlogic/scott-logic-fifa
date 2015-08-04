@@ -1,32 +1,47 @@
-<div class="login">
+<div class="container-fluid form-group">
+  <div class="form-group">
     <h2>Login</h2>
     <hr />
-    <form class="simple-form" ng-submit="vm.login()" ng-hide="vm.loginData.isAuth">
-      <div class="clear"></div>
-      <div class="alert alert-danger" role="alert" ng-repeat="value in vm.errors['item.Global']">{{value}}</div>
-      <table>
-        <tr>
-            <td>Login </td>
-            <td>
-                <input type="text" ng-model="vm.loginData.userName" required />
-                <div class="clear"></div>
-                <div class="alert alert-danger" role="alert" ng-repeat="value in vm.errors['item.userName']">{{value}}</div>
-            </td>
-        </tr>
-        <tr>
-            <td>Password </td>
-            <td>
-                <input type="password" ng-model="vm.loginData.password" required />
-                <div class="clear"></div>
-                <div class="alert alert-danger" role="alert" ng-repeat="value in vm.errors['item.password']">{{value}}</div>
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2"><input type="submit" value="Login" /></td>
-        </tr>
-      </table>
-    </form><br>
+    <form class="container-fluid" ng-submit="vm.login()" ng-hide="vm.loginData.isAuth">
+
+      <div class="form-group">
+        <label class="sr-only" for="error">Errors:</label>
+        <div class="clear"></div>
+        <div class="alert alert-danger" role="alert" ng-repeat="value in vm.errors['item.Global']">{{value}}</div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6 col-sm-6 col-xs-12">
+          <div class="form-group">
+      			<label>User name</label>
+              <input type="text" class="form-control" ng-model="vm.loginData.userName" required />
+              <div class="clear"></div>
+              <div class="alert alert-danger" role="alert" ng-repeat="value in vm.errors['item.userName']">{{value}}</div>
+      		</div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6 col-sm-6 col-xs-12">
+          <div class="form-group">
+      			<label>Password</label>
+              <input type="password" class="form-control" ng-model="vm.loginData.password" required />
+              <div class="clear"></div>
+              <div class="alert alert-danger" role="alert" ng-repeat="value in vm.errors['item.password']">{{value}}</div>
+      		</div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-6">
+          <div class="form-group">
+            <label class="sr-only" for="Login">Login:</label>
+      			<input type="submit" class="btn btn-primary" value="Login"/>
+      		</div>
+        </div>
+      </div>
+    </form>
     <div ng-show="vm.loginData.isAuth">
         Welcome {{vm.loginData.userName}} !
     </div>
+  </div>
 </div>

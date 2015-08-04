@@ -5,17 +5,18 @@ module FifaLeagueClient.Module.Login {
     export class LoginController extends Common.Controllers.AbstractController  {
 
         mainService:LoginService;
-
         loginData:AuthenticationModel;
+        location;
 
         static $inject = [
-            "$scope", 'loginService'
+            "$scope", 'loginService', '$location'
         ];
 
-        constructor(scope, loginService : LoginService) {
+        constructor(scope, loginService : LoginService, location) {
             super(scope);
             this.mainService = loginService;
             this.loginData = new AuthenticationModel();
+            this.location = location;
         }
 
         public login = () => {
@@ -32,6 +33,7 @@ module FifaLeagueClient.Module.Login {
         // Do nothing if the creation is successfull
         protected handleSuccess = (response:boolean) => {
             this.loginData.isAuth = response;
+            this.location.path("/");
         }
 
         // Method adding creating errors in creatingErrors list
