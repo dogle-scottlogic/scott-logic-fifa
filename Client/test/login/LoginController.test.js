@@ -13,11 +13,7 @@ describe('Testing the LoginController', function() {
         $provide.value('loginService', loginService);
       });
 
-      loginService.login = function(data){
-      }
-
-      loginService.logout = function(){
-      }
+    loginService = jasmine.createSpyObj('loginService',['login','logout']);
 
     // Getting the dependencies
     inject(function($injector) {
@@ -42,15 +38,18 @@ describe('Testing the LoginController', function() {
 
   describe('LoginController : ', function(){
 
+      function createAuthenticationModel(){
+          var loginData = new FifaLeagueClient.Module.Login.AuthenticationModel();
+          loginData.userName = "user";
+          loginData.password = "password";
+          return loginData;
+      }
+
       it('Verify that the user and password are sent to the service', function () {
-
-        spyOn(loginService, 'login').and.returnValue(defer.promise);
-        spyOn(loginService, 'logout').and.returnValue(null);
+        loginService.login.and.returnValue(defer.promise);
         // Setting the loginData
-        loginController.loginData.userName = "user";
-        loginController.loginData.password = "password";
+        loginController.loginData = createAuthenticationModel();
         loginController.login();
-
         // We expect that the service have been called with the loginData of the controller
         expect(loginService.logout).toHaveBeenCalled();
         expect(loginService.login).toHaveBeenCalledWith(loginController.loginData);
@@ -59,11 +58,9 @@ describe('Testing the LoginController', function() {
 
       it('Login success', function () {
         defer.resolve(true);
-        spyOn(loginService, 'login').and.returnValue(defer.promise);
-        spyOn(loginService, 'logout').and.returnValue(null);
+        loginService.login.and.returnValue(defer.promise);
         // Setting the loginData
-        loginController.loginData.userName = "user";
-        loginController.loginData.password = "password";
+        loginController.loginData = createAuthenticationModel();
         loginController.login();
         verifyPromiseAndDigest(loginController, defer, rootScope);
         // We expect that the auth should be at true
@@ -72,11 +69,9 @@ describe('Testing the LoginController', function() {
 
       it('Login error', function () {
         defer.reject({errors:["Error"]});
-        spyOn(loginService, 'login').and.returnValue(defer.promise);
-        spyOn(loginService, 'logout').and.returnValue(null);
+        loginService.login.and.returnValue(defer.promise);
         // Setting the loginData
-        loginController.loginData.userName = "user";
-        loginController.loginData.password = "password";
+        loginController.loginData = createAuthenticationModel();
         loginController.login();
         verifyPromiseAndDigest(loginController, defer, rootScope);
         // We expect that the auth should be at false and have the error in the errors list
@@ -84,10 +79,6 @@ describe('Testing the LoginController', function() {
         expect(loginController.errors).toContain("Error");
       });
 
-
-
-
   });
-
 
 });

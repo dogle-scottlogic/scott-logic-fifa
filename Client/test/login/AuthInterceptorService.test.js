@@ -14,8 +14,8 @@ describe('Testing the AuthInterceptorService', function() {
         $provide.value('sessionStorageService', sessionStorageService);
       });
 
-      sessionStorageService.getObjectSession = function(authorizationTokenKey){
-      }
+    sessionStorageService = jasmine.createSpyObj('sessionStorageService',['getObjectSession']);
+
 
     inject(function($injector) {
       $httpBackend = $injector.get('$httpBackend');
@@ -37,7 +37,6 @@ describe('Testing the AuthInterceptorService', function() {
 
       it('Case auth null', function () {
 
-        spyOn(sessionStorageService, 'getObjectSession').and.returnValue(null);
         var authHeaderUsed="";
         // We call an url in order to have a get and see if the config file is correctly filled
         var url = "api/test/";
@@ -56,7 +55,7 @@ describe('Testing the AuthInterceptorService', function() {
       // we fake the authorization header
       var authHeaderUsed = "";
       var authHeader = "fake header";
-      spyOn(sessionStorageService, 'getObjectSession').and.returnValue(authHeader);
+      sessionStorageService.getObjectSession.and.returnValue(authHeader);
       // We call an url in order to have a get and see if the config file is correctly filled
       var url = "api/test/";
 
@@ -75,7 +74,7 @@ describe('Testing the AuthInterceptorService', function() {
       // we fake the authorization header
       var previousUrl = $location.url();
       var authHeader = "fake header";
-      spyOn(sessionStorageService, 'getObjectSession').and.returnValue(authHeader);
+      sessionStorageService.getObjectSession.and.returnValue(authHeader);
       // We call an url in order to have a get and see if the config file is correctly filled
       var url = "api/test/";
       $httpBackend.expectGET(url).respond(401,{Message: 'Auth error'});
@@ -88,7 +87,6 @@ describe('Testing the AuthInterceptorService', function() {
 
 
     it('Case user not authenticated and have an 401 error response - Change of path ', function () {
-      spyOn(sessionStorageService, 'getObjectSession').and.returnValue(null);
       // We call an url in order to have a get and see if the config file is correctly filled
       var url = "api/test/";
       $httpBackend.expectGET(url).respond(401,{Message: 'Auth error'});
@@ -102,7 +100,6 @@ describe('Testing the AuthInterceptorService', function() {
 
     it('Case user not authenticated and have an 500 error response - No change of path ', function () {
       var previousUrl = $location.url();
-      spyOn(sessionStorageService, 'getObjectSession').and.returnValue(null);
       // We call an url in order to have a get and see if the config file is correctly filled
       var url = "api/test/";
       $httpBackend.expectGET(url).respond(500,{Message: 'Error'});

@@ -14,13 +14,7 @@ describe('Testing the LoginService', function() {
         $provide.value('sessionStorageService', sessionStorageService);
       });
 
-      sessionStorageService.getObjectSession = function(authorizationTokenKey){
-      }
-
-      sessionStorageService.setObjectSession = function(authorizationTokenKey){
-      }
-
-
+      sessionStorageService = jasmine.createSpyObj('sessionStorageService',['getObjectSession','setObjectSession']);
 
     // Mocking the datas
     inject(function($injector) {
@@ -39,14 +33,15 @@ describe('Testing the LoginService', function() {
 
   describe('LoginService : ', function(){
 
+      function createAuthenticationModel(){
+          var loginData = new FifaLeagueClient.Module.Login.AuthenticationModel();
+          loginData.userName = "user";
+          loginData.password = "password";
+          return loginData;
+      }
+
       it('Verify that the user and password are sent', function () {
-
-        spyOn(sessionStorageService, 'getObjectSession').and.returnValue(null);
-        spyOn(sessionStorageService, 'setObjectSession').and.returnValue(null);
-
-        var loginData = new FifaLeagueClient.Module.Login.AuthenticationModel();
-        loginData.userName = "user";
-        loginData.password = "password";
+        var loginData = createAuthenticationModel();
 
         var authHeaderUsed="";
         // We call an url in order to have a get and see if the config file is correctly filled
@@ -62,15 +57,9 @@ describe('Testing the LoginService', function() {
       });
 
       it('Case login success', function () {
-
-        spyOn(sessionStorageService, 'getObjectSession').and.returnValue(null);
-        spyOn(sessionStorageService, 'setObjectSession').and.returnValue(null);
-
         var responseData = {ID : "a"};
 
-        var loginData = new FifaLeagueClient.Module.Login.AuthenticationModel();
-        loginData.userName = "user";
-        loginData.password = "password";
+        loginData = createAuthenticationModel();
         // We call an url in order to have a get and see if the config file is correctly filled
         $httpBackend.expectGET(FifaLeagueClient.Module.Login.apiURL).respond(200,responseData);
         loginService.login(loginData);
@@ -83,15 +72,7 @@ describe('Testing the LoginService', function() {
       });
 
       it('Case login failure', function () {
-
-        spyOn(sessionStorageService, 'getObjectSession').and.returnValue(null);
-        spyOn(sessionStorageService, 'setObjectSession').and.returnValue(null);
-
-        var responseData = {ID : "a"};
-
-        var loginData = new FifaLeagueClient.Module.Login.AuthenticationModel();
-        loginData.userName = "user";
-        loginData.password = "password";
+        var loginData = createAuthenticationModel();
         // We call an url in order to have a get and see if the config file is correctly filled
         $httpBackend.expectGET(FifaLeagueClient.Module.Login.apiURL).respond(500,"Error");
         loginService.login(loginData);
@@ -105,9 +86,6 @@ describe('Testing the LoginService', function() {
 
 
       it('Case logout', function () {
-
-        spyOn(sessionStorageService, 'setObjectSession').and.returnValue(null);
-
         loginService.logout();
 
         // We expect that the authentication session has been correctly emptied

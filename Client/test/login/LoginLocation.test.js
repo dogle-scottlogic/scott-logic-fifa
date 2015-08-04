@@ -15,8 +15,7 @@ describe('Testing the login locations', function() {
         $provide.value('loginService', loginService);
       });
 
-      loginService.logout = function(){
-      }
+      loginService = jasmine.createSpyObj('loginService',['logout']);
 
       // getting all we need for the tests
       inject(function ($location, $rootScope, $route, $compile, $q) {
@@ -65,7 +64,6 @@ describe('Testing the login locations', function() {
     });
 
     it('Location /logout should call the logout method', function() {
-      spyOn(loginService, 'logout').and.returnValue(null);
       var html = angular.element('<ng-view></ng-view>');
       var element = compile(html)(rootScope.$new());
       location.path('/logout');
