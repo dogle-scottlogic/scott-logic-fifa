@@ -36,10 +36,12 @@ module FifaLeagueClient.Module.Login {
         // Handle Request error redirect to the login page if no auth although go to a page describing the error
         public responseError = (rejection) => {
             var authData = this.injector.get('sessionStorageService').getObjectSession(SessionStorageService.authorizationTokenKey);
+            // Case of unauthorized request for a logged in user (in this case we don't change the page)
             if (rejection.status === 401 && authData) {
-                this.injector.get('$location').path(unauthorizedPath);
+                // this.injector.get('$location').path(unauthorizedPath);
             }
             else if (rejection.status === 401) {
+                // If the user is not authorized by has never been logged in, we go to the login page
                 this.injector.get('$location').path(loginPath);
             }
             return this.qService.reject(rejection);

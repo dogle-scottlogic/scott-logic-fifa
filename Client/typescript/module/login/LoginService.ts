@@ -61,7 +61,6 @@ module FifaLeagueClient.Module.Login {
         // Login in means store the token header in session
         public successLogin(data, config){
             // we store the token in the service
-            // we store the token in the service
             this.localStorageService.setObjectSession(SessionStorageService.authorizationTokenKey, config.headers.Authorization);
             this.localStorageService.setObjectSession(SessionStorageService.userID, data.ID);
             this.localStorageService.setObjectSession(SessionStorageService.loginData, data);

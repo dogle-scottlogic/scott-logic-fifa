@@ -237,6 +237,7 @@ var testFiles = [
   'lib/angular-bootstrap/ui-bootstrap-tpls.js',
   'lib/angular-busy/angular-busy.js',
   'lib/angular-wizard/dist/angular-wizard.js',
+  'lib/angular-local-storage/dist/angular-local-storage.js',
   'app/leagueManager.js',
   'test/**/*.js',
   // Loading the html files
