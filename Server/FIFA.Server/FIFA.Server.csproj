@@ -352,10 +352,11 @@
     <Content Include="Areas\HelpPage\Views\Shared\_Layout.cshtml" />
     <Content Include="Areas\HelpPage\Views\Web.config" />
     <Content Include="Areas\HelpPage\Views\_ViewStart.cshtml" />
-    <None Include="Properties\PublishProfiles\fabien.pubxml" />
     <Content Include="Properties\PublishProfiles\scottlogic-fifaleague.azurewebsites.net.PublishSettings" />
-    <None Include="Properties\PublishProfiles\scottlogic-fifaleague - FTP.pubxml" />
-    <None Include="Properties\PublishProfiles\scottlogic-fifaleague - Web Deploy.pubxml" />
+    <None Include="Properties\PublishProfiles\xb-fifaleague - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\xb-fifaleague - Web Deploy.pubxml" />
+    <None Include="Properties\PublishProfiles\xb-fifaleague-preprod - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\xb-fifaleague-preprod - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
