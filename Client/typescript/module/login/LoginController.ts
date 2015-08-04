@@ -21,7 +21,7 @@ module FifaLeagueClient.Module.Login {
         public login = () => {
           var self =  this;
     			this.errors = {};
-    				this.mainService.logOut();
+    				this.mainService.logout();
 
           // After the logout, we login
     			this.loadingPromise = this.mainService.login(this.loginData)
@@ -41,7 +41,7 @@ module FifaLeagueClient.Module.Login {
         }
 
         public logout = () => {
-            this.mainService.logOut();
+            this.mainService.logout();
         };
 
     }

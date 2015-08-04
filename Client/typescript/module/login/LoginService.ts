@@ -50,7 +50,7 @@ module FifaLeagueClient.Module.Login {
                     deferred.resolve(true);
                 })
                 .error(function (data, status, headers, config) {
-                    self.logOut();
+                    self.logout();
                     deferred.reject(config);
                 });
 
@@ -67,7 +67,7 @@ module FifaLeagueClient.Module.Login {
         }
 
         // Login out means drop the token header stored in session
-        public logOut() {
+        public logout() {
             this.localStorageService.setObjectSession(SessionStorageService.authorizationTokenKey, null);
             this.localStorageService.setObjectSession(SessionStorageService.userID, null);
             this.localStorageService.setObjectSession(SessionStorageService.loginData, null);

@@ -27,10 +27,10 @@ module FifaLeagueClient.Module.Login {
         controllerAs: 'vm'
       }),
       $routeProvider.when(unauthorizedPath, {
-        templateUrl: './views/Login/unauthorized.html'
+        templateUrl: 'views/login/unauthorized.html'
       }),
       $routeProvider.when(logoutPath, {
-        templateUrl: './views/Login/logout.html',
+        templateUrl: 'views/login/logout.html',
         controller: LoginController,
         controllerAs: 'vm'
       })

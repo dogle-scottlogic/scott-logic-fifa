@@ -17,11 +17,7 @@ describe('Testing the AuthInterceptorService', function() {
       sessionStorageService.getObjectSession = function(authorizationTokenKey){
       }
 
-
-    // Mocking the datas
     inject(function($injector) {
-
-      config = $injector.get(FifaLeagueClient.Module.Common.configService);
       $httpBackend = $injector.get('$httpBackend');
       $http = $injector.get('$http');
       $q = $injector.get('$q');

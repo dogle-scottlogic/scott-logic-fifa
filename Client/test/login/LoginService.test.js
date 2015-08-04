@@ -24,8 +24,6 @@ describe('Testing the LoginService', function() {
 
     // Mocking the datas
     inject(function($injector) {
-
-      config = $injector.get(FifaLeagueClient.Module.Common.configService);
       $httpBackend = $injector.get('$httpBackend');
       $q = $injector.get('$q');
 
@@ -63,7 +61,7 @@ describe('Testing the LoginService', function() {
         expect(authHeaderUsed).toEqual(loginService.make_base_auth(loginData.userName, loginData.password));
       });
 
-      it('Case login worked', function () {
+      it('Case login success', function () {
 
         spyOn(sessionStorageService, 'getObjectSession').and.returnValue(null);
         spyOn(sessionStorageService, 'setObjectSession').and.returnValue(null);
@@ -77,17 +75,48 @@ describe('Testing the LoginService', function() {
         $httpBackend.expectGET(FifaLeagueClient.Module.Login.apiURL).respond(200,responseData);
         loginService.login(loginData);
 
-
-        this.localStorageService.setObjectSession(SessionStorageService.authorizationTokenKey, config.headers.Authorization);
-        this.localStorageService.setObjectSession(SessionStorageService.userID, data.ID);
-        this.localStorageService.setObjectSession(SessionStorageService.loginData, data);
-
         $httpBackend.flush();
         // We expect that the authentication has been correctly stored in session
         expect(sessionStorageService.setObjectSession).toHaveBeenCalledWith(FifaLeagueClient.Module.Login.SessionStorageService.authorizationTokenKey, loginService.make_base_auth(loginData.userName, loginData.password));
         expect(sessionStorageService.setObjectSession).toHaveBeenCalledWith(FifaLeagueClient.Module.Login.SessionStorageService.userID, responseData.ID);
         expect(sessionStorageService.setObjectSession).toHaveBeenCalledWith(FifaLeagueClient.Module.Login.SessionStorageService.loginData, responseData);
       });
+
+      it('Case login failure', function () {
+
+        spyOn(sessionStorageService, 'getObjectSession').and.returnValue(null);
+        spyOn(sessionStorageService, 'setObjectSession').and.returnValue(null);
+
+        var responseData = {ID : "a"};
+
+        var loginData = new FifaLeagueClient.Module.Login.AuthenticationModel();
+        loginData.userName = "user";
+        loginData.password = "password";
+        // We call an url in order to have a get and see if the config file is correctly filled
+        $httpBackend.expectGET(FifaLeagueClient.Module.Login.apiURL).respond(500,"Error");
+        loginService.login(loginData);
+
+        $httpBackend.flush();
+        // We expect that the authentication session has been correctly emptied
+        expect(sessionStorageService.setObjectSession).toHaveBeenCalledWith(FifaLeagueClient.Module.Login.SessionStorageService.authorizationTokenKey, null);
+        expect(sessionStorageService.setObjectSession).toHaveBeenCalledWith(FifaLeagueClient.Module.Login.SessionStorageService.userID, null);
+        expect(sessionStorageService.setObjectSession).toHaveBeenCalledWith(FifaLeagueClient.Module.Login.SessionStorageService.loginData, null);
+      });
+
+
+      it('Case logout', function () {
+
+        spyOn(sessionStorageService, 'setObjectSession').and.returnValue(null);
+
+        loginService.logout();
+
+        // We expect that the authentication session has been correctly emptied
+        expect(sessionStorageService.setObjectSession).toHaveBeenCalledWith(FifaLeagueClient.Module.Login.SessionStorageService.authorizationTokenKey, null);
+        expect(sessionStorageService.setObjectSession).toHaveBeenCalledWith(FifaLeagueClient.Module.Login.SessionStorageService.userID, null);
+        expect(sessionStorageService.setObjectSession).toHaveBeenCalledWith(FifaLeagueClient.Module.Login.SessionStorageService.loginData, null);
+      });
+
+
 
   });
 
