@@ -12,10 +12,14 @@ module FifaLeagueClient.Module.Results {
         public DateTo:Date;
         public DateFrom:Date;
         public LimitResult:number;
+        public HourOffset:number;
 
         // build the model directly from the data returned by the service
         constructor(){
           super();
+          // We retrieve the client side time offset
+          var x = new Date();
+          this.HourOffset = -x.getTimezoneOffset() / 60;
         }
 
         public reset(){
@@ -40,7 +44,8 @@ module FifaLeagueClient.Module.Results {
               .addRequestBooleanParameter("PlayedMatch", this.PlayedMatch)
               .addRequestDayDateParameter("DateTo", this.DateTo)
               .addRequestDayDateParameter("DateFrom", this.DateFrom)
-              .addRequestNumberParameter("LimitResult", this.LimitResult);
+              .addRequestNumberParameter("LimitResult", this.LimitResult)
+              .addRequestNumberParameter("HourOffset", this.HourOffset);
 
             return this.query;
         }

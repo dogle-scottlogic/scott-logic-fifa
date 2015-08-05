@@ -63,7 +63,7 @@ resultView_mockHTTPBackend = function(config, $httpBackend, $q, dataRepository){
           return [200,dataRepository];
       });
 
-    var mockedResultViewGetList = $httpBackend.whenGET(config.backend+"api/ResultView?PlayedMatch=true")
+    var mockedResultViewGetList = $httpBackend.whenGET(config.backend+"api/ResultView?PlayedMatch=true&HourOffset=1")
         .respond(function (method, url, data, headers) {
             return [200,dataRepository];
         });
@@ -89,7 +89,7 @@ resultView_mockHTTPBackend = function(config, $httpBackend, $q, dataRepository){
 // mocking the backend in error case
 resultView_mockHTTPBackend_Error = function(config, $httpBackend, $q, dataRepository){
 
-    $httpBackend.whenGET(config.backend+"api/ResultView?PlayedMatch=true")
+    $httpBackend.whenGET(config.backend+"api/ResultView?PlayedMatch=true&HourOffset=1")
         .respond(0,{status:0});
 
 
