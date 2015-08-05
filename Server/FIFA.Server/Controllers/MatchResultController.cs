@@ -8,6 +8,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
+using FIFA.Server.Models.Authentication;
 
 namespace FIFA.Server.Controllers
 {
@@ -23,8 +24,7 @@ namespace FIFA.Server.Controllers
             this.matchRepository = matchRepository;
             this.scoreRepository = scoreRepository;
         }
-
-        [Authorize(Roles = AuthenticationRoles.administratorRole)] // Require authenticated requests.
+        
         public async Task<HttpResponseMessage> Post(MatchResultDTO matchResult) { 
 
             if (matchResult != null)
@@ -35,6 +35,14 @@ namespace FIFA.Server.Controllers
 
                 if (match != null)
                 {
+                    // if we found the match, we verify if it has already been played, if it s the case,
+                    // only the admin can change the value then
+                    if (match.Played
+                        && !CurrentUserTool.isUserInRole(AuthenticationRoles.administratorRole))
+                    {
+                        return Request.CreateErrorResponse(HttpStatusCode.Forbidden, "Only the administrator can modify a match already played.");
+                    }
+
                     // found the match, now update the scores and save them
                     Score homeScore = new Score();
                     homeScore.MatchId = match.Id;
