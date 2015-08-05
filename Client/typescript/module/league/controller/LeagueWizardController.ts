@@ -92,16 +92,20 @@ module FifaLeagueClient.Module.League {
       for(var i=0; i<this.leagues.length;i++){
           var league = this.leagues[i];
           var players = [];
+
           // for each leagues, we retrieve the players associated
           for(var j=0; j< this.playerAssignLeague.length;j++){
-            if(this.playerAssignLeague[j].leagueId == league.Id){
+            if (this.playerAssignLeague[j].leagueId == league.Id) {
               players.push(this.playerAssignLeague[j].player);
             }
+          }
+          if (players.length === 1) {
+              this.errors[league.Id] = "A league cannot have only one team";
+              return;
           }
           // we add this list of players with the league
           this.generateLeague.PlayerLeagues.push(new PlayerAssignLeagueModel(league, players));
       }
-
 
       // Pushing the datas on the server
       this.loadingPromise =
