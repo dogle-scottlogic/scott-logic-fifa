@@ -7,6 +7,7 @@ describe('The EditTeamController', function() {
     var teamService;
     var locationService;
     var defer;
+    var initDefer;
     var rootScope;
 
     //Mock the team service
@@ -23,7 +24,7 @@ describe('The EditTeamController', function() {
         // Getting the dependencies
         inject(function($injector) {
             $q = $injector.get('$q');
-            defer = $q.defer();
+            initDefer = $q.defer();
             rootScope = $injector.get('$rootScope');
         });
     });
@@ -32,17 +33,19 @@ describe('The EditTeamController', function() {
     beforeEach(inject(function($controller, $rootScope) {
         scope = $rootScope.$new();
 
-        teamService.getTeam.and.returnValue(defer.promise);
+        //Constructor calls a promise straight away, so we will resolve this to avoid interference with the method testing
+        initDefer.resolve(null);
+        teamService.getTeam.and.returnValue(initDefer.promise);
         editTeamController = $controller(FifaLeagueClient.Module.Team.EditTeamController, {$scope: scope, $routeParams: {}});
 
         scope.$digest();
+
+        //Set new defer for methods
+        defer = $q.defer();
     }));
 
     describe('when updating a team', function() {
         it('creates a loading promise', function() {
-             // The constructor creates a promsie request, we must resolve this now so that this method does not pass falsly
-            verifyPromiseAndDigest(editTeamController, defer, rootScope);
-
             teamService.updateTeam.and.returnValue(defer.promise);
             // We simulate we have loaded a team
             editTeamController.team = createTeamModel();
@@ -60,6 +63,7 @@ describe('The EditTeamController', function() {
 
             // And that we submitted this team
             editTeamController.updateTeam();
+            verifyPromiseAndDigest(editTeamController, defer, rootScope);
 
             var expectedTeam = createTeamModel();
             expect(teamService.updateTeam).toHaveBeenCalledWith(expectedTeam);
@@ -72,12 +76,14 @@ describe('The EditTeamController', function() {
 
             // And that we submitted this team
             editTeamController.updateTeam();
+            defer.resolve();
             verifyPromiseAndDigest(editTeamController, defer, rootScope);
 
             expect(locationService.path).toHaveBeenCalledWith('/teams');
         });
 
         it('adds the errors to the team controller and does not redirect when it fails', function() {
+            defer.reject({errors: createErrors()});
             teamService.updateTeam.and.returnValue(defer.promise);
             // We simulate we have loaded a team
             editTeamController.team =  createTeamModel();
@@ -86,7 +92,6 @@ describe('The EditTeamController', function() {
             editTeamController.updateTeam();
             
             // And that it failed
-            defer.reject({errors: createErrors()});
             verifyPromiseAndDigest(editTeamController, defer, rootScope);
 
             expect(editTeamController.errors).toEqual(createErrors());
@@ -96,9 +101,6 @@ describe('The EditTeamController', function() {
     
     describe('when retreiving a team', function() {
         it('creates a loading promise', function() {
-            // The constructor creates a promsie request, we must resolve this now so that this method does not pass falsly
-            verifyPromiseAndDigest(editTeamController, defer, rootScope);
-
             //Load new team
             editTeamController.loadTeam();
 
@@ -116,18 +118,20 @@ describe('The EditTeamController', function() {
         });
 
         it('sets the loaded team to be the retreived one on success', function() {
+            teamService.getTeam.and.returnValue(defer.promise);
+            defer.resolve(createTeamModel());
             // We simulate we have set a team on this controller
             editTeamController.id = 1;
 
-            // And that we loaded that team successfully
+            // And that we loaded the team
             editTeamController.loadTeam();
-            defer.resolve(createTeamModel());
             verifyPromiseAndDigest(editTeamController, defer, rootScope);
             
             expect(editTeamController.team).toEqual(createTeamModel());
         });
 
         it('sets an error on the controller if it fails', function() {
+            teamService.getTeam.and.returnValue(defer.promise);
             // We simulate we have set a team on this controller
             editTeamController.id = 1;
 
