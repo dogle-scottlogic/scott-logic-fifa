@@ -24,8 +24,7 @@ namespace FIFA.Server.Controllers
             this.matchRepository = matchRepository;
             this.scoreRepository = scoreRepository;
         }
-        
-        public async Task<HttpResponseMessage> Post(MatchResultDTO matchResult) { 
+                public async Task<HttpResponseMessage> Post(MatchResultDTO matchResult) { 
 
             if (matchResult != null)
             {
