@@ -134,7 +134,7 @@ namespace FIFA.Server.Controllers
         /// 
             // POST api/League
         [ResponseType(typeof(League))]
-        [Authorize(Roles = AuthenticationRoles.administratorRole)] // Require authenticated requests.
+        [Authorize(Roles = AuthenticationRoles.AdministratorRole)] // Require authenticated requests.
         public async Task<HttpResponseMessage> Post(GenerateLeagueDTO item)
         {
             // try to get the season, if it returns null, send an error

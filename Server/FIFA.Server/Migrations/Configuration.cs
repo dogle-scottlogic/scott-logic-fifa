@@ -195,7 +195,7 @@ namespace FIFA.Server.Migrations
             IdentityRole role = context.Roles.Add(new IdentityRole(AuthenticationRoles.userRole));
             context.Roles.Add(role);
 
-            IdentityRole adminRole = context.Roles.Add(new IdentityRole(AuthenticationRoles.administratorRole));
+            IdentityRole adminRole = context.Roles.Add(new IdentityRole(AuthenticationRoles.AdministratorRole));
             context.Roles.Add(adminRole);
             context.SaveChanges();
 

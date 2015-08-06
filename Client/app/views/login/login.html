@@ -2,7 +2,7 @@
   <div class="form-group">
     <h2>Login</h2>
     <hr />
-    <form class="container-fluid" ng-submit="vm.login()" ng-hide="vm.loginData.isAuth">
+    <form class="container-fluid" ng-submit="vm.login()" ng-hide="vm.loginData.isAuth" cg-busy="vm.loadingPromise">
 
       <div class="form-group">
         <label class="sr-only" for="error">Errors:</label>

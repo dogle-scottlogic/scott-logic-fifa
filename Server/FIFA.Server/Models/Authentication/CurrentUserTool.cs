@@ -35,7 +35,7 @@ namespace FIFA.Server.Models.Authentication
         // => or the user is an administrator
         public static bool isAccessibleByName(string userName)
         {
-            bool admin = isUserInRole(AuthenticationRoles.administratorRole);
+            bool admin = isUserInRole(AuthenticationRoles.AdministratorRole);
             if (admin)
             {
                 return true;
@@ -51,7 +51,7 @@ namespace FIFA.Server.Models.Authentication
         // => or the user is an administrator
         public static bool isAccessibleById(string userID)
         {
-            bool admin = isUserInRole(AuthenticationRoles.administratorRole);
+            bool admin = isUserInRole(AuthenticationRoles.AdministratorRole);
             if (admin)
             {
                 return true;

@@ -71,7 +71,7 @@ namespace FIFA.Server.Controllers
         /// 
         // POST api/Team
         [ResponseType(typeof(Team))]
-        [Authorize(Roles = AuthenticationRoles.administratorRole)] // Require authenticated requests.
+        [Authorize(Roles = AuthenticationRoles.AdministratorRole)] // Require authenticated requests.
         public async Task<HttpResponseMessage> Post(Team team)
         {
             // try to get the country, if it returns null, send an error
@@ -93,7 +93,7 @@ namespace FIFA.Server.Controllers
         /// 
         // PUT api/Team/5
         [ResponseType(typeof(Team))]
-        [Authorize(Roles = AuthenticationRoles.administratorRole)] // Require authenticated requests.
+        [Authorize(Roles = AuthenticationRoles.AdministratorRole)] // Require authenticated requests.
         public async Task<HttpResponseMessage> Put(int id, Team team)
         {
             // try to get the country, if it returns null, send an error
@@ -119,7 +119,7 @@ namespace FIFA.Server.Controllers
         /// 
         // DELETE api/Team/5
         [ResponseType(typeof(Team))]
-        [Authorize(Roles = AuthenticationRoles.administratorRole)] // Require authenticated requests.
+        [Authorize(Roles = AuthenticationRoles.AdministratorRole)] // Require authenticated requests.
         public async Task<HttpResponseMessage> Delete(int id)
         {
             return await base.Delete(id);

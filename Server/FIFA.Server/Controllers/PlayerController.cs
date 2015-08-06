@@ -76,7 +76,7 @@ namespace FIFA.Server.Controllers
         /// 
         // POST api/Country
         [ResponseType(typeof(Player))]
-        [Authorize(Roles = AuthenticationRoles.administratorRole)] // Require authenticated requests.
+        [Authorize(Roles = AuthenticationRoles.AdministratorRole)] // Require authenticated requests.
         public async Task<HttpResponseMessage> Post(Player item)
         {
             if (item != null && await ((IPlayerRepository)repository).isPlayerNameExist(item.Name, null))
@@ -98,7 +98,7 @@ namespace FIFA.Server.Controllers
         /// 
         // PUT api/Player/5
         [ResponseType(typeof(Player))]
-        [Authorize(Roles = AuthenticationRoles.administratorRole)] // Require authenticated requests.
+        [Authorize(Roles = AuthenticationRoles.AdministratorRole)] // Require authenticated requests.
         public async Task<HttpResponseMessage> Put(int id, Player item)
         {
             if (await ((IPlayerRepository)repository).isPlayerNameExist(item.Name, id))
@@ -122,7 +122,7 @@ namespace FIFA.Server.Controllers
         /// 
         // DELETE api/Player/5
         [ResponseType(typeof(Player))]
-        [Authorize(Roles = AuthenticationRoles.administratorRole)] // Require authenticated requests.
+        [Authorize(Roles = AuthenticationRoles.AdministratorRole)] // Require authenticated requests.
         public async Task<HttpResponseMessage> Delete(int id)
         {
             return await base.Delete(id);

@@ -38,7 +38,7 @@ namespace FIFA.Server.Controllers
                     // if we found the match, we verify if it has already been played, if it s the case,
                     // only the admin can change the value then
                     if (match.Played
-                        && !CurrentUserTool.isUserInRole(AuthenticationRoles.administratorRole))
+                        && !CurrentUserTool.isUserInRole(AuthenticationRoles.AdministratorRole))
                     {
                         return Request.CreateErrorResponse(HttpStatusCode.Forbidden, "Only the administrator can modify a match already played.");
                     }
