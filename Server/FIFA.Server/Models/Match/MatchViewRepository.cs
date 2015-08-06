@@ -27,9 +27,15 @@ namespace FIFA.Server.Models
 
             // Getting all the played matches
             var matchQuery = getMatchResultViewModel(filteredMatchQuery);
+
+            // Grouping the matches by local date
+            int hourOffset = 0;
+            if(filter != null && filter.HourOffset != null)
+            {
+                hourOffset = filter.HourOffset.Value;
+            }
             
-            // Grouping the matches by date
-            var groupedMatches = matchQuery.GroupBy(m => DbFunctions.TruncateTime(m.Date)).ToList().Select(mq => mq).ToList();
+            var groupedMatches = matchQuery.GroupBy(m => DbFunctions.TruncateTime(DbFunctions.AddHours(m.Date, hourOffset))).ToList().Select(mq => mq).ToList();
 
             // we group by the league Id
             var leagueMatches = groupedMatches.Select(

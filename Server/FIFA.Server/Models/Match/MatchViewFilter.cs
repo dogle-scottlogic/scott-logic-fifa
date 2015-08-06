@@ -22,6 +22,9 @@ namespace FIFA.Server.Models
         // Limitation of results
         public int? LimitResult { get; set; }
 
+        // Time offset of the client (usefull for the group by)
+        public int? HourOffset { get; set; }
+
         public IQueryable<Match> FilterMatchView(IQueryable<Match> query)
         {
 
