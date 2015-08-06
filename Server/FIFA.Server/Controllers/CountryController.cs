@@ -11,10 +11,13 @@ using System.Web.Http.Description;
 using FIFA.Server.Models;
 using System.Threading.Tasks;
 using FIFA.Server.Infrastructure;
+using FIFA.Server.Authentication;
 
 namespace FIFA.Server.Controllers
 {
 
+    [IdentityBasicAuthentication] // Enable authentication via an ASP.NET Identity user name and password
+    [Authorize] // Require authenticated requests.
     [ConfigurableCorsPolicy("localhost")]
     public class CountryController : AbstractCRUDAPIController<Country, int, CountryFilter>
     {
@@ -71,6 +74,7 @@ namespace FIFA.Server.Controllers
         /// 
         // POST api/Country
         [ResponseType(typeof(Country))]
+        [Authorize(Roles = AuthenticationRoles.AdministratorRole)] // Require authenticated requests.
         public async Task<HttpResponseMessage> Post(Country item)
         {
             if (item != null && await((ICountryRepository)repository).isCountryNameExist(item.Name, null))
@@ -92,6 +96,7 @@ namespace FIFA.Server.Controllers
         /// 
         // PUT api/Country/5
         [ResponseType(typeof(Country))]
+        [Authorize(Roles = AuthenticationRoles.AdministratorRole)] // Require authenticated requests.
         public async Task<HttpResponseMessage> Put(int id, Country item)
         {
             if (item != null && await ((ICountryRepository)repository).isCountryNameExist(item.Name, id))
@@ -115,6 +120,7 @@ namespace FIFA.Server.Controllers
         /// 
         // DELETE api/Country/5
         [ResponseType(typeof(Country))]
+        [Authorize(Roles = AuthenticationRoles.AdministratorRole)] // Require authenticated requests.
         public async Task<HttpResponseMessage> Delete(int id)
         {
             return await base.Delete(id);

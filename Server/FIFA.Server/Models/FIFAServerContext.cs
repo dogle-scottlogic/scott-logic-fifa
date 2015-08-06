@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNet.Identity.EntityFramework;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
@@ -6,10 +7,10 @@ using System.Web;
 
 namespace FIFA.Server.Models
 {
-    public class FIFAServerContext : DbContext
+    public class FIFAServerContext : IdentityDbContext<IdentityUser>
     {
     
-        public FIFAServerContext() : base("name=FIFAServerContext")
+        public FIFAServerContext() : base("FIFAServerContext")
         {
             base.Configuration.ProxyCreationEnabled = false;
         }

@@ -1,4 +1,5 @@
-﻿using FIFA.Server.Infrastructure;
+﻿using FIFA.Server.Authentication;
+using FIFA.Server.Infrastructure;
 using FIFA.Server.Models;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,8 @@ using System.Web.Http;
 
 namespace FIFA.Server.Controllers
 {
+    [IdentityBasicAuthentication] // Enable authentication via an ASP.NET Identity user name and password
+    [Authorize] // Require authenticated requests.
     [ConfigurableCorsPolicy("localhost")]
     public class ResultViewController : ApiController
     {

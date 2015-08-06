@@ -10,9 +10,14 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 using FIFA.Server.Models;
+using FIFA.Server.Authentication;
+using FIFA.Server.Infrastructure;
 
 namespace FIFA.Server.Controllers
 {
+    [IdentityBasicAuthentication] // Enable authentication via an ASP.NET Identity user name and password
+    [Authorize] // Require authenticated requests.
+    [ConfigurableCorsPolicy("localhost")]
     public class ScoreController : AbstractCRUDAPIController<Score, int, ScoreFilter>
     {
         private FIFAServerContext db = new FIFAServerContext();
@@ -63,6 +68,7 @@ namespace FIFA.Server.Controllers
         /// 
         // POST api/Score
         [ResponseType(typeof(Score))]
+        [Authorize(Roles = AuthenticationRoles.AdministratorRole)] // Require authenticated requests.
         public async Task<HttpResponseMessage> Post(Score item)
         {
             if (item != null && ScoreExists(item.Id))
@@ -84,6 +90,7 @@ namespace FIFA.Server.Controllers
         /// 
         // PUT api/Score/5
         [ResponseType(typeof(Score))]
+        [Authorize(Roles = AuthenticationRoles.AdministratorRole)] // Require authenticated requests.
         public async Task<HttpResponseMessage> Put(int id, Score item)
         {
             if (item != null && ScoreExists(item.Id))
@@ -107,6 +114,7 @@ namespace FIFA.Server.Controllers
         /// 
         // DELETE api/Score/5
         [ResponseType(typeof(Score))]
+        [Authorize(Roles = AuthenticationRoles.AdministratorRole)] // Require authenticated requests.
         public async Task<HttpResponseMessage> Delete(int id)
         {
             return await base.Delete(id);

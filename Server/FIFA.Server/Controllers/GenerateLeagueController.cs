@@ -11,10 +11,13 @@ using System.Web.Http.Description;
 using FIFA.Server.Models;
 using System.Threading.Tasks;
 using FIFA.Server.Infrastructure;
+using FIFA.Server.Authentication;
 
 namespace FIFA.Server.Controllers
 {
     // Controller used to generate a league
+    [IdentityBasicAuthentication] // Enable authentication via an ASP.NET Identity user name and password
+    [Authorize] // Require authenticated requests.
     [ConfigurableCorsPolicy("localhost")]
     public class GenerateLeagueController : ApiController
     {
@@ -131,6 +134,7 @@ namespace FIFA.Server.Controllers
         /// 
             // POST api/League
         [ResponseType(typeof(League))]
+        [Authorize(Roles = AuthenticationRoles.AdministratorRole)] // Require authenticated requests.
         public async Task<HttpResponseMessage> Post(GenerateLeagueDTO item)
         {
             // try to get the season, if it returns null, send an error

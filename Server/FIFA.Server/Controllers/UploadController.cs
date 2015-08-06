@@ -10,9 +10,12 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 using FIFA.Server.Models;
+using FIFA.Server.Authentication;
 
 namespace FIFA.Server.Controllers
 {
+    [IdentityBasicAuthentication] // Enable authentication via an ASP.NET Identity user name and password
+    [Authorize] // Require authenticated requests.
     public class UploadController : ApiController
     {
         private FIFAServerContext db = new FIFAServerContext();
