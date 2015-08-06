@@ -3,7 +3,7 @@
   <div class="alert alert-danger" role="alert" ng-repeat="value in vm.errors['item.Global']">{{value}}</div>
   <div class="grid-view">
     <div class="rubric-title">Season table</div>
-    <accordion close-others="true">
+    <accordion close-others="true" class="table-responsive">
         <accordion-group  ng-repeat="seasonTableView in vm.seasonTableViewList" ng-init="status.open = $first" is-open="status.open" class="accordion-panel">
                 <accordion-heading>
                   <div class="accordion-head">
@@ -11,7 +11,7 @@
                     <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
                   </div>
                 </accordion-heading>
-                <div ng-repeat="leagueTableView in seasonTableView.LeagueTables" class="table-responsive">
+                <div ng-repeat="leagueTableView in seasonTableView.LeagueTables">
                       <table class="table table-multipletbody-striped table-bordered table-hover">
                           <thead>
                             <tr class="league-thead">
@@ -20,7 +20,7 @@
                             </tr>
                               <tr>
                                   <th class="hidden-xs hidden-sm"></th>
-                                  <th>Position</th>
+                                  <th>Pos</th>
                                   <th>Team</th>
                                   <th><span tooltip="Matches played">P</span></th>
                                   <th class="hidden-xs"><span tooltip="Matches won">W</span></th>
