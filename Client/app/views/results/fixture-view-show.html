@@ -1,9 +1,14 @@
+<accordion close-others="true" class="table-responsive">
+    <accordion-group is-open="status.open" class="accordion-panel">
+      <accordion-heading>
+          <div class="accordion-head">
+            Show me:
+            <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
+          </div>
+      </accordion-heading>
 <form class="form-inline" ng-submit="vm.loadList()">
     <div class="container-fluid form-group">
       <div class="form-group">
-        <label>Show me:</label>
-      </div>
-      <div class="form-group" >
         <label class="sr-only" for="country">Country</label>
         <countryselect selectedcountry="vm.resultViewFilter.CountryId" filterhasremainingmatchtoplay="true"></countryselect>
       </div>
@@ -20,13 +25,14 @@
         <input type="submit" class="btn btn-primary" value="Update" />
       </div>
     </div>
-</form><br>
-
+    </form>
+  </accordion-group>
+</accordion>
 <div ng-init="vm.loadList()" cg-busy="vm.loadingPromise">
-  <div class="clear"></div>
-  <div class="alert alert-danger" role="alert" ng-repeat="value in vm.errors['item.Global']">{{value}}</div>
   <div class="grid-view">
     <div class="rubric-title">Fixtures</div>
+    <div class="clear"></div>
+    <div class="alert alert-danger" role="alert" ng-repeat="value in vm.errors['item.Global']">{{value}}</div>
     <accordion close-others="true">
       <div ng-repeat="resultView in vm.resultViewList" ng-init="resultViewFirst = $first">
         <h2>{{resultView.Date | date :'EEEE dd MMMM yyyy'}}</h2>
@@ -45,7 +51,7 @@
                                   <td width="50%">{{match.homeTeamPlayer.PlayerName}} ({{match.homeTeamPlayer.TeamName}})</td>
                                   <td class="text-nowrap">v</td>
                                   <td width="50%">{{match.awayTeamPlayer.PlayerName}} ({{match.awayTeamPlayer.TeamName}})</td>
-                                  <td><matchmodallink showeditlink="true" id="match.Id" callbackupdate="vm.loadList()"></matchmodallink></td>
+                                  <td class="hidden-xs"><matchmodallink showeditlink="true" id="match.Id" callbackupdate="vm.loadList()"></matchmodallink></td>
                               </tr>
                           </table>
                   </accordion-group>

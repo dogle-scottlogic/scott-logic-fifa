@@ -37,7 +37,7 @@
 
 <form ng-submit="vm.saveResult()" class="container-fluid" ng-init="vm.initFields()" cg-busy="vm.loadingPromise">
 
-      <div class="form-group">
+      <div class="row">
         <label class="sr-only" for="error">Errors:</label>
         <div class="clear"></div>
         <div class="alert alert-danger" role="alert" ng-repeat="value in vm.errors['item.Global']">{{value}}</div>
