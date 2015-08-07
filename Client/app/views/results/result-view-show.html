@@ -39,10 +39,10 @@
 <br>
 
 <div ng-init="vm.loadList()" cg-busy="vm.loadingPromise">
-  <div class="clear"></div>
-  <div class="alert alert-danger" role="alert" ng-repeat="value in vm.errors['item.Global']">{{value}}</div>
   <div class="grid-view">
     <div class="rubric-title">Results</div>
+    <div class="clear"></div>
+    <div class="alert alert-danger" role="alert" ng-repeat="value in vm.errors['item.Global']">{{value}}</div>
     <accordion close-others="true" class="table-responsive">
         <accordion-group  ng-repeat="resultView in vm.resultViewList" ng-init="status.open = $first" is-open="status.open" class="accordion-panel">
                 <accordion-heading>
