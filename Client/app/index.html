@@ -17,9 +17,9 @@
 <body ng-app="FifaLeagueApp">
     <div id="header">
         <div class="wrapper">
-            <div id="logo"></div>
+            <div id="logo" class="hidden-xs"></div>
             <div id="title">
-                XB - FIFA League
+                FIFA League
             </div>
             <div class="clear"></div>
         </div>
@@ -38,26 +38,26 @@
 
             <div class="collapse navbar-collapse" id="index-navbar">
                 <ul class="nav navbar-nav">
-                    <li><a href="#/dashboard" data-toggle="collapse" data-target=".navbar-collapse">Dashboard</a></li>
-                    <li><a href="#/add-result" data-toggle="collapse" data-target=".navbar-collapse">Add result</a></li>
-                    <li><a href="#/view-fixture" data-toggle="collapse" data-target=".navbar-collapse">Fixtures</a></li>
-                    <li><a href="#/view-result" data-toggle="collapse" data-target=".navbar-collapse">Results</a></li>
-                    <li><a href="#" data-toggle="collapse" data-target=".navbar-collapse">Archives</a></li>
-                    <li><a href="#" data-toggle="collapse" data-target=".navbar-collapse">Players</a></li>
+                    <li><a href="#/dashboard" data-toggle="collapse" data-target="#index-navbar.in">Dashboard</a></li>
+                    <li><a href="#/add-result" data-toggle="collapse" data-target="#index-navbar.in">Add result</a></li>
+                    <li><a href="#/view-fixture" data-toggle="collapse" data-target="#index-navbar.in">Fixtures</a></li>
+                    <li><a href="#/view-result" data-toggle="collapse" data-target="#index-navbar.in">Results</a></li>
+                    <li><a href="#" data-toggle="collapse" data-target="#index-navbar.in">Archives</a></li>
+                    <li><a href="#" data-toggle="collapse" data-target="#index-navbar.in">Players</a></li>
                     <li class="dropdown">
                       <a class="dropdown-toggle" data-toggle="dropdown" role="button">Admin <span class="caret"></span></a>
                       <ul class="dropdown-menu" role="menu">
-                          <li><a href="#/countries" data-toggle="collapse" data-target=".navbar-collapse">Countries</a></li>
-                          <li><a href="#/players" data-toggle="collapse" data-target=".navbar-collapse">Players</a></li>
-                          <li><a href="#/seasons" data-toggle="collapse" data-target=".navbar-collapse">Seasons</a></li>
-                          <li><a href="#/teams" data-toggle="collapse" data-target=".navbar-collapse">Teams</a></li>
+                          <li><a href="#/countries" data-toggle="collapse" data-target="#index-navbar.in">Countries</a></li>
+                          <li><a href="#/players" data-toggle="collapse" data-target="#index-navbar.in">Players</a></li>
+                          <li><a href="#/seasons" data-toggle="collapse" data-target="#index-navbar.in">Seasons</a></li>
+                          <li><a href="#/teams" data-toggle="collapse" data-target="#index-navbar.in">Teams</a></li>
                       </ul>
                     </li>
                 </ul>
             </div>
         </div>
     </nav>
-    <div>
+    <div class ="wrapper">
         <ng-view></ng-view>
     </div>
 </body>

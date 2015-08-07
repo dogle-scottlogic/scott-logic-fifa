@@ -1,4 +1,7 @@
-<accordion close-others="true" class="table-responsive">
+
+<div class="row">
+  <div class="col-md-12" >
+    <accordion close-others="true" class="table-responsive">
     <accordion-group is-open="status.open" class="accordion-panel">
         <accordion-heading>
           <div class="accordion-head">
@@ -34,17 +37,18 @@
                   <label class="sr-only" for="Update">Update</label>
                   <input type="submit" class="btn btn-primary" value="Update" />
                 </div>
-          </div>
-      </form>
-    </accordion-group>
-</accordion>
-<br>
-<div class="container-fluid">
-  <div class="row">
-    <div class="col-md-6" >
-        <latestresultviewshow filter="vm.resultViewFilter" parentvm="vm"></latestresultviewshow>
-    </div>
-    <div class="col-md-6" >
-        <seasontableviewshow filter="vm.seasonTableFilter" parentvm="vm"></seasontableviewshow>
-    </div>
+            </div>
+        </form>
+      </accordion-group>
+    </accordion>
   </div>
+</div>
+
+<div class="row">
+  <div class="col-md-6" >
+      <latestresultviewshow filter="vm.resultViewFilter" parentvm="vm"></latestresultviewshow>
+  </div>
+  <div class="col-md-6" >
+      <seasontableviewshow filter="vm.seasonTableFilter" parentvm="vm"></seasontableviewshow>
+  </div>
+</div>
