@@ -19,10 +19,12 @@ namespace FIFA.Server.Controllers
     {
         IMatchRepository matchRepository;
         IScoreRepository scoreRepository;
+        ICurrentUserTool userTool;
 
-        public MatchResultController(IMatchRepository matchRepository, IScoreRepository scoreRepository) {
+        public MatchResultController(IMatchRepository matchRepository, IScoreRepository scoreRepository, ICurrentUserTool _userTool) {
             this.matchRepository = matchRepository;
             this.scoreRepository = scoreRepository;
+            this.userTool = _userTool;
         }
                 public async Task<HttpResponseMessage> Post(MatchResultDTO matchResult) { 
 
@@ -37,7 +39,7 @@ namespace FIFA.Server.Controllers
                     // if we found the match, we verify if it has already been played, if it s the case,
                     // only the admin can change the value then
                     if (match.Played
-                        && !CurrentUserTool.isUserInRole(AuthenticationRoles.AdministratorRole))
+                        && !this.userTool.isUserInRole(AuthenticationRoles.AdministratorRole))
                     {
                         return Request.CreateErrorResponse(HttpStatusCode.Forbidden, "Only the administrator can modify a match already played.");
                     }

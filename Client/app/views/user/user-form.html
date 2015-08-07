@@ -1,0 +1,28 @@
+<div class="form-group">
+
+  <label>Name</label>
+  <input type="text" ng-model="vm.user.Name" class="form-control"
+     placeholder="User Name"
+     tooltip="Enter the name of the User"
+     tooltip-placement="top"
+     tooltip-trigger="mouseenter"
+     tooltip-enable="!vm.user.Name"
+     required/>
+  <div class="clear"></div>
+  <div class="alert alert-danger" role="alert" ng-repeat="value in vm.errors['item.Name']">{{value}}</div>
+   <label>Password</label>
+   <input type="password" ng-model="vm.user.Password" class="form-control"
+      tooltip="Enter the password of the User only if you want to change it"
+      tooltip-placement="top"
+      tooltip-trigger="mouseenter"
+      tooltip-enable="!vm.user.Password"/>
+    <label>Confirm the password</label>
+    <input type="password" ng-model="vm.user.ConfirmPassword" class="form-control"
+       tooltip="Confirm the password"
+       tooltip-placement="top"
+       tooltip-trigger="mouseenter"
+       tooltip-enable="!vm.user.ConfirmPassword"/>
+    <div class="clear"></div>
+    <div class="alert alert-danger" role="alert" ng-repeat="value in vm.errors['item.Password']">{{value}}</div>
+
+</div>

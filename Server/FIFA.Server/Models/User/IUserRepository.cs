@@ -7,8 +7,8 @@ using System.Web;
 
 namespace FIFA.Server.Models
 {
-    public interface IUserRepository : ICRUDRepository<IdentityUser, string, UserFilter>
+    public interface IUserRepository : ICRUDRepository<UserModel, string, UserFilter>
     {
-        Task<bool> isUserNameExist(string userName, string Id);
+        Task<bool> isNameExist(string name, string Id);
     }
 }

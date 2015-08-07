@@ -14,6 +14,7 @@ using System.Reflection;
 using FIFA.Server.Models;
 using System.Net.Http.Headers;
 using System.Data.Entity;
+using FIFA.Server.Models.Authentication;
 
 namespace FIFA.Server
 {
@@ -62,6 +63,7 @@ namespace FIFA.Server
             kernel.Bind<IMatchViewRepository>().To<MatchViewRepository>();
             kernel.Bind<ISeasonTableViewRepository>().To<SeasonTableViewRepository>();
             kernel.Bind<IUserRepository>().To<UserRepository>();
+            kernel.Bind<ICurrentUserTool>().To<CurrentUserTool>();
         }
     }
 }

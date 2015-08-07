@@ -1,6 +1,7 @@
 ﻿using FIFA.Server.Authentication;
 using FIFA.Server.Infrastructure;
 using FIFA.Server.Models;
+using FIFA.Server.Models.Authentication;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System;
 using System.Collections.Generic;
@@ -20,23 +21,24 @@ namespace FIFA.Server.Controllers
     [IdentityBasicAuthentication] // Enable authentication via an ASP.NET Identity user name and password
     [Authorize] // Require authenticated requests.
     [ConfigurableCorsPolicy("localhost")]
-    public class UserController : AbstractCRUDAPIController<IdentityUser, string, UserFilter>
+    public class UserController : AbstractCRUDAPIController<UserModel, string, UserFilter>
     {
 
+        ICurrentUserTool userTool;
         /// <summary>
         ///     Constructor
         /// </summary>
         /// <returns></returns>
-        public UserController(IUserRepository UserRepository)
+        public UserController(IUserRepository UserRepository, ICurrentUserTool _userTool)
             : base(UserRepository)
         {
+            this.userTool = _userTool;
         }
 
         /// <summary>
         ///     Retrieve a list of Users
         /// </summary>
-        /// <returns>Return a list of IdentityUser</returns>
-        [Authorize(Roles = AuthenticationRoles.AdministratorRole)]
+        /// <returns>Return a list of UserModel</returns>
         public async Task<HttpResponseMessage> GetAll()
         {
             return await base.GetAll();
@@ -46,7 +48,7 @@ namespace FIFA.Server.Controllers
         ///     Retrieves a specific User by it's ID
         /// </summary>
         /// <param name="id">The ID of the User.</param>
-        /// <returns>Return a IdentityUser if found</returns>
+        /// <returns>Return a UserModel if found</returns>
         [RestrictAccessFromUserID]
         public async Task<HttpResponseMessage> Get(string id)
         {
@@ -57,15 +59,23 @@ namespace FIFA.Server.Controllers
         ///     Create a new User
         /// </summary>
         /// <param name="item">The User to add without id</param>
-        /// <returns>Return a IdentityUser if created and its uri to retrieve it</returns>
+        /// <returns>Return a UserModel if created and its uri to retrieve it</returns>
         [Authorize(Roles = AuthenticationRoles.AdministratorRole)]
-        public async Task<HttpResponseMessage> Post(IdentityUser item)
+        public async Task<HttpResponseMessage> Post(UserModel item)
         {
-            if (item != null && await ((IUserRepository)repository).isUserNameExist(item.UserName, null))
+            // The password is mandatory on creation
+            if(item != null && String.IsNullOrEmpty(item.Password))
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Impossible to create an user with an empty password.");
+            }
+            else if (item != null && String.IsNullOrEmpty(item.Name))
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Impossible to create an user with an empty name.");
+            }
+            else if (item != null && await ((IUserRepository)repository).isNameExist(item.Name, null))
             {
                 return this.createErrorResponseUserNameExists();
-            }
-            else
+            }else
             {
                 return await base.Post(item);
             }
@@ -76,11 +86,16 @@ namespace FIFA.Server.Controllers
         /// </summary>
         /// <param name="id">The ID of the User.</param>
         /// <param name="item">The modified User</param>
-        /// <returns>Return the modified IdentityUser if no error</returns>
+        /// <returns>Return the modified UserModel if no error</returns>
         [RestrictAccessFromUserID]
-        public async Task<HttpResponseMessage> Put(string id, IdentityUser item)
+        public async Task<HttpResponseMessage> Put(string id, UserModel item)
         {
-            if (item != null && await ((IUserRepository)repository).isUserNameExist(item.UserName, id))
+            
+            if (item != null && String.IsNullOrEmpty(item.Name))
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Impossible to update an user with an empty name.");
+            }
+            else if (item != null && await ((IUserRepository)repository).isNameExist(item.Name, id))
             {
                 return this.createErrorResponseUserNameExists();
             }
@@ -101,17 +116,25 @@ namespace FIFA.Server.Controllers
         [Authorize(Roles = AuthenticationRoles.AdministratorRole)]
         public async Task<HttpResponseMessage> Delete(string id)
         {
-            return await base.Delete(id);
+            // if the user to delete is the current user, we respond an error
+            if (this.userTool.GetCurrentUserId() == id)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "You can't delete yourself. Ask for an other administrator to do this operation.");
+            }
+            else
+            {
+                return await base.Delete(id);
+            }
         }
 
 
         /**
          * Creating an error message indicating that the user name already exists
          **/
-        private const string userNameExistsError = "The user name already exists";
+        private const string NameExistsError = "The user name already exists";
         private HttpResponseMessage createErrorResponseUserNameExists()
         {
-            return Request.CreateErrorResponse(HttpStatusCode.BadRequest, userNameExistsError);
+            return Request.CreateErrorResponse(HttpStatusCode.BadRequest, NameExistsError);
         }
 
 
