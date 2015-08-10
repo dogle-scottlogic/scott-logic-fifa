@@ -485,7 +485,6 @@ namespace FIFATests.ControllerTests
         {
             UserModel userModel = createUser(false);
             UserModel adminUserModel = createUser(true);
-            adminUserModel.AdministratorRole = true;
             var mock = new Mock<IUserRepository>(MockBehavior.Strict);
 
             // Creating the rules for mock, always send true in this case
@@ -515,7 +514,6 @@ namespace FIFATests.ControllerTests
         {
             UserModel userModel = createUser(false);
             UserModel adminUserModel = createUser(true);
-            adminUserModel.AdministratorRole = true;
             var mock = new Mock<IUserRepository>(MockBehavior.Strict);
 
             // Creating the rules for mock, always send true in this case
