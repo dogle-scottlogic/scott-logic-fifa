@@ -70,6 +70,8 @@ namespace FIFA.Server.Models
             IdentityUser newUser = createIdentityUser(item);
 
             db.Users.Add(newUser);
+
+            // We save the changes before adding the roles and the claim
             await db.SaveChangesAsync();
 
             // we attach the user to the role of user
@@ -81,6 +83,7 @@ namespace FIFA.Server.Models
                 await this.userManager.AddToRoleAsync(newUser.Id, AuthenticationRoles.AdministratorRole);
             }
 
+            // Add the claim
             await this.userManager.AddClaimAsync(newUser.Id, new Claim("hasRegistered", "true"));
 
 
@@ -114,7 +117,7 @@ namespace FIFA.Server.Models
                 // Managing the admin role of the user
                 if (item.AdministratorRole)
                 {
-                    // if the item has the administrator role at true, we add the role to the user if it doesn't exists
+                    // if the item has the administrator role at true, we add the role to the user if he doesn't have it
                     if (!await this.userManager.IsInRoleAsync(id, AuthenticationRoles.AdministratorRole))
                     {
                         await this.userManager.AddToRoleAsync(id , AuthenticationRoles.AdministratorRole);
@@ -122,7 +125,7 @@ namespace FIFA.Server.Models
                 }
                 else
                 {
-                    // if the item has the administrator role at false, we remove the role to the user if it exists
+                    // if the item has the administrator role at false, we remove the role to the user if he has it
                     if (await this.userManager.IsInRoleAsync(id, AuthenticationRoles.AdministratorRole))
                     {
                         userManager.RemoveFromRole(id, AuthenticationRoles.AdministratorRole);
@@ -176,11 +179,6 @@ namespace FIFA.Server.Models
             {
                 db.Dispose();
             }
-        }
-
-        private async Task<IdentityRole> getRole(string roleName)
-        {
-            return await db.Roles.Where(r => r.Name == roleName).FirstOrDefaultAsync();
         }
 
         public async Task<bool> isNameExist(string name, string Id)
