@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FIFA.Server.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -7,7 +8,7 @@ using System.Web;
 
 namespace FIFA.Server.Models
 {
-    public class CountryFilter
+    public class CountryFilter : IQueryFilter<Country>
     {
         public int Id { get; set; }
 
@@ -15,7 +16,7 @@ namespace FIFA.Server.Models
 
         public bool? HasRemainingMatchToPlay { get; set; }
 
-        public IQueryable<Country> FilterCountries(IQueryable<Country> query)
+        public IQueryable<Country> Filter(IQueryable<Country> query)
         {
             if (this.Id != 0)
             {

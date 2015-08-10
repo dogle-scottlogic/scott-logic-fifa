@@ -19,7 +19,7 @@ namespace FIFA.Server.Controllers
     [IdentityBasicAuthentication] // Enable authentication via an ASP.NET Identity user name and password
     [Authorize] // Require authenticated requests.
     [ConfigurableCorsPolicy("localhost")]
-    public class CountryController : AbstractCRUDAPIController<Country, int, CountryFilter>
+    public class CountryController : AbstractCRUDAPIController<Country, int, IQueryFilter<Country>>
     {
         /// <summary>
         ///     Constructor

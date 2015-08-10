@@ -8,81 +8,38 @@ using System.Data.Entity;
 
 namespace FIFA.Server.Models
 {
-    public class CountryRepository : ICountryRepository
+    public class CountryRepository : DbSetRepository<Country, int, String>, ICountryRepository
     {
-        private FIFAServerContext db = new FIFAServerContext();
+        private FIFAServerContext db;
 
-        public CountryRepository() { }
-        
-        // Get all the countries ordered by name / seasons
-        public async Task<IEnumerable<Country>> GetAll()
+        /// <summary>
+        /// Default constructor
+        /// </summary>
+        public CountryRepository() : this(new FIFAServerContext())
         {
-            return await db.Countries
-                .OrderBy(c => c.Name)
-                .ToListAsync();
         }
 
-        public async Task<IEnumerable<Country>> GetAllWithFilter(CountryFilter filter)
+        /// <summary>
+        /// Constructor that takes a specialized <see cref="DbContext"/>.
+        /// </summary>
+        /// <param name="db">FIFAServerContext that contains the DbSet of <see cref="Country"/> objects.</param>
+        /// <remarks>To allow for ninject dependency injection, 
+        /// this will attempt to dispose its <paramref name="db"/> on <c>dispose(bool)</c>.
+        /// </remarks>
+        CountryRepository(FIFAServerContext db) : base(
+            db, 
+            db.Countries, 
+            (country, id) => country.Id = id, // set the key field
+            (country) => country.Name) // order by this property
         {
-            return await FilterCountries(db.Countries, filter)
-                .OrderBy(c => c.Name)
-                .ToListAsync();
+            this.db = db;
         }
 
-        private IQueryable<Country> FilterCountries(IQueryable<Country> query, CountryFilter filter)
-        {
-            if (filter != null)
-            {
-                query = filter.FilterCountries(query);
-            }
-
-            return query;
-        }
-
-        // Get one country by its ID
-        public async Task<Country> Get(int id)
-        {
-            return await db.Countries.FindAsync(id);
-        }
-
-        // Add one country
-        public async Task<Country> Add(Country item){
-            db.Countries.Add(item);
-            await db.SaveChangesAsync();
-            return item;
-        }
-
-        // Update a country by its ID
-        public async Task<bool> Update(int id, Country item){
-
-            if (item == null)
-            {
-                return false;
-            }
-            item.Id = id;
-
-            db.Entry(item).State = EntityState.Modified;
-            await db.SaveChangesAsync();
-
-            return true;
-        }
-
-        // remove a country by its id
-        public async Task<bool> Remove(int id){
-            
-            Country country = db.Countries.Find(id);
-            if (country == null)
-            {
-                return false;
-            }
-
-            db.Countries.Remove(country);
-            await db.SaveChangesAsync();
-
-            return true;
-        }
-        
-        public void Dispose(bool disposing)
+        /// <summary>
+        /// Partial implementation of dispose pattern.
+        /// </summary>
+        /// <param name="disposing"></param>
+        public void dispose(bool disposing)
         {
             if (disposing)
             {
@@ -90,11 +47,16 @@ namespace FIFA.Server.Models
             }
         }
 
+        /// <summary>
+        /// Check for the existence of a country with the given name.
+        /// </summary>
+        /// <param name="countryName"></param>
+        /// <param name="Id"></param>
+        /// <returns>true if one has been found.</returns>
+        /// <remarks>It's not clear why we take the id parameter here.</remarks>
         public async Task<bool> isCountryNameExist(string countryName, int? Id)
         {
-            return await db.Countries.AnyAsync(c => c.Name == countryName && (Id == null || c.Id != Id));
+            return await AnyAsync(c => c.Name == countryName && (Id == null || c.Id != Id));
         }
-
-
     }
 }
