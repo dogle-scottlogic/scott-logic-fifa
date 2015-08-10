@@ -108,6 +108,14 @@
         "./typescript/module/team/statistic/TeamPlayerStatisticViewModel.ts",
         "./typescript/module/team/statistic/TeamPlayerStatisticViewService.ts",
         "./typescript/module/team/statistic/TeamPlayerStatisticViewShowController.ts",
-        "./typescript/module/team/statistic/TeamPlayerStatisticViewShowDirective.ts"
+        "./typescript/module/team/statistic/TeamPlayerStatisticViewShowDirective.ts",
+        "./typescript/module/user/UserFilter.ts",
+        "./typescript/module/user/UserModel.ts",
+        "./typescript/module/user/UserModule.ts",
+        "./typescript/module/user/UserService.ts",
+        "./typescript/module/user/controller/AbstractUserController.ts",
+        "./typescript/module/user/controller/UserAddController.ts",
+        "./typescript/module/user/controller/UserEditController.ts",
+        "./typescript/module/user/controller/UserListController.ts"
     ]
 }
