@@ -95,5 +95,16 @@ namespace FIFA.Server.Models
         public async Task<bool> teamNameExists(string name, int countryId, int? id) {
             return await db.Teams.AnyAsync(t => t.Name == name && t.CountryId == countryId && (id == null || t.Id != id));
         }
+
+        /// <summary>
+        /// Checks that the team with the specified id has attached scores i.e. 
+        /// it has matches attached.
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>true if team has matches, false otherwise</returns>
+        public async Task<bool> HasMatches(int id) {
+            return await db.TeamPlayers.Where(tp => tp.TeamId == id && tp.Scores.Where(s => s.Match != null).Count() > 0).AnyAsync();
+        }
     }
 }
