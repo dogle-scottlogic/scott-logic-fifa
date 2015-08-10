@@ -1,7 +1,7 @@
 module FifaLeagueClient.Module.User {
   export const moduleName = 'user';
 
-  export var userModule = angular.module(moduleName, ['ui.bootstrap', 'cgBusy','ngRoute']);
+  export var userModule = angular.module(moduleName, ['ui.bootstrap', 'cgBusy','ngRoute', Login.moduleName]);
 
   export const usersPath = '/users';
   export const usersAddPath = usersPath+'/add';

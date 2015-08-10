@@ -5,6 +5,7 @@ describe('Testing the UserEditController', function() {
   var $controller;
   var location;
   var userService = {};
+  var loginService = {};
   var defer, rootScope;
 
   beforeEach(function() {
@@ -12,9 +13,11 @@ describe('Testing the UserEditController', function() {
     module(function($provide) {
         // Fake userService Implementation
         $provide.value('userService', userService);
+        $provide.value('loginService', loginService);
       });
 
     userService = jasmine.createSpyObj('userService',['getUser', 'updateUser']);
+    loginService = jasmine.createSpyObj('loginService',['getUserIdInSession', 'logout']);
 
     // Getting the dependencies
     inject(function($injector) {
@@ -119,14 +122,63 @@ describe('Testing the UserEditController', function() {
       });
 
 
-      it('Verify edit done', function () {
+      it('Verify edit done for an other user', function () {
+        loginService.getUserIdInSession.and.returnValue("NotSameValueAsUser");
         defer.resolve(null);
         userService.updateUser.and.returnValue(defer.promise);
         userEditController.user = createCorrectUser();
+        userEditController.userBeforeChange = createCorrectUser();
         userEditController.updateUser();
         verifyPromiseAndDigest(userEditController, defer, rootScope);
         // We expect the location should change to the list of users
         expect(location.path()).toBe('/users');
+      });
+
+
+      it('Verify edit done for the same user and change nothing', function () {
+        loginService.getUserIdInSession.and.returnValue("1");
+        defer.resolve(null);
+        userService.updateUser.and.returnValue(defer.promise);
+        userEditController.user = new FifaLeagueClient.Module.User.UserModel({ Id: "1",
+                                                                               Name: "Tony"}
+                                                                            );
+        userEditController.userBeforeChange = new FifaLeagueClient.Module.User.UserModel({ Id: "1",
+                                                                               Name: "Tony"}
+                                                                            );
+        userEditController.updateUser();
+        verifyPromiseAndDigest(userEditController, defer, rootScope);
+        // We expect the location should change to the list of users
+        expect(location.path()).toBe('/users');
+      });
+
+
+      it('Verify edit done for the same user and change the name', function () {
+        loginService.getUserIdInSession.and.returnValue("1");
+        defer.resolve(null);
+        userService.updateUser.and.returnValue(defer.promise);
+        userEditController.user = new FifaLeagueClient.Module.User.UserModel({ Id: "1",
+                                                                               Name: "Tony"}
+                                                                            );
+        userEditController.userBeforeChange = new FifaLeagueClient.Module.User.UserModel({ Id: "1",
+                                                                               Name: "To"}
+                                                                            );
+        userEditController.updateUser();
+        verifyPromiseAndDigest(userEditController, defer, rootScope);
+        // We expect the location should change to the list of users
+        expect(location.path()).toBe('/login');
+      });
+
+
+      it('Verify edit done for the same user and change the password', function () {
+        loginService.getUserIdInSession.and.returnValue("1");
+        defer.resolve(null);
+        userService.updateUser.and.returnValue(defer.promise);
+        userEditController.user = createCorrectUser();
+        userEditController.userBeforeChange = createCorrectUser();
+        userEditController.updateUser();
+        verifyPromiseAndDigest(userEditController, defer, rootScope);
+        // We expect the location should change to the list of users
+        expect(location.path()).toBe('/login');
       });
 
       it('Verify edit error', function () {

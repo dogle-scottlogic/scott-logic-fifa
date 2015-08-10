@@ -20,7 +20,7 @@ function createUserList() {
 function createCorrectUser() {
   return new FifaLeagueClient.Module.User.UserModel(
           {
-            Id: 1,
+            Id: "1",
             Name: "Tony",
             Password:"pwd",
             ConfirmPassword:"pwd"
