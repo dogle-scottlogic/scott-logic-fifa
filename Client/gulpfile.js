@@ -192,12 +192,14 @@ gulp.task('setupAndBuild:production', function(){
   // The dest path is now dist
   destPath = "../Server/FIFA.Server/Client/";
   isDevelopment = "false";
-  gulp.run('dependency');
-  gulp.run('build');
 })
 
 // used to deploy the application in production
 gulp.task('deploy:production',['setupAndBuild:production'], function () {
+
+    gulp.run('dependency');
+
+    gulp.run('build');
 
     // deploy the html files (except the index)
     gulp.src("app/views/**/*.html")
@@ -206,6 +208,8 @@ gulp.task('deploy:production',['setupAndBuild:production'], function () {
 
     // Deploy the index.html file (replacing the libs import)
     var index = gulp.src(['app/index.html']);
+    index.setMaxListeners(files.length*2);
+
     // In the end, we replace the import js files for the index.html
     for(var i=0; i<files.length; i++){
       for(var j=0;j<files[i].src.length;j++){
@@ -215,12 +219,11 @@ gulp.task('deploy:production',['setupAndBuild:production'], function () {
 
     index.pipe(gulp.dest(destPath));
 
-   // deploy the images files
-   gulp.src("app/**/*.gif")
+    // deploy the images files
+    gulp.src("app/**/*.gif")
            .pipe(gulp.dest(destPath));
-   gulp.src("app/**/*.png")
+    gulp.src("app/**/*.png")
            .pipe(gulp.dest(destPath));
-
 
 });
 
@@ -260,4 +263,4 @@ gulp.task('karma', function() {
 gulp.task('dependency', ['copy','script']);
 gulp.task('build', ['typescript', 'less']);
 gulp.task('default', ['dependency', 'build', 'browser-sync']);
-gulp.task('production', ['deploy:production', 'browser-sync']);
+gulp.task('production', ['run:production']);
