@@ -63,10 +63,14 @@ namespace FIFA.Server.Controllers
         [Authorize(Roles = AuthenticationRoles.AdministratorRole)]
         public async Task<HttpResponseMessage> Post(UserModel item)
         {
-            // The password is mandatory on creation
-            if(item != null && String.IsNullOrEmpty(item.Password))
+            if (item == null)
             {
-                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Impossible to create an user with an empty password.");
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Impossible to update a null user.");
+            }
+            else if (item != null && String.IsNullOrEmpty(item.Password))
+            {
+                    // The password is mandatory on creation
+                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Impossible to create an user with an empty password.");
             }
             else if (item != null && String.IsNullOrEmpty(item.Name))
             {
@@ -90,8 +94,11 @@ namespace FIFA.Server.Controllers
         [RestrictAccessFromUserID]
         public async Task<HttpResponseMessage> Put(string id, UserModel item)
         {
-            
-            if (item != null && String.IsNullOrEmpty(item.Name))
+            if(item == null)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Impossible to update a null user.");
+            }
+            else if (item != null && String.IsNullOrEmpty(item.Name))
             {
                 return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Impossible to update an user with an empty name.");
             }
@@ -101,7 +108,25 @@ namespace FIFA.Server.Controllers
             }
             else
             {
-                return await base.Put(id, item);
+                UserModel userBeforeUpdate = await this.repository.Get(id);
+                // Verifying that the user without admin role didn't change admin right
+                if (item.AdministratorRole != userBeforeUpdate.AdministratorRole
+                && !this.userTool.isUserInRole(AuthenticationRoles.AdministratorRole))
+                {
+                    return Request.CreateErrorResponse(HttpStatusCode.Forbidden, "Only the administrator can change the administrator role to an user.");
+                }
+                // Verifying that the administrator is not removing his own rights
+                else if(!item.AdministratorRole 
+                    && userBeforeUpdate.AdministratorRole
+                    && this.userTool.GetCurrentUserId() == id)
+                {
+                    return Request.CreateErrorResponse(HttpStatusCode.Forbidden, "You can't remove your administrator rights. Ask for an other administrator to do this operation.");
+                }
+                else
+                {
+                    return await base.Put(id, item);
+                }
+
             }
         }
 

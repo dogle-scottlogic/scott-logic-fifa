@@ -24,5 +24,13 @@
        tooltip-enable="!vm.user.ConfirmPassword"/>
     <div class="clear"></div>
     <div class="alert alert-danger" role="alert" ng-repeat="value in vm.errors['item.Password']">{{value}}</div>
+  <label>Administrator role</label>
+  <input type="checkbox" ng-model="vm.user.AdministratorRole" class="form-control"
+     tooltip="Give the role of administrator"
+     tooltip-placement="top"
+     tooltip-trigger="mouseenter"
+     tooltip-enable="!vm.user.AdministratorRole"/>
+  <div class="clear"></div>
+  <div class="alert alert-danger" role="alert" ng-repeat="value in vm.errors['item.AdministratorRole']">{{value}}</div>
 
 </div>

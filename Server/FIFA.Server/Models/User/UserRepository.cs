@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
 
@@ -13,17 +14,19 @@ namespace FIFA.Server.Models
     public class UserRepository : IUserRepository
     {
         private FIFAServerContext db;
+        private UserManager<IdentityUser> userManager;
 
         public UserRepository(FIFAServerContext db)
         {
             this.db = db;
+            this.userManager = new UserManager<IdentityUser>(new UserStore<IdentityUser>(db));
         }
 
         // Get the list of all Users
         public async Task<IEnumerable<UserModel>> GetAll()
         {
             IEnumerable<UserModel> UserList = await queryIdentityUser(db.Users).ToListAsync();
-            
+
             return UserList;
         }
 
@@ -37,7 +40,6 @@ namespace FIFA.Server.Models
         // Get a User by its ID
         public async Task<UserModel> Get(string id)
         {
-
             UserModel user = await queryIdentityUser(db.Users.Where( u => u.Id == id)).FirstOrDefaultAsync();
             return user;
         }
@@ -50,11 +52,12 @@ namespace FIFA.Server.Models
                 {
                     Id = u.Id,
                     Name = u.UserName,
-                    Password = null
+                    Password = null,
+                    AdministratorRole = db.Roles.Any(r => r.Name == AuthenticationRoles.AdministratorRole && u.Roles.Any(ur => ur.RoleId == r.Id))
                 }
                 );
         }
-        
+                
         // Adding a User to the database
         public async Task<UserModel> Add(UserModel item)
         {
@@ -65,19 +68,21 @@ namespace FIFA.Server.Models
 
             // We convert the userModel to IdentityUser
             IdentityUser newUser = createIdentityUser(item);
-            // we attach the user to the role of user
-            IdentityRole role = await db.Roles.Where(r => r.Name == AuthenticationRoles.UserRole).FirstOrDefaultAsync();
-            newUser.Roles.Add(new IdentityUserRole { RoleId = role.Id, UserId = newUser.Id });
-            // we claim him hasRegistered
-            newUser.Claims.Add(new IdentityUserClaim
-            {
-                UserId = newUser.Id,
-                ClaimType = "hasRegistered",
-                ClaimValue = "true"
-            });
 
             db.Users.Add(newUser);
             await db.SaveChangesAsync();
+
+            // we attach the user to the role of user
+            await this.userManager.AddToRoleAsync(newUser.Id, AuthenticationRoles.UserRole);
+
+            // if the item has the administrator role at true, we add it to the user 
+            if (item.AdministratorRole)
+            {
+                await this.userManager.AddToRoleAsync(newUser.Id, AuthenticationRoles.AdministratorRole);
+            }
+
+            await this.userManager.AddClaimAsync(newUser.Id, new Claim("hasRegistered", "true"));
+
 
             return item;
         }
@@ -105,7 +110,26 @@ namespace FIFA.Server.Models
                     editedUser.PasswordHash = new PasswordHasher().HashPassword(item.Password);
                     editedUser.SecurityStamp = Guid.NewGuid().ToString();
                 }
-                
+
+                // Managing the admin role of the user
+                if (item.AdministratorRole)
+                {
+                    // if the item has the administrator role at true, we add the role to the user if it doesn't exists
+                    if (!await this.userManager.IsInRoleAsync(id, AuthenticationRoles.AdministratorRole))
+                    {
+                        await this.userManager.AddToRoleAsync(id , AuthenticationRoles.AdministratorRole);
+                    }
+                }
+                else
+                {
+                    // if the item has the administrator role at false, we remove the role to the user if it exists
+                    if (await this.userManager.IsInRoleAsync(id, AuthenticationRoles.AdministratorRole))
+                    {
+                        userManager.RemoveFromRole(id, AuthenticationRoles.AdministratorRole);
+
+                    }
+                }
+
                 db.Entry(editedUser).State = EntityState.Modified;
                 await db.SaveChangesAsync();
 
@@ -154,6 +178,10 @@ namespace FIFA.Server.Models
             }
         }
 
+        private async Task<IdentityRole> getRole(string roleName)
+        {
+            return await db.Roles.Where(r => r.Name == roleName).FirstOrDefaultAsync();
+        }
 
         public async Task<bool> isNameExist(string name, string Id)
         {

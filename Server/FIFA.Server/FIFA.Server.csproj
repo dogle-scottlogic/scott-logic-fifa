@@ -209,7 +209,7 @@
     <Compile Include="Authentication\BasicAuthenticationAttribute.cs" />
     <Compile Include="Authentication\HttpAuthenticationChallengeContextExtensions.cs" />
     <Compile Include="Authentication\IdentityBasicAuthenticationAttribute.cs" />
-    <Compile Include="Authentication\ICurrentUserTool.cs" />
+    <Compile Include="Models\Authentication\ICurrentUserTool.cs" />
     <Compile Include="Authentication\RestrictAccessFromUserID.cs" />
     <Compile Include="Controllers\AbstractCRUDAPIController.cs" />
     <Compile Include="Controllers\AuthenticationController.cs" />
