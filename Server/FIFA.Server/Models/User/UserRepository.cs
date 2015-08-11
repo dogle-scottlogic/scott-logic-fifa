@@ -32,11 +32,22 @@ namespace FIFA.Server.Models
 
         public async Task<IEnumerable<UserModel>> GetAllWithFilter(UserFilter filter)
         {
-            IEnumerable<UserModel> UserList = await queryIdentityUser(db.Users).ToListAsync();
+            IEnumerable<UserModel> UserList = await queryIdentityUser(this.FilterUsers(db.Users, filter)).ToListAsync();
 
             return UserList;
         }
-        
+
+
+        private IQueryable<IdentityUser> FilterUsers(IQueryable<IdentityUser> query, UserFilter filter)
+        {
+            if (filter != null)
+            {
+                query = filter.Filter(query);
+            }
+
+            return query;
+        }
+
         // Get a User by its ID
         public async Task<UserModel> Get(string id)
         {
