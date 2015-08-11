@@ -12,7 +12,8 @@ module FifaLeagueClient.Module.User {
         constructor($http: ng.IHttpService, config: Common.Config, $q: ng.IQService) {
             super($http, config, $q, "api/User");
         }
-        // Method converting the data into a user
+        
+        // Method converting the data into an user
         protected convertDataToTObject(data): UserModel {
             return new UserModel(data);
         }

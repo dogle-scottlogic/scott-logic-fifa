@@ -94,7 +94,7 @@ module FifaLeagueClient.Module.Common.Services {
         }
 
         // Deleting a user by is ID
-        public delete(Id) : ng.IPromise<boolean> {
+        public delete(Id:TKey) : ng.IPromise<boolean> {
             var deferred = this.qService.defer();
             var self = this;
             this.httpService.delete(this.apiURLWithSlash + Id).success(function (data, status, headers, config) {
