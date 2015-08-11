@@ -9,20 +9,20 @@ module FifaLeagueClient.Module.User {
 
         // build the model directly from the data returned by the service
         constructor(){
-          super();
+            super();
         }
 
         public reset(){
             this.Id = null;
             this.Name = null;
         }
-
+        
         // Add the request with the names
         public getParameters(query:string):string{
-           this.query = query;
+            this.query = query;
 
-           this.addRequestNumberParameter("Id", this.Id)
-              .addRequestParameter("Name", this.Name);
+            this.addRequestNumberParameter("Id", this.Id)
+            .addRequestParameter("Name", this.Name);
 
             return this.query;
         }

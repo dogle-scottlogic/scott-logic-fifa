@@ -17,6 +17,8 @@
         "./typescript/module/common/controllers/AbstractController.ts",
         "./typescript/module/common/controllers/AbstractListController.ts",
         "./typescript/module/common/services/AbstractFilter.ts",
+        "./typescript/module/common/services/AbstractModel.ts",
+        "./typescript/module/common/services/AbstractService.ts",
         "./typescript/module/common/services/Config.ts",
         "./typescript/module/common/services/HTTPErrorInterceptorService.ts",
         "./typescript/module/country/CountryFilter.ts",
