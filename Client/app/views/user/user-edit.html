@@ -1,7 +1,7 @@
 <form class="simple-form" ng-submit="vm.updateUser()" cg-busy="vm.loadingPromise">
-  <div class="clear"></div>
-  <div class="alert alert-danger" role="alert" ng-repeat="value in vm.errors['item.Global']">{{value}}</div>
-  <div ng-include="'views/user/user-form.html'"></div>
-  <input type="submit" class="btn btn-primary" value="Save" />
-  <input type="button" class="btn btn-danger btn-custom" value="Cancel" ng-click="vm.goBack()" />
+    <div class="clear"></div>
+    <div class="alert alert-danger" role="alert" ng-repeat="value in vm.errors['item.Global']">{{value}}</div>
+    <div ng-include="'views/user/user-form.html'"></div>
+    <input type="submit" class="btn btn-primary" value="Save" />
+    <input type="button" class="btn btn-danger btn-custom" value="Cancel" ng-click="vm.goBack()" />
 </form>
