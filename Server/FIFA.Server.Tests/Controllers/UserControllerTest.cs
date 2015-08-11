@@ -18,39 +18,43 @@ using System.Net;
 using FIFA.Server.Models;
 using FIFA.Server.Controllers;
 using Microsoft.AspNet.Identity.EntityFramework;
+using FIFA.Server.Models.Authentication;
 
 namespace FIFATests.ControllerTests
 {
     [TestClass]
         public class userControllerTests : AbstractControllerTest
     {
-        // Method used to generate a identityUser list
-        public List<IdentityUser> CreateIdentityUserList()
+        // Method used to generate a userModel list
+        public List<UserModel> CreateUserModelList()
         {
 
-            var identityUsers = new List<IdentityUser>
+            var userModels = new List<UserModel>
         {
-            new IdentityUser{Id="1",UserName="User 1"},
-            new IdentityUser{Id="2",UserName="User 2"},
-            new IdentityUser{Id="3",UserName="User 3"}
+            new UserModel{Id="1",Name="User 1", Password="mo"},
+            new UserModel{Id="2",Name="User 2", Password="mo"},
+            new UserModel{Id="3",Name="User 3", Password="mo"}
         };
 
-            return identityUsers;
+            return userModels;
         }
 
         // Verifying the get(i) method
         [TestMethod]
-        public void RetrieveAnIdentityUserInTheRepo()
+        public void RetrieveAnUserModelInTheRepo()
         {
-            List<IdentityUser> identityUsers = CreateIdentityUserList();
+            List<UserModel> userModels = CreateUserModelList();
 
             var mock = new Mock<IUserRepository>(MockBehavior.Strict);
 
             // Filling mock with data
-            mock.As<ICRUDRepository<IdentityUser, string, UserFilter>>().Setup(m => m.Get(It.IsAny<string>()))
-                .Returns<string>(id => Task.FromResult(identityUsers.FirstOrDefault(u => u.Id == id)));
-            
-            UserController controller = new UserController(mock.Object);
+            mock.As<ICRUDRepository<UserModel, string, UserFilter>>().Setup(m => m.Get(It.IsAny<string>()))
+                .Returns<string>(id => Task.FromResult(userModels.FirstOrDefault(u => u.Id == id)));
+
+
+            var mockUserTool = new Mock<ICurrentUserTool>(MockBehavior.Strict);
+
+            UserController controller = new UserController(mock.Object, mockUserTool.Object);
 
             // configuring the context for the controler
             fakeContext(controller);
@@ -58,24 +62,27 @@ namespace FIFATests.ControllerTests
             HttpResponseMessage response = controller.Get("1").Result;
             Assert.AreEqual(response.StatusCode, HttpStatusCode.OK);
             var objectContent = response.Content as ObjectContent;
-            Assert.AreEqual(identityUsers[0], objectContent.Value);
+            Assert.AreEqual(userModels[0], objectContent.Value);
 
 
         }
 
         // Verifying the get(i) method
         [TestMethod]
-        public void RetrieveFailureAnIdentityUserInTheRepo()
+        public void RetrieveFailureAnUserModelInTheRepo()
         {
-            List<IdentityUser> identityUsers = CreateIdentityUserList();
+            List<UserModel> userModels = CreateUserModelList();
 
             var mock = new Mock<IUserRepository>(MockBehavior.Strict);
 
             // Filling mock with data
-            mock.As<ICRUDRepository<IdentityUser, string, UserFilter>>().Setup(m => m.Get(It.IsAny<string>()))
-                .Returns<string>(id => Task.FromResult((IdentityUser)null));
-            
-            UserController controller = new UserController(mock.Object);
+            mock.As<ICRUDRepository<UserModel, string, UserFilter>>().Setup(m => m.Get(It.IsAny<string>()))
+                .Returns<string>(id => Task.FromResult((UserModel)null));
+
+
+            var mockUserTool = new Mock<ICurrentUserTool>(MockBehavior.Strict);
+
+            UserController controller = new UserController(mock.Object, mockUserTool.Object);
 
             // configuring the context for the controler
             fakeContext(controller);
@@ -87,74 +94,83 @@ namespace FIFATests.ControllerTests
 
         // Verifying the getAll method
         [TestMethod]
-        public void RetrieveAllIdentityUsersInTheRepo()
+        public void RetrieveAllUserModelsInTheRepo()
         {
-            IEnumerable<IdentityUser> identityUsers = CreateIdentityUserList();
+            IEnumerable<UserModel> userModels = CreateUserModelList();
 
             var mock = new Mock<IUserRepository>(MockBehavior.Strict);
 
             // Filling mock with data
-            mock.As<ICRUDRepository<IdentityUser, string, UserFilter>>().Setup(m => m.GetAll())
-                .Returns(Task.FromResult(identityUsers));
-            
-            UserController controller = new UserController(mock.Object);
+            mock.As<ICRUDRepository<UserModel, string, UserFilter>>().Setup(m => m.GetAll())
+                .Returns(Task.FromResult(userModels));
+
+
+            var mockUserTool = new Mock<ICurrentUserTool>(MockBehavior.Strict);
+
+            UserController controller = new UserController(mock.Object, mockUserTool.Object);
             fakeContext(controller);
 
             HttpResponseMessage response = controller.GetAll().Result;
 
             Assert.AreEqual(response.StatusCode, HttpStatusCode.OK);
             var objectContent = response.Content as ObjectContent;
-            Assert.AreEqual(identityUsers, objectContent.Value);
+            Assert.AreEqual(userModels, objectContent.Value);
 
         }
 
 
         // Verifying the Add method
         [TestMethod]
-        public void AddIdentityUserInTheRepo()
+        public void AddUserModelInTheRepo()
         {
-            List<IdentityUser> identityUsers = CreateIdentityUserList();
-            List<IdentityUser> added = new List<IdentityUser>();
+            List<UserModel> userModels = CreateUserModelList();
+            List<UserModel> added = new List<UserModel>();
             var mock = new Mock<IUserRepository>(MockBehavior.Strict);
 
             // Filling mock with data
-            mock.As<ICRUDRepository<IdentityUser, string, UserFilter>>().Setup(m => m.Add(It.IsAny<IdentityUser>()))
-                .Returns(Task.FromResult(identityUsers.FirstOrDefault()))
-                .Callback<IdentityUser>(c => added.Add(c));
+            mock.As<ICRUDRepository<UserModel, string, UserFilter>>().Setup(m => m.Add(It.IsAny<UserModel>()))
+                .Returns(Task.FromResult(userModels.FirstOrDefault()))
+                .Callback<UserModel>(c => added.Add(c));
 
-            mock.As<IUserRepository>().Setup(m => m.isUserNameExist(It.IsAny<string>(), It.IsAny<string>()))
+            mock.As<IUserRepository>().Setup(m => m.isNameExist(It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(Task.FromResult(false));
-            
-            UserController controller = new UserController(mock.Object);
+
+
+            var mockUserTool = new Mock<ICurrentUserTool>(MockBehavior.Strict);
+
+            UserController controller = new UserController(mock.Object, mockUserTool.Object);
             // configuring the context for the controler
             fakeContext(controller);
 
-            // Testing all the list that we can retrieve correctly the identityUsers
-            for (int i = 0; i < identityUsers.Count; i++)
+            // Testing all the list that we can retrieve correctly the userModels
+            for (int i = 0; i < userModels.Count; i++)
             {
-                HttpResponseMessage response = controller.Post(identityUsers[i]).Result;
+                HttpResponseMessage response = controller.Post(userModels[i]).Result;
                 // the result should say "HttpStatusCode.Created"
                 Assert.AreEqual(response.StatusCode, HttpStatusCode.Created);
             }
 
             // the added list should be the same as the list
-            CollectionAssert.AreEqual(identityUsers, added);
+            CollectionAssert.AreEqual(userModels, added);
         }
-
+        
         // Verifying the Add failure method
         [TestMethod]
-        public void AddFailureIdentityUserInTheRepo()
+        public void AddFailureUserModelInTheRepo()
         {
-            IdentityUser identityUser = new IdentityUser();
+            UserModel userModel = new UserModel();
             var mock = new Mock<IUserRepository>(MockBehavior.Strict);
 
             // Filling mock rull with repository
-            mock.As<ICRUDRepository<IdentityUser, string, UserFilter>>().Setup(m => m.Add(It.IsAny<IdentityUser>()));
+            mock.As<ICRUDRepository<UserModel, string, UserFilter>>().Setup(m => m.Add(It.IsAny<UserModel>()));
 
-            mock.As<IUserRepository>().Setup(m => m.isUserNameExist(It.IsAny<string>(), It.IsAny<string>()))
+            mock.As<IUserRepository>().Setup(m => m.isNameExist(It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(Task.FromResult(false));
-            
-            UserController controller = new UserController(mock.Object);
+
+
+            var mockUserTool = new Mock<ICurrentUserTool>(MockBehavior.Strict);
+
+            UserController controller = new UserController(mock.Object, mockUserTool.Object);
 
             // configuring the context for the controler
             fakeContext(controller);
@@ -162,30 +178,85 @@ namespace FIFATests.ControllerTests
             // Faking a model error
             controller.ModelState.AddModelError("key", "errorMessage");
 
-            HttpResponseMessage response = controller.Post(identityUser).Result;
+            HttpResponseMessage response = controller.Post(userModel).Result;
             // the result should say "HttpStatusCode.BadRequest"
             Assert.AreEqual(response.StatusCode, HttpStatusCode.BadRequest);
         }
 
-        // Verifying the Add failure method
+        // Verifying the Add failure name empty method
         [TestMethod]
-        public void AddFailureNameExistsIdentityUserInTheRepo()
+        public void AddFailureNameEmptyUserModelInTheRepo()
         {
-            IdentityUser identityUser = new IdentityUser();
+            UserModel userModel = new UserModel();
+            userModel.Name = "";
             var mock = new Mock<IUserRepository>(MockBehavior.Strict);
 
             // Filling mock rull with repository
-            mock.As<ICRUDRepository<IdentityUser, string, UserFilter>>().Setup(m => m.Add(It.IsAny<IdentityUser>()));
+            mock.As<ICRUDRepository<UserModel, string, UserFilter>>().Setup(m => m.Add(It.IsAny<UserModel>()));
 
-            mock.As<IUserRepository>().Setup(m => m.isUserNameExist(It.IsAny<string>(), It.IsAny<string>()))
-                .Returns(Task.FromResult(true));
-            
-            UserController controller = new UserController(mock.Object);
+
+            var mockUserTool = new Mock<ICurrentUserTool>(MockBehavior.Strict);
+
+            UserController controller = new UserController(mock.Object, mockUserTool.Object);
 
             // configuring the context for the controler
             fakeContext(controller);
 
-            HttpResponseMessage response = controller.Post(identityUser).Result;
+            HttpResponseMessage response = controller.Post(userModel).Result;
+            // the result should say "HttpStatusCode.BadRequest"
+            Assert.AreEqual(response.StatusCode, HttpStatusCode.BadRequest);
+
+        }
+
+        // Verifying the Add failure password empty method
+        [TestMethod]
+        public void AddFailurePasswordEmptyUserModelInTheRepo()
+        {
+            UserModel userModel = new UserModel();
+            userModel.Name = "user";
+            var mock = new Mock<IUserRepository>(MockBehavior.Strict);
+
+            // Filling mock rull with repository
+            mock.As<ICRUDRepository<UserModel, string, UserFilter>>().Setup(m => m.Add(It.IsAny<UserModel>()));
+
+
+            var mockUserTool = new Mock<ICurrentUserTool>(MockBehavior.Strict);
+
+            UserController controller = new UserController(mock.Object, mockUserTool.Object);
+
+            // configuring the context for the controler
+            fakeContext(controller);
+
+            HttpResponseMessage response = controller.Post(userModel).Result;
+            // the result should say "HttpStatusCode.BadRequest"
+            Assert.AreEqual(response.StatusCode, HttpStatusCode.BadRequest);
+
+        }
+
+        // Verifying the Add failure method
+        [TestMethod]
+        public void AddFailureNameExistsUserModelInTheRepo()
+        {
+            UserModel userModel = new UserModel();
+            userModel.Name = "user";
+            userModel.Password = "pwd";
+            var mock = new Mock<IUserRepository>(MockBehavior.Strict);
+
+            // Filling mock rull with repository
+            mock.As<ICRUDRepository<UserModel, string, UserFilter>>().Setup(m => m.Add(It.IsAny<UserModel>()));
+
+            mock.As<IUserRepository>().Setup(m => m.isNameExist(It.IsAny<string>(), It.IsAny<string>()))
+                .Returns(Task.FromResult(true));
+
+
+            var mockUserTool = new Mock<ICurrentUserTool>(MockBehavior.Strict);
+
+            UserController controller = new UserController(mock.Object, mockUserTool.Object);
+
+            // configuring the context for the controler
+            fakeContext(controller);
+
+            HttpResponseMessage response = controller.Post(userModel).Result;
             // the result should say "HttpStatusCode.BadRequest"
             Assert.AreEqual(response.StatusCode, HttpStatusCode.BadRequest);
 
@@ -194,17 +265,20 @@ namespace FIFATests.ControllerTests
 
         // Verifying the Add failure method
         [TestMethod]
-        public void AddFailureNullIdentityUserInTheRepo()
+        public void AddFailureNullUserModelInTheRepo()
         {
             var mock = new Mock<IUserRepository>(MockBehavior.Strict);
 
             // Filling mock rull with repository
-            mock.As<ICRUDRepository<IdentityUser, string, UserFilter>>().Setup(m => m.Add(It.IsAny<IdentityUser>()));
+            mock.As<ICRUDRepository<UserModel, string, UserFilter>>().Setup(m => m.Add(It.IsAny<UserModel>()));
 
-            mock.As<IUserRepository>().Setup(m => m.isUserNameExist(It.IsAny<string>(), It.IsAny<string>()))
+            mock.As<IUserRepository>().Setup(m => m.isNameExist(It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(Task.FromResult(false));
-            
-            UserController controller = new UserController(mock.Object);
+
+
+            var mockUserTool = new Mock<ICurrentUserTool>(MockBehavior.Strict);
+
+            UserController controller = new UserController(mock.Object, mockUserTool.Object);
 
             // configuring the context for the controler
             fakeContext(controller);
@@ -214,63 +288,65 @@ namespace FIFATests.ControllerTests
             Assert.AreEqual(response.StatusCode, HttpStatusCode.BadRequest);
 
         }
-                        
+
         // Verifying the Update failure method
         [TestMethod]
-        public void UpdateIdentityUserInTheRepo()
+        public void UpdateUserModelInTheRepo()
         {
-            IdentityUser identityUser = new IdentityUser();
+            UserModel userModel = new UserModel();
 
             var mock = new Mock<IUserRepository>(MockBehavior.Strict);
 
             // Creating the rules for mock, always send true in this case
-            mock.As<ICRUDRepository<IdentityUser, string, UserFilter>>().Setup(m => m.Update(It.IsAny<string>(), It.IsAny<IdentityUser>()))
+            mock.As<ICRUDRepository<UserModel, string, UserFilter>>().Setup(m => m.Update(It.IsAny<string>(), It.IsAny<UserModel>()))
                 .Returns(Task.FromResult(true));
+            mock.As<ICRUDRepository<UserModel, string, UserFilter>>().Setup(m => m.Get(It.IsAny<string>()))
+            .Returns(Task.FromResult(userModel));
 
-            mock.As<IUserRepository>().Setup(m => m.isUserNameExist(It.IsAny<string>(), It.IsAny<string>()))
+            mock.As<IUserRepository>().Setup(m => m.isNameExist(It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(Task.FromResult(false));
-            
-            UserController controller = new UserController(mock.Object);
+
+
+            var mockUserTool = new Mock<ICurrentUserTool>(MockBehavior.Strict);
+            mockUserTool.Setup(m => m.GetCurrentUserId())
+                .Returns("ID");
+
+            UserController controller = new UserController(mock.Object, mockUserTool.Object);
             // configuring the context for the controler
             fakeContext(controller);
 
-            IdentityUser modifiedidentityUser = new IdentityUser();
-            modifiedidentityUser.Id = identityUser.Id;
-            modifiedidentityUser.UserName = "ModifiedName";
-            HttpResponseMessage response = controller.Put(modifiedidentityUser.Id, modifiedidentityUser).Result;
+            UserModel modifieduserModel = new UserModel();
+            modifieduserModel.Id = userModel.Id;
+            modifieduserModel.Name = "ModifiedName";
+            HttpResponseMessage response = controller.Put(modifieduserModel.Id, modifieduserModel).Result;
             // the result should say "HttpStatusCode.Created" and the returned object should have a different lastName
             Assert.AreEqual(response.StatusCode, HttpStatusCode.Created);
 
             var objectContent = response.Content as ObjectContent;
-            Assert.AreNotEqual(identityUser.UserName, ((IdentityUser)objectContent.Value).UserName);
+            Assert.AreNotEqual(userModel.Name, ((UserModel)objectContent.Value).Name);
 
         }
 
-
         // Verifying the Update method
         [TestMethod]
-        public void UpdateFailureIdentityUserInTheRepo()
+        public void UpdateFailureNameEmptyUserModelInTheRepo()
         {
-            IdentityUser identityUser = new IdentityUser();
+            UserModel userModel = new UserModel();
 
             var mock = new Mock<IUserRepository>(MockBehavior.Strict);
 
             // Creating the rules for mock, always send true in this case
-            mock.As<ICRUDRepository<IdentityUser, string, UserFilter>>().Setup(m => m.Update(It.IsAny<string>(), It.IsAny<IdentityUser>()))
+            mock.As<ICRUDRepository<UserModel, string, UserFilter>>().Setup(m => m.Update(It.IsAny<string>(), It.IsAny<UserModel>()))
                 .Returns(Task.FromResult(true));
 
 
-            mock.As<IUserRepository>().Setup(m => m.isUserNameExist(It.IsAny<string>(), It.IsAny<string>()))
-                .Returns(Task.FromResult(false));
-            
-            UserController controller = new UserController(mock.Object);
+            var mockUserTool = new Mock<ICurrentUserTool>(MockBehavior.Strict);
+
+            UserController controller = new UserController(mock.Object, mockUserTool.Object);
             // configuring the context for the controller
             fakeContext(controller);
-
-            // Faking a model error
-            controller.ModelState.AddModelError("key", "errorMessage");
-
-                HttpResponseMessage response = controller.Put("1", identityUser).Result;
+            
+            HttpResponseMessage response = controller.Put("1", userModel).Result;
             // the result should say "HttpStatusCode.BadRequest"
             Assert.AreEqual(response.StatusCode, HttpStatusCode.BadRequest);
 
@@ -279,19 +355,55 @@ namespace FIFATests.ControllerTests
 
         // Verifying the Update method
         [TestMethod]
-        public void UpdateFailureNullIdentityUserInTheRepo()
+        public void UpdateFailureUserModelInTheRepo()
+        {
+            UserModel userModel = new UserModel();
+
+            var mock = new Mock<IUserRepository>(MockBehavior.Strict);
+
+            // Creating the rules for mock, always send true in this case
+            mock.As<ICRUDRepository<UserModel, string, UserFilter>>().Setup(m => m.Update(It.IsAny<string>(), It.IsAny<UserModel>()))
+                .Returns(Task.FromResult(true));
+
+
+            mock.As<IUserRepository>().Setup(m => m.isNameExist(It.IsAny<string>(), It.IsAny<string>()))
+                .Returns(Task.FromResult(false));
+
+
+            var mockUserTool = new Mock<ICurrentUserTool>(MockBehavior.Strict);
+
+            UserController controller = new UserController(mock.Object, mockUserTool.Object);
+            // configuring the context for the controller
+            fakeContext(controller);
+
+            // Faking a model error
+            controller.ModelState.AddModelError("key", "errorMessage");
+
+                HttpResponseMessage response = controller.Put("1", userModel).Result;
+            // the result should say "HttpStatusCode.BadRequest"
+            Assert.AreEqual(response.StatusCode, HttpStatusCode.BadRequest);
+
+        }
+
+
+        // Verifying the Update method
+        [TestMethod]
+        public void UpdateFailureNullUserModelInTheRepo()
         {
             var mock = new Mock<IUserRepository>(MockBehavior.Strict);
 
             // Creating the rules for mock, always send true in this case
-            mock.As<ICRUDRepository<IdentityUser, string, UserFilter>>().Setup(m => m.Update(It.IsAny<string>(), It.IsAny<IdentityUser>()))
+            mock.As<ICRUDRepository<UserModel, string, UserFilter>>().Setup(m => m.Update(It.IsAny<string>(), It.IsAny<UserModel>()))
                 .Returns(Task.FromResult(true));
 
 
-            mock.As<IUserRepository>().Setup(m => m.isUserNameExist(It.IsAny<string>(), It.IsAny<string>()))
+            mock.As<IUserRepository>().Setup(m => m.isNameExist(It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(Task.FromResult(false));
-            
-            UserController controller = new UserController(mock.Object);
+
+
+            var mockUserTool = new Mock<ICurrentUserTool>(MockBehavior.Strict);
+
+            UserController controller = new UserController(mock.Object, mockUserTool.Object);
             // configuring the context for the controler
             fakeContext(controller);
 
@@ -302,43 +414,148 @@ namespace FIFATests.ControllerTests
         }
 
 
-        // Verifying the Update method if identityUser exists
+        // Verifying the Update method if userModel exists
         [TestMethod]
-        public void UpdateFailureIdentityUserNameExistsInTheRepo()
+        public void UpdateFailureUserModelNameExistsInTheRepo()
         {
-            IdentityUser identityUser = new IdentityUser();
+            UserModel userModel = new UserModel();
+            userModel.Name = "name";
             var mock = new Mock<IUserRepository>(MockBehavior.Strict);
 
             // Creating the rules for mock, always send true in this case
-            mock.As<ICRUDRepository<IdentityUser, string, UserFilter>>().Setup(m => m.Update(It.IsAny<string>(), It.IsAny<IdentityUser>()))
+            mock.As<ICRUDRepository<UserModel, string, UserFilter>>().Setup(m => m.Update(It.IsAny<string>(), It.IsAny<UserModel>()))
                 .Returns(Task.FromResult(true));
 
 
-            mock.As<IUserRepository>().Setup(m => m.isUserNameExist(It.IsAny<string>(), It.IsAny<string>()))
+            mock.As<IUserRepository>().Setup(m => m.isNameExist(It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(Task.FromResult(true));
-            
-            UserController controller = new UserController(mock.Object);
+
+
+            var mockUserTool = new Mock<ICurrentUserTool>(MockBehavior.Strict);
+
+            UserController controller = new UserController(mock.Object, mockUserTool.Object);
             // configuring the context for the controler
             fakeContext(controller);
 
-                HttpResponseMessage response = controller.Put("1", identityUser).Result;
+                HttpResponseMessage response = controller.Put("1", userModel).Result;
             // the result should say "HttpStatusCode.BadRequest"
             Assert.AreEqual(response.StatusCode, HttpStatusCode.BadRequest);
 
         }
 
+        private UserModel createUser(bool adminRole)
+        {
+            UserModel userModel = new UserModel();
+            userModel.Id = "1";
+            userModel.Name = "name";
+            userModel.AdministratorRole = adminRole;
+            return userModel;
+        }
+
+        [TestMethod]
+        public void UpdateFailureUserNoRightToChangeAdminRoleInTheRepo()
+        {
+            UserModel previousUserModel = createUser(false);
+            UserModel userModel = createUser(true);
+            var mock = new Mock<IUserRepository>(MockBehavior.Strict);
+
+            // Creating the rules for mock, always send true in this case
+            mock.As<ICRUDRepository<UserModel, string, UserFilter>>().Setup(m => m.Update(It.IsAny<string>(), It.IsAny<UserModel>()))
+                .Returns(Task.FromResult(true));
+            mock.As<IUserRepository>().Setup(m => m.isNameExist(It.IsAny<string>(), It.IsAny<string>()))
+                .Returns(Task.FromResult(false));
+            mock.As<ICRUDRepository<UserModel, string, UserFilter>>().Setup(m => m.Get(It.IsAny<string>()))
+                .Returns(Task.FromResult(previousUserModel));
+            
+            var mockUserTool = new Mock<ICurrentUserTool>(MockBehavior.Strict);
+            mockUserTool.Setup(m => m.isUserInRole(It.IsAny<string>())).Returns(false);
+
+            UserController controller = new UserController(mock.Object, mockUserTool.Object);
+            // configuring the context for the controler
+            fakeContext(controller);
+
+            HttpResponseMessage response = controller.Put("1", userModel).Result;
+            // the result should say "HttpStatusCode.BadRequest"
+            Assert.AreEqual(response.StatusCode, HttpStatusCode.Forbidden);
+
+        }
+
+        [TestMethod]
+        public void UpdateFailureUserNoRightToDisableHisAdminRoleInTheRepo()
+        {
+            UserModel userModel = createUser(false);
+            UserModel adminUserModel = createUser(true);
+            var mock = new Mock<IUserRepository>(MockBehavior.Strict);
+
+            // Creating the rules for mock, always send true in this case
+            mock.As<ICRUDRepository<UserModel, string, UserFilter>>().Setup(m => m.Update(It.IsAny<string>(), It.IsAny<UserModel>()))
+                .Returns(Task.FromResult(true));
+            mock.As<IUserRepository>().Setup(m => m.isNameExist(It.IsAny<string>(), It.IsAny<string>()))
+                .Returns(Task.FromResult(false));
+            mock.As<ICRUDRepository<UserModel, string, UserFilter>>().Setup(m => m.Get(It.IsAny<string>()))
+                .Returns(Task.FromResult(adminUserModel));
+
+            var mockUserTool = new Mock<ICurrentUserTool>(MockBehavior.Strict);
+            mockUserTool.Setup(m => m.isUserInRole(It.IsAny<string>())).Returns(true);
+            mockUserTool.Setup(m => m.GetCurrentUserId()).Returns("1");
+
+            UserController controller = new UserController(mock.Object, mockUserTool.Object);
+            // configuring the context for the controler
+            fakeContext(controller);
+
+            HttpResponseMessage response = controller.Put("1", userModel).Result;
+            // the result should say "HttpStatusCode.BadRequest"
+            Assert.AreEqual(response.StatusCode, HttpStatusCode.Forbidden);
+
+        }
+
+        [TestMethod]
+        public void UpdateUserHasRightToDisableAnAdminRoleInTheRepo()
+        {
+            UserModel userModel = createUser(false);
+            UserModel adminUserModel = createUser(true);
+            var mock = new Mock<IUserRepository>(MockBehavior.Strict);
+
+            // Creating the rules for mock, always send true in this case
+            mock.As<ICRUDRepository<UserModel, string, UserFilter>>().Setup(m => m.Update(It.IsAny<string>(), It.IsAny<UserModel>()))
+                .Returns(Task.FromResult(true));
+            mock.As<IUserRepository>().Setup(m => m.isNameExist(It.IsAny<string>(), It.IsAny<string>()))
+                .Returns(Task.FromResult(false));
+            mock.As<ICRUDRepository<UserModel, string, UserFilter>>().Setup(m => m.Get(It.IsAny<string>()))
+                .Returns(Task.FromResult(adminUserModel));
+
+            var mockUserTool = new Mock<ICurrentUserTool>(MockBehavior.Strict);
+            mockUserTool.Setup(m => m.isUserInRole(It.IsAny<string>())).Returns(true);
+            mockUserTool.Setup(m => m.GetCurrentUserId()).Returns("2");
+
+            UserController controller = new UserController(mock.Object, mockUserTool.Object);
+            // configuring the context for the controler
+            fakeContext(controller);
+
+            HttpResponseMessage response = controller.Put("1", userModel).Result;
+            // the result should say "HttpStatusCode.BadRequest"
+            Assert.AreEqual(response.StatusCode, HttpStatusCode.Created);
+
+        }
+
+
+
 
         // Verifying the delete method
         [TestMethod]
-        public void DeleteIdentityUserInTheRepo()
+        public void DeleteUserModelInTheRepo()
         {
             var mock = new Mock<IUserRepository>(MockBehavior.Strict);
 
             // Creating the rules for mock, always send true in this case
-            mock.As<ICRUDRepository<IdentityUser, string, UserFilter>>().Setup(m => m.Remove(It.IsAny<string>()))
+            mock.As<ICRUDRepository<UserModel, string, UserFilter>>().Setup(m => m.Remove(It.IsAny<string>()))
                 .Returns(Task.FromResult(true));
             
-            UserController controller = new UserController(mock.Object);
+            var mockUserTool = new Mock<ICurrentUserTool>(MockBehavior.Strict);
+            mockUserTool.Setup(u => u.GetCurrentUserId()).Returns("1");
+            
+
+            UserController controller = new UserController(mock.Object, mockUserTool.Object);
             // configuring the context for the controler
             fakeContext(controller);
 
@@ -347,18 +564,44 @@ namespace FIFATests.ControllerTests
             Assert.AreEqual(response.StatusCode, HttpStatusCode.OK);
         }
 
-
         // Verifying the delete method
         [TestMethod]
-        public void DeleteFailureIdentityUserInTheRepo()
+        public void DeleteFailureCurrentUserModelInTheRepo()
         {
             var mock = new Mock<IUserRepository>(MockBehavior.Strict);
 
             // Creating the rules for mock, always send true in this case
-            mock.As<ICRUDRepository<IdentityUser, string, UserFilter>>().Setup(m => m.Remove(It.IsAny<string>()))
+            mock.As<ICRUDRepository<UserModel, string, UserFilter>>().Setup(m => m.Remove(It.IsAny<string>()))
                 .Returns(Task.FromResult(false));
-            
-            UserController controller = new UserController(mock.Object);
+
+
+            var mockUserTool = new Mock<ICurrentUserTool>(MockBehavior.Strict);
+            mockUserTool.Setup(u => u.GetCurrentUserId()).Returns("0");
+
+            UserController controller = new UserController(mock.Object, mockUserTool.Object);
+            // configuring the context for the controler
+            fakeContext(controller);
+
+            HttpResponseMessage response = controller.Delete("0").Result;
+            // the result should say "HttpStatusCode.NotFound"
+            Assert.AreEqual(response.StatusCode, HttpStatusCode.BadRequest);
+        }
+
+        // Verifying the delete method
+        [TestMethod]
+        public void DeleteFailureUserModelInTheRepo()
+        {
+            var mock = new Mock<IUserRepository>(MockBehavior.Strict);
+
+            // Creating the rules for mock, always send true in this case
+            mock.As<ICRUDRepository<UserModel, string, UserFilter>>().Setup(m => m.Remove(It.IsAny<string>()))
+                .Returns(Task.FromResult(false));
+
+
+            var mockUserTool = new Mock<ICurrentUserTool>(MockBehavior.Strict);
+            mockUserTool.Setup(u => u.GetCurrentUserId()).Returns("1");
+
+            UserController controller = new UserController(mock.Object, mockUserTool.Object);
             // configuring the context for the controler
             fakeContext(controller);
 

@@ -17,6 +17,7 @@
         "./typescript/module/common/controllers/AbstractController.ts",
         "./typescript/module/common/controllers/AbstractListController.ts",
         "./typescript/module/common/services/AbstractFilter.ts",
+        "./typescript/module/common/services/AbstractService.ts",
         "./typescript/module/common/services/Config.ts",
         "./typescript/module/common/services/HTTPErrorInterceptorService.ts",
         "./typescript/module/country/CountryFilter.ts",
@@ -108,6 +109,14 @@
         "./typescript/module/team/statistic/TeamPlayerStatisticViewModel.ts",
         "./typescript/module/team/statistic/TeamPlayerStatisticViewService.ts",
         "./typescript/module/team/statistic/TeamPlayerStatisticViewShowController.ts",
-        "./typescript/module/team/statistic/TeamPlayerStatisticViewShowDirective.ts"
+        "./typescript/module/team/statistic/TeamPlayerStatisticViewShowDirective.ts",
+        "./typescript/module/user/UserFilter.ts",
+        "./typescript/module/user/UserModel.ts",
+        "./typescript/module/user/UserModule.ts",
+        "./typescript/module/user/UserService.ts",
+        "./typescript/module/user/controller/AbstractUserController.ts",
+        "./typescript/module/user/controller/UserAddController.ts",
+        "./typescript/module/user/controller/UserEditController.ts",
+        "./typescript/module/user/controller/UserListController.ts"
     ]
 }

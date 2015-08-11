@@ -72,5 +72,9 @@ module FifaLeagueClient.Module.Login {
             this.localStorageService.setObjectSession(SessionStorageService.userID, null);
             this.localStorageService.setObjectSession(SessionStorageService.loginData, null);
         }
-    }
+
+        public getUserIdInSession(){
+          return this.localStorageService.getObjectSession(SessionStorageService.userID);
+        }
+      }
 }

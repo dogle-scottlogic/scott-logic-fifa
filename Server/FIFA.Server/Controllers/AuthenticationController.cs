@@ -16,19 +16,22 @@ namespace FIFA.Server.Controllers
     public class AuthenticationController : ApiController
     {
 
+        ICurrentUserTool userTool;
+
         /// <summary>
         ///     Constructor
         /// </summary>
         /// <returns></returns>
-        public AuthenticationController()
+        public AuthenticationController(ICurrentUserTool _userTool)
         {
+            this.userTool = _userTool;
         }
 
         public IHttpActionResult Get()
         {
             AuthenticationModel model = new AuthenticationModel
             {
-                ID = CurrentUserTool.GetCurrentUserId(),
+                ID = this.userTool.GetCurrentUserId(),
                 UserName = User.Identity.Name
             };
 

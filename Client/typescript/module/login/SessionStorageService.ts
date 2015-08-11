@@ -29,7 +29,7 @@ module FifaLeagueClient.Module.Login {
         public setObjectSession = (cacheID : string, value : Object) =>{
             return this.localStorageService.set(cacheID, value);
         }
-
+        
     }
 
 }

@@ -31,8 +31,9 @@ namespace FIFA.Server.Authentication
                 {
                     var id = actionContext.Request.RequestUri.Segments[segmentLength - 1];
 
+                    var userTool = new CurrentUserTool();
                     // Verifiying that the ID accessed is the same than the connected user or that the connected user is the admin
-                    if (!CurrentUserTool.isAccessibleById(id))
+                    if (!userTool.isAccessibleById(id))
                     {
                         return false;
                     }

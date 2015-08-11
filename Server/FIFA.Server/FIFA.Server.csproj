@@ -209,6 +209,7 @@
     <Compile Include="Authentication\BasicAuthenticationAttribute.cs" />
     <Compile Include="Authentication\HttpAuthenticationChallengeContextExtensions.cs" />
     <Compile Include="Authentication\IdentityBasicAuthenticationAttribute.cs" />
+    <Compile Include="Models\Authentication\ICurrentUserTool.cs" />
     <Compile Include="Authentication\RestrictAccessFromUserID.cs" />
     <Compile Include="Controllers\AbstractCRUDAPIController.cs" />
     <Compile Include="Controllers\AuthenticationController.cs" />
@@ -329,6 +330,7 @@
     <Compile Include="Models\Team\TeamRepository.cs" />
     <Compile Include="Models\User\IUserRepository.cs" />
     <Compile Include="Models\User\UserFilter.cs" />
+    <Compile Include="Models\User\UserModel.cs" />
     <Compile Include="Models\User\UserRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
