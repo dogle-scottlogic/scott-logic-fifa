@@ -33,7 +33,7 @@ module FifaLeagueClient.Module.League {
     }
 
     public getErrorForLeague = function(leagueId:number) {
-        return this.parentController.errors[leagueId];
+        return this.parentController.seasonErrors[leagueId];
     }
 
   }

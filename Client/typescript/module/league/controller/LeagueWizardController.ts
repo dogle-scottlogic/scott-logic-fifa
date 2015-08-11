@@ -23,6 +23,9 @@ module FifaLeagueClient.Module.League {
       // The Id of the season after generation
       generatedSeasonId:number;
 
+      //List of errors for each season you are trying to create, indexed by the season id
+      seasonErrors: {};
+
 
     static $inject = ["$scope", '$interval', 'generateLeagueService', 'WizardHandler'];
 
@@ -34,6 +37,7 @@ module FifaLeagueClient.Module.League {
         this.generateLeague = new GenerateLeagueDTOModel(null);
         this.playerAssignLeague=[];
         this.showWizard = true;
+        this.seasonErrors = {};
     }
 
     // Hide the wizard, show the result (count to 10 before showing)
@@ -69,7 +73,7 @@ module FifaLeagueClient.Module.League {
 
     // Validating the selection of players
     public validatePlayerSelectionStep():void{
-        this.errors = {};
+        this.resetErrors();
         var selectedPlayers = this.getListPlayers(true);
         this.playerAssignLeague=[];
 
@@ -85,7 +89,7 @@ module FifaLeagueClient.Module.League {
 
     // Assigning players to league
     public validateAssignPlayerToLeagueStep():void{
-      this.errors = {};
+      this.resetErrors();
 
       this.generateLeague.PlayerLeagues = [];
       // tranforming the selections in player assignable
@@ -100,7 +104,7 @@ module FifaLeagueClient.Module.League {
             }
           }
           if (players.length === 1) {
-              this.errors[league.Id] = "A league cannot have only one team";
+              this.seasonErrors[league.Id] = "A league cannot have only one team";
               return;
           }
           // we add this list of players with the league
@@ -175,6 +179,11 @@ module FifaLeagueClient.Module.League {
 
     protected fillLeaguesErrorCallBack = (config) => {
       this.errors = config.errors;
+    }
+
+    protected resetErrors(){
+      this.seasonErrors = {};
+      super.resetErrors();
     }
 
 
