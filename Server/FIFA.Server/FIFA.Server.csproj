@@ -184,6 +184,12 @@
     <EmbeddedResource Include="Migrations\201508031001538_IdentityUsers.resx">
       <DependentUpon>201508031001538_IdentityUsers.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201508130826576_AddRuleSets.resx">
+      <DependentUpon>201508130826576_AddRuleSets.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201508130828040_LinkSeasonsToRuleSets.resx">
+      <DependentUpon>201508130828040_LinkSeasonsToRuleSets.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
@@ -217,6 +223,7 @@
     <Compile Include="Controllers\AuthenticationController.cs" />
     <Compile Include="Controllers\AvailablePlayersController.cs" />
     <Compile Include="Controllers\CountryController.cs" />
+    <Compile Include="Controllers\RuleSetController.cs" />
     <Compile Include="Controllers\TeamPlayerStatisticViewController.cs" />
     <Compile Include="Controllers\SeasonTableViewController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -278,6 +285,14 @@
     <Compile Include="Migrations\201508031001538_IdentityUsers.Designer.cs">
       <DependentUpon>201508031001538_IdentityUsers.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201508130826576_AddRuleSets.cs" />
+    <Compile Include="Migrations\201508130826576_AddRuleSets.Designer.cs">
+      <DependentUpon>201508130826576_AddRuleSets.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201508130828040_LinkSeasonsToRuleSets.cs" />
+    <Compile Include="Migrations\201508130828040_LinkSeasonsToRuleSets.Designer.cs">
+      <DependentUpon>201508130828040_LinkSeasonsToRuleSets.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Authentication\AuthenticationModel.cs" />
     <Compile Include="Models\Authentication\ClaimModel.cs" />
@@ -290,6 +305,11 @@
     <Compile Include="Models\FIFAServerContext.cs" />
     <Compile Include="Models\ICRUDRepository.cs" />
     <Compile Include="Models\IQueryFilter.cs" />
+    <Compile Include="Models\RuleSet\IRuleSetRepository.cs" />
+    <Compile Include="Models\RuleSet\MatchCreationHelper.cs" />
+    <Compile Include="Models\RuleSet\RuleSet.cs" />
+    <Compile Include="Models\RuleSet\RuleSetFilter.cs" />
+    <Compile Include="Models\RuleSet\RuleSetRepository.cs" />
     <Compile Include="Models\SeasonTable\ISeasonTableViewRepository.cs" />
     <Compile Include="Models\SeasonTable\SeasonTableFilter.cs" />
     <Compile Include="Models\SeasonTable\SeasonTableViewRepository.cs" />
@@ -358,8 +378,9 @@
     <Content Include="Areas\HelpPage\Views\Shared\_Layout.cshtml" />
     <Content Include="Areas\HelpPage\Views\Web.config" />
     <Content Include="Areas\HelpPage\Views\_ViewStart.cshtml" />
-    <Content Include="Properties\PublishProfiles\scottlogic-fifaleague.azurewebsites.net.PublishSettings" />
+    <None Include="Properties\PublishProfiles\xb-fifaleague - FTP %282%29.pubxml" />
     <None Include="Properties\PublishProfiles\xb-fifaleague - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\xb-fifaleague - Web Deploy %282%29.pubxml" />
     <None Include="Properties\PublishProfiles\xb-fifaleague - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\xb-fifaleague-preprod - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\xb-fifaleague-preprod - Web Deploy.pubxml" />

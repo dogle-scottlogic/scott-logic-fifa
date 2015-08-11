@@ -59,6 +59,12 @@ module FifaLeagueClient.Module.League {
       }
     }
 
+    //Validating the rules set selection step
+    public validateRulesetSelectionStep() : void {
+        if(this.wizardHandler.wizard() != null){
+          this.wizardHandler.wizard().next();
+        }
+    }
 
     // Validating the season select step
     public validateSeasonSelectionStep():void{

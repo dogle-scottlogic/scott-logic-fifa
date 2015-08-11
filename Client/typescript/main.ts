@@ -2,6 +2,7 @@
 /// <reference path="module/common/services/AbstractFilter.ts" />
 /// <reference path="module/common/services/Config.ts" />
 /// <reference path="module/common/services/HTTPErrorInterceptorService.ts" />
+/// <reference path="module/rules/RulesModule.ts" />
 /// <reference path="module/country/CountryModule.ts" />
 /// <reference path="module/player/PlayerModule.ts" />
 /// <reference path="module/season/SeasonModule.ts" />
@@ -18,7 +19,8 @@ module FifaLeagueClient {
         Module.Common.HTTPErrorHandleModuleName, Module.Common.devConfig, Module.Player.moduleName,
         Module.Country.moduleName, Module.Season.moduleName, Module.Team.moduleName,
         Module.League.moduleName, Module.Results.moduleName,
-        Module.Dashboard.moduleName, Module.SeasonTableView.moduleName, Module.Login.moduleName, Module.User.moduleName
+        Module.Dashboard.moduleName, Module.SeasonTableView.moduleName, Module.Login.moduleName, Module.User.moduleName,
+        Module.Rules.moduleName
     ]).config(["$routeProvider",
     function routes($routeProvider: ng.route.IRouteProvider){
       $routeProvider.when('/teams', {

@@ -131,6 +131,7 @@
     <Compile Include="Controllers\CountryControllerTest.cs" />
     <Compile Include="Controllers\TeamControllerTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Helpers\MatchCreationHelperTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App.config" />

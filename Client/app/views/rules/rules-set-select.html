@@ -1,0 +1,10 @@
+<div ng-init="vm.getRulesSetList()" cg-busy="vm.loadingPromise">
+    <div class="clear"></div>
+    <div class="alert alert-danger" role="alert" ng-repeat="value in vm.errors['item.Global']">{{value}}</div>
+    <select class="form-control" ng-model="selectedrulesset" ng-change="vm.select()"
+            ng-options="rulesset.Id as rulesset.Name for rulesset in vm.rulesSets"
+            ng-required='required'>
+        <option value=""></option>
+    </select>
+
+</div>

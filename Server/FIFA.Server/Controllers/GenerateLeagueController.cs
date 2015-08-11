@@ -153,7 +153,7 @@ namespace FIFA.Server.Controllers
             }else{
 
                 // get the season
-                Season season = new Season {CountryId = item.CountryId, Name = item.SeasonName };
+                Season season = new Season {CountryId = item.CountryId, Name = item.SeasonName, RuleSetId = item.RulesId };
                 
                 // retrieving the teams associated to the country
                 List<Team> teams = new List<Team>(await this.getTeamsAssociatedToTheCountry(item.CountryId));

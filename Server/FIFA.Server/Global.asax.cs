@@ -64,6 +64,7 @@ namespace FIFA.Server
             kernel.Bind<ISeasonTableViewRepository>().To<SeasonTableViewRepository>();
             kernel.Bind<IUserRepository>().To<UserRepository>();
             kernel.Bind<ICurrentUserTool>().To<CurrentUserTool>();
+            kernel.Bind<IRuleSetRepository>().To<RuleSetRepository>();
         }
     }
 }

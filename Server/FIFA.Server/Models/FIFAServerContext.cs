@@ -32,5 +32,7 @@ namespace FIFA.Server.Models
         public System.Data.Entity.DbSet<FIFA.Server.Models.Upload> Uploads { get; set; }
 
         public System.Data.Entity.DbSet<FIFA.Server.Models.TeamPlayer> TeamPlayers { get; set; }
+
+        public System.Data.Entity.DbSet<FIFA.Server.Models.RuleSet> RuleSets { get; set; }
     }
 }

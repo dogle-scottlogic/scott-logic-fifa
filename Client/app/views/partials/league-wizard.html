@@ -1,15 +1,23 @@
 <div class="gridview" ng-show="vm.showWizard">
   <wizard on-finish="vm.finishedWizard()">
-    <wz-step title="Selecting a country">
-        <h1>Selecting a country</h1>
+    <wz-step title="Select a rule set">
+        <h1>Selecting a rule set</h1>
+        <p>Please select a ruleset for the tournament</p>
+        <form class="simple-form" ng-submit="vm.validateRulesetSelectionStep()">
+          <rulessetselect selectedrulesset="vm.generateLeague.RulesId" required='true'></rulessetselect>
+          <input type="submit" class="btn btn-primary" value="Continue" />
+        </form>
+    </wz-step>
+    <wz-step title="Select a country">
+        <h1>Select a country</h1>
         <p>Please choose the country for the league</p>
         <form class="simple-form" ng-submit="vm.validateCountrySelectionStep()">
           <countryselect selectedcountry="vm.generateLeague.CountryId" required='true'></countryselect>
           <input type="submit" class="btn btn-primary" value="Continue" />
         </form>
     </wz-step>
-    <wz-step title="Selecting a season">
-        <h1>Selecting a season</h1>
+    <wz-step title="Select a season">
+        <h1>Select a season</h1>
         <p>Please fill a season name</p>
         <countryshow countryid='vm.generateLeague.CountryId' parentcontroller="vm"></countryshow>
         <form class="simple-form" ng-submit="vm.validateSeasonSelectionStep()">
@@ -23,8 +31,8 @@
           <input type="submit" class="btn btn-primary" value="Continue" />
         </form>
     </wz-step>
-    <wz-step title="Selecting players">
-        <h1>Selecting players</h1>
+    <wz-step title="Select players">
+        <h1>Select players</h1>
         <p>Please select the players </p>
         <form class="simple-form" ng-submit="vm.validatePlayerSelectionStep()">
           <div class="alert alert-danger" role="alert" ng-repeat="value in vm.errors['item.Global']">{{value}}</div>
@@ -32,8 +40,8 @@
           <input type="submit" class="btn btn-primary" value="Assign to leagues" />
         </form>
     </wz-step>
-    <wz-step title="Assigning players to league">
-        <h1>Assigning players to league</h1>
+    <wz-step title="Assign players to a league">
+        <h1>Assign players to league</h1>
         <p>Please assign the players to a league </p>
         <form class="simple-form" ng-submit="vm.validateAssignPlayerToLeagueStep()">
           <div class="alert alert-danger" role="alert" ng-repeat="value in vm.errors['item.Global']">{{value}}</div>

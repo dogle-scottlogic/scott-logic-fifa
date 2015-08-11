@@ -30,8 +30,17 @@ namespace FIFA.Server.Migrations
                 new Country { Id = 1, Name = "Scotland" }
             );
             context.SaveChanges();
+            
+            //Populating rule sets
+            context.RuleSets.AddOrUpdate(
+                rs => rs.Id,
+                new RuleSet { Id = 1, Name = "Standard League", LegsPlayedPerOpponent = 2 },
+                new RuleSet { Id = 2, Name = "Round Robin", LegsPlayedPerOpponent = 1 }
+            );
 
-            var season = new Season { Id = 1, Name = "Scottish season", CountryId = 1 };
+            context.SaveChanges();
+
+            var season = new Season { Id = 1, Name = "Scottish season66", CountryId = 1, RuleSetId = 1 };
             // Populating the seasons
             context.Seasons.AddOrUpdate(
                 s => s.Id,
@@ -123,33 +132,6 @@ namespace FIFA.Server.Migrations
                 );
             }
             context.SaveChanges();
-
-            // half the players in League 1, half in 2
-            /*var teamPlayersLeague1 = allTeamPlayers.GetRange(0, 6);
-            var teamPlayersLeague2 = allTeamPlayers.GetRange(6, 6);
-
-            int scoreId = 1;
-            int matchId = 1;
-
-            var league1Matches = seedMatchesScores(context, teamPlayersLeague1, scoreId, matchId);
-
-            matchId = 31;
-            scoreId = 61;
-            var league2Matches = seedMatchesScores(context, teamPlayersLeague2, scoreId, matchId);
-
-            var leagues = new List<League> { 
-                new League { Id = 1, Name = "League 1", SeasonId = 1, TeamPlayers = teamPlayersLeague1, Matches = league1Matches },
-                new League { Id = 2, Name = "League 2", SeasonId = 1, TeamPlayers = teamPlayersLeague2, Matches = league2Matches }
-            };
-
-            foreach (League league in leagues)
-            {
-                context.Leagues.AddOrUpdate(
-                    l => l.Id,
-                    league
-                );
-            }
-            context.SaveChanges();*/
         }
         
         // Generates matches and scores for a list of players
@@ -191,35 +173,41 @@ namespace FIFA.Server.Migrations
 
         protected List<IdentityUser> initUsers(FIFAServerContext context)
         {
-            // Initializing the roles for users
-            IdentityRole role = context.Roles.Add(new IdentityRole(AuthenticationRoles.UserRole));
-            context.Roles.Add(role);
-
-            IdentityRole adminRole = context.Roles.Add(new IdentityRole(AuthenticationRoles.AdministratorRole));
-            context.Roles.Add(adminRole);
-            context.SaveChanges();
-
-            // Creating generic users
-            var users = new List<IdentityUser>
+            // if at least one user exist we don t populate
+            if (context.Users.Count() > 0)
             {
-                new IdentityUser("user1"),
-                new IdentityUser("user2"),
-                new IdentityUser("admin")
-            };
+                return null;
+            } else { 
+                // Initializing the roles for users
+                IdentityRole role = context.Roles.Add(new IdentityRole(AuthenticationRoles.UserRole));
+                context.Roles.Add(role);
 
-            initUser(users[0], role.Id);
-            context.Users.Add(users[0]);
-            initUser(users[1], role.Id);
-            context.Users.Add(users[1]);
+                IdentityRole adminRole = context.Roles.Add(new IdentityRole(AuthenticationRoles.AdministratorRole));
+                context.Roles.Add(adminRole);
+                context.SaveChanges();
 
-            // adding the Admin role to the admin user
-            initUser(users[2], role.Id);
-            users[2].Roles.Add(new IdentityUserRole { RoleId = adminRole.Id, UserId = users[2].Id });
-            context.Users.Add(users[2]);
+                // Creating generic users
+                var users = new List<IdentityUser>
+                {
+                    new IdentityUser("user1"),
+                    new IdentityUser("user2"),
+                    new IdentityUser("admin")
+                };
 
-            context.SaveChanges();
+                initUser(users[0], role.Id);
+                context.Users.Add(users[0]);
+                initUser(users[1], role.Id);
+                context.Users.Add(users[1]);
 
-            return users;
+                // adding the Admin role to the admin user
+                initUser(users[2], role.Id);
+                users[2].Roles.Add(new IdentityUserRole { RoleId = adminRole.Id, UserId = users[2].Id });
+                context.Users.Add(users[2]);
+
+                context.SaveChanges();
+                return users;
+            }
+
 
         }
 

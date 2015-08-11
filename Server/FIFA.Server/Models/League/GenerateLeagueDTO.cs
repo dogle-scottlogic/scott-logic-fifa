@@ -14,6 +14,7 @@ namespace FIFA.Server.Models
         }
 
         public int CountryId { get; set; }
+        public int RulesId { get; set; }
         public string SeasonName { get; set; }
         public ICollection<PlayerAssignLeagueModel> PlayerLeagues { get; set; }
 
