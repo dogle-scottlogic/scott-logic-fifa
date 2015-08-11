@@ -122,7 +122,10 @@ namespace FIFA.Server.Controllers
         [Authorize(Roles = AuthenticationRoles.AdministratorRole)] // Require authenticated requests.
         public async Task<HttpResponseMessage> Delete(int id)
         {
-            return await base.Delete(id);
+            bool hasMatches = await ((ITeamRepository)repository).HasMatches(id);
+
+            // if the team has matches attached, it cannot be deleted
+            return hasMatches ? createErrorResponseWithMessage(TEAM_HAS_MATCHES_ERR) : await base.Delete(id);
         }
 
         /**
@@ -140,6 +143,7 @@ namespace FIFA.Server.Controllers
 
         private const string NON_EXISTENT_COUNTRY_ERR = "The country doesn't exist";
         private const string TEAM_EXISTS_ERR = "The team name already exists";
+        private const string TEAM_HAS_MATCHES_ERR = "Team can't be deleted because it has matches";
 
         private HttpResponseMessage createErrorResponseWithMessage(string msg) {
             return Request.CreateErrorResponse(HttpStatusCode.BadRequest, msg);
