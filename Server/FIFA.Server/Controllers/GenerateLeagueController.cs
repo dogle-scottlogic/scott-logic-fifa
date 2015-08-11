@@ -196,7 +196,7 @@ namespace FIFA.Server.Controllers
             Random rand = new Random();
             List<League> leaguesInCreation = new List<League>();
 
-            // For each player leagu in player leagues, we genereage a league
+            // For each player league in player leagues, we genereage a league
             foreach (PlayerAssignLeagueModel playerleague in playerleagues)
             {
                 if(playerleague.Players != null && playerleague.Players.Count > 0)

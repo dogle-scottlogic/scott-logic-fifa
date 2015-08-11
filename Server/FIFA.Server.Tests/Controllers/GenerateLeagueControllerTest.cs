@@ -567,10 +567,7 @@ namespace FIFATests.ControllerTests
             Season season = new Season();
             Player player = new Player();
 
-            // Mock league repository to do what? Return null? Why?
-            var mock = new Mock<ILeagueRepository>(MockBehavior.Strict);
-            mock.As<ICRUDRepository<League, int, LeagueFilter>>().Setup(l => l.GetAllWithFilter(It.IsAny<LeagueFilter>()))
-                .Returns(Task.FromResult((IEnumerable<League>)null));
+            var mockLeagueRepo = new Mock<ILeagueRepository>(MockBehavior.Strict);
 
             List<League> createdLeagues = new List<League>();
 
@@ -589,7 +586,7 @@ namespace FIFATests.ControllerTests
                 .Returns(Task.FromResult((IEnumerable<Team>)teams));
 
             // Creating the controller which we want to create
-            GenerateLeagueController controller = new GenerateLeagueController(mock.Object, mockSeasonRepo.Object,
+            GenerateLeagueController controller = new GenerateLeagueController(mockLeagueRepo.Object, mockSeasonRepo.Object,
                 mockTeamRepo.Object, mockCountry.Object);
 
             // configuring the context for the controler
@@ -597,6 +594,8 @@ namespace FIFATests.ControllerTests
 
             HttpResponseMessage response = controller.Post(generateLeagueDTO).Result;
             Assert.AreEqual(response.StatusCode, HttpStatusCode.BadRequest);
+            String errorMessage = response.Content.ReadAsStringAsync().Result;
+            Assert.AreEqual(errorMessage, "{\"Message\":\"A league must have at least 2 players\"}");
         }
 
 
