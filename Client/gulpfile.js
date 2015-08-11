@@ -260,6 +260,21 @@ gulp.task('karma', function() {
     });
 });
 
+// Protractor related tasks
+var protractor = require("gulp-protractor").protractor;
+// Setting up the test task
+gulp.task('protractor', ['webdriver_update'], function(cb) {
+    gulp.src(['./e2e-test/tests/*.js']).pipe(protractor({
+        configFile: './e2e-test/protractor.conf.js',
+    })).on('error', function(e) {
+        console.log(e)
+    }).on('end', cb);
+});
+// Download and update the selenium driver
+var webdriver_update = require('gulp-protractor').webdriver_update;
+// Downloads the selenium webdriver
+gulp.task('webdriver_update', webdriver_update);
+
 gulp.task('dependency', ['copy','script']);
 gulp.task('build', ['typescript', 'less']);
 gulp.task('default', ['dependency', 'build', 'browser-sync']);
