@@ -420,6 +420,8 @@ namespace FIFATests.ControllerTests {
             mock.As<ICRUDRepository<Team, int, TeamFilter>>().Setup(m => m.Remove(It.IsAny<int>()))
                 .Returns(Task.FromResult(true));
 
+            mock.As<ITeamRepository>().Setup(m => m.HasMatches(It.IsAny<int>())).Returns(Task.FromResult(false));
+
             var mockCountryRepo = new Mock<ICountryRepository>(MockBehavior.Strict);
             mockCountryRepo.As<ICRUDRepository<Country, int, TeamFilter>>().Setup(m => m.Get(It.IsAny<int>()))
                 .Returns<int>(id => Task.FromResult(new Country()));
@@ -434,6 +436,31 @@ namespace FIFATests.ControllerTests {
             Assert.AreEqual(response.StatusCode, HttpStatusCode.OK);
         }
 
+        // Verifying the delete method
+        [TestMethod]
+        public void DeleteFailureTeamHasMatchesInTheRepo()
+        {
+            var mock = new Mock<ITeamRepository>(MockBehavior.Strict);
+
+            // Creating the rules for mock, always send true in this case
+            mock.As<ICRUDRepository<Team, int, TeamFilter>>().Setup(m => m.Remove(It.IsAny<int>()))
+                .Returns(Task.FromResult(false));
+
+            mock.As<ITeamRepository>().Setup(m => m.HasMatches(It.IsAny<int>())).Returns(Task.FromResult(true));
+
+            var mockCountryRepo = new Mock<ICountryRepository>(MockBehavior.Strict);
+            mockCountryRepo.As<ICRUDRepository<Country, int, TeamFilter>>().Setup(m => m.Get(It.IsAny<int>()))
+                .Returns<int>(id => Task.FromResult(new Country()));
+
+            // Creating the controller which we want to create
+            TeamController controller = new TeamController(mock.Object, mockCountryRepo.Object);
+            // configuring the context for the controler
+            fakeContext(controller);
+
+            HttpResponseMessage response = controller.Delete(0).Result;
+            // the result should say "HttpStatusCode.BadRequest"
+            Assert.AreEqual(response.StatusCode, HttpStatusCode.BadRequest);
+        } 
 
         // Verifying the delete method
         [TestMethod]
@@ -444,6 +471,8 @@ namespace FIFATests.ControllerTests {
             // Creating the rules for mock, always send true in this case
             mock.As<ICRUDRepository<Team, int, TeamFilter>>().Setup(m => m.Remove(It.IsAny<int>()))
                 .Returns(Task.FromResult(false));
+
+            mock.As<ITeamRepository>().Setup(m => m.HasMatches(It.IsAny<int>())).Returns(Task.FromResult(false));
 
             var mockCountryRepo = new Mock<ICountryRepository>(MockBehavior.Strict);
             mockCountryRepo.As<ICRUDRepository<Country, int, TeamFilter>>().Setup(m => m.Get(It.IsAny<int>()))

@@ -9,5 +9,7 @@ namespace FIFA.Server.Models
     public interface ITeamRepository : ICRUDRepository<Team, int, TeamFilter>
     {
         Task<bool> teamNameExists(string name, int countryId, int? id);
+        
+        Task<bool> HasMatches(int id);
     }
 }
