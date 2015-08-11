@@ -4,6 +4,17 @@ module FifaLeagueClient.Module.Common.Services {
 
         query:string;
 
+        public buildApiUrl(url:string,query:string):string{
+            var returnedUrl = url;
+            var builtParam = this.getParameters(query);
+            if(builtParam!= ""){
+                returnedUrl = returnedUrl +"?"+ builtParam;
+            }else{
+                returnedUrl = returnedUrl +"/";
+            }
+            return returnedUrl;
+        }
+
         public getParameters(query:string):string{
           return query;
         }

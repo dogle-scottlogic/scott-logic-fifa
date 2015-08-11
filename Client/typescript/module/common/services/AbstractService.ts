@@ -5,7 +5,7 @@ module FifaLeagueClient.Module.Common.Services {
         httpService: ng.IHttpService;
         qService: ng.IQService;
 
-        // URL used to reach the user API
+        // URL used to reach the TObject API
         apiURL:string;
         apiURLWithSlash:string;
 
@@ -21,18 +21,12 @@ module FifaLeagueClient.Module.Common.Services {
             return this.getFilteredList(null);
         }
 
-        // Get a filtered user list, execute successCallBack if it is a success and errorCallBack if it is a failure
+        // Get a filtered TObject list, execute successCallBack if it is a success and errorCallBack if it is a failure
         public getFilteredList(filter:AbstractFilter): ng.IPromise<TObject[]> {
             var deferred = this.qService.defer();
-            var getParams = "";
             var url;
             if(filter!= null){
-                getParams = filter.getParameters(getParams);
-                if(getParams!= ""){
-                    url = this.apiURL +"?"+ getParams;
-                }else{
-                    url = this.apiURLWithSlash;
-                }
+                url = filter.buildApiUrl(this.apiURL, "");
             }else{
                 url = this.apiURLWithSlash;
             }
@@ -58,42 +52,42 @@ module FifaLeagueClient.Module.Common.Services {
             var deferred = this.qService.defer();
             var self = this;
             this.httpService.get(this.apiURLWithSlash + Id).success(function (data, status, headers, config) {
-                var user = self.convertDataToTObject(data);
-                deferred.resolve(user);
+                var returnedObject = self.convertDataToTObject(data);
+                deferred.resolve(returnedObject);
             }).error(function (data, status, headers, config) {
                 deferred.reject(config);
             });
             return deferred.promise;
         }
 
-        // add a user in the database
-        public add(item:TObject): ng.IPromise<TObject>{
+        // add a TObject in the database
+        public add(TObject:TObject): ng.IPromise<TObject>{
             var deferred = this.qService.defer();
             var self = this;
 
-            this.httpService.post(this.apiURLWithSlash, item).success(function (data, status, headers, config) {
-                var user = self.convertDataToTObject(data);
-                deferred.resolve(user);
+            this.httpService.post(this.apiURLWithSlash, TObject).success(function (data, status, headers, config) {
+                var returnedObject = self.convertDataToTObject(data);
+                deferred.resolve(returnedObject);
             }).error(function (data, status, headers, config) {
                 deferred.reject(config);
             });
             return deferred.promise;
         }
 
-        // Updating with the user information
-        public update(Id:TKey, item:TObject): ng.IPromise<TObject> {
+        // Updating with the TObject information
+        public update(Id:TKey, TObject:TObject): ng.IPromise<TObject> {
             var deferred = this.qService.defer();
             var self = this;
-            this.httpService.put(this.apiURLWithSlash + Id, item).success(function (data, status, headers, config) {
-                var user = self.convertDataToTObject(data);
-                deferred.resolve(user);
+            this.httpService.put(this.apiURLWithSlash + Id, TObject).success(function (data, status, headers, config) {
+                var returnedObject = self.convertDataToTObject(data);
+                deferred.resolve(returnedObject);
             }).error(function (data, status, headers, config) {
                 deferred.reject(config);
             });
             return deferred.promise;
         }
 
-        // Deleting a user by is ID
+        // Deleting a TObject by is ID
         public delete(Id:TKey) : ng.IPromise<boolean> {
             var deferred = this.qService.defer();
             var self = this;
