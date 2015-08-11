@@ -9,7 +9,7 @@ module FifaLeagueClient.Module.User {
         locationService: ng.ILocationService;
         id: string;
         loginService: Login.LoginService;
-        userBeforeChange: UserModel;
+        nameBeforeChange: String;
 
         static $inject = ["$scope", 'userService', '$location', '$routeParams', 'loginService'];
 
@@ -29,7 +29,7 @@ module FifaLeagueClient.Module.User {
                 self.UserService.get(self.id)
                 .then(function(data) {
                     self.user = data;
-                    self.userBeforeChange = self.user;
+                    self.nameBeforeChange = self.user.Name;
                 }).catch(self.onError);
             }
         }
@@ -42,7 +42,7 @@ module FifaLeagueClient.Module.User {
             // if the userId in session is the same than the modified user  and the password had been changed or the user name
             // we empty the datas in session in order to force the login
             if(this.loginService.getUserIdInSession() == this.user.Id
-            && (this.userBeforeChange.Name != this.user.Name || this.user.Password != null)){
+            && (this.nameBeforeChange != this.user.Name || this.user.Password != null)){
                 this.loginService.logout();
                 this.locationService.path(Login.loginPath);
             }else{

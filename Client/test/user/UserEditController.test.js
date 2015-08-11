@@ -65,88 +65,86 @@ describe('Testing the UserEditController', function() {
                     // We expect that the service has been called with the user id
                     expect(controller.id).toEqual(null);
                     expect(userService.get).not.toHaveBeenCalled();
-                });
-
-            });
-
-            describe('Load the user : ', function(){
-
-                it('Verify the Id is sent to the service', function () {
-                    userService.get.and.returnValue(defer.promise);
-                    userEditController.id = 1;
-                    userEditController.loadUser();
-                    // We expect that the service has been called with the user id
-                    expect(userService.get).toHaveBeenCalledWith(1);
-                });
-
-
-                it('Verify get ok', function () {
-                    defer.resolve(createCorrectUser());
-                    userService.get.and.returnValue(defer.promise);
-                    userEditController.id = 1;
-                    userEditController.loadUser();
-                    verifyPromiseAndDigest(userEditController, defer, rootScope);
-                    // We expect the location should change to the list of users
-                    expect(userEditController.user).toEqual(createCorrectUser());
-                });
-
-                it('Verify get error', function () {
-                    defer.reject({errors:["Error"]});
-                    userService.get.and.returnValue(defer.promise);
-                    userEditController.id = 1;
-                    userEditController.loadUser();
-                    verifyPromiseAndDigest(userEditController, defer, rootScope);
-                    // We expect the error
-                    expect(userEditController.errors).toContain("Error");
-                });
-
-            });
-
-            describe('Update the user : ', function(){
-
-                it('Verify if the confirm password fail', function () {
-                    userService.update.and.returnValue(defer.promise);
-                    userEditController.user = createFailurePasswordUser();
-                    userEditController.updateUser();
-                    // We expect that the service not have been called because of the failure
-                    expect(userService.update).not.toHaveBeenCalled();
-                    expect(userEditController.errors["item.Password"]).not.toEqual(null);
-                });
-
-
-                it('Verify the user sent to the service', function () {
-                    userService.update.and.returnValue(defer.promise);
-                    userEditController.id = "1";
-                    userEditController.user = createCorrectUser();
-                    userEditController.updateUser();
-                    // We expect that the service has been called
-                    expect(userService.update).toHaveBeenCalledWith("1",createCorrectUser());
-                });
-
-
-                it('Verify edit done for an other user', function () {
-                    loginService.getUserIdInSession.and.returnValue("NotSameValueAsUser");
-                    defer.resolve(null);
-                    userService.update.and.returnValue(defer.promise);
-                    userEditController.user = createCorrectUser();
-                    userEditController.userBeforeChange = createCorrectUser();
-                    userEditController.updateUser();
-                    verifyPromiseAndDigest(userEditController, defer, rootScope);
-                    // We expect the location should change to the list of users
-                    expect(location.path()).toBe('/users');
-                });
-
-
-                it('Verify edit done for the same user and change nothing', function () {
-                    loginService.getUserIdInSession.and.returnValue("1");
-                    defer.resolve(null);
-                    userService.update.and.returnValue(defer.promise);
-                    userEditController.user = new FifaLeagueClient.Module.User.UserModel({ Id: "1",
-                    Name: "Tony"}
-                );
-                userEditController.userBeforeChange = new FifaLeagueClient.Module.User.UserModel({ Id: "1",
-                Name: "Tony"}
+                }
             );
+
+        }
+    );
+
+    describe('Load the user : ', function(){
+
+        it('Verify the Id is sent to the service', function () {
+            userService.get.and.returnValue(defer.promise);
+            userEditController.id = 1;
+            userEditController.loadUser();
+            // We expect that the service has been called with the user id
+            expect(userService.get).toHaveBeenCalledWith(1);
+        });
+
+
+        it('Verify get ok', function () {
+            defer.resolve(createCorrectUser());
+            userService.get.and.returnValue(defer.promise);
+            userEditController.id = 1;
+            userEditController.loadUser();
+            verifyPromiseAndDigest(userEditController, defer, rootScope);
+            // We expect the location should change to the list of users
+            expect(userEditController.user).toEqual(createCorrectUser());
+        });
+
+        it('Verify get error', function () {
+            defer.reject({errors:["Error"]});
+            userService.get.and.returnValue(defer.promise);
+            userEditController.id = 1;
+            userEditController.loadUser();
+            verifyPromiseAndDigest(userEditController, defer, rootScope);
+            // We expect the error
+            expect(userEditController.errors).toContain("Error");
+        });
+
+    });
+
+    describe('Update the user : ', function(){
+
+        it('Verify if the confirm password fail', function () {
+            userService.update.and.returnValue(defer.promise);
+            userEditController.user = createFailurePasswordUser();
+            userEditController.updateUser();
+            // We expect that the service not have been called because of the failure
+            expect(userService.update).not.toHaveBeenCalled();
+            expect(userEditController.errors["item.Password"]).not.toEqual(null);
+        });
+
+
+        it('Verify the user sent to the service', function () {
+            userService.update.and.returnValue(defer.promise);
+            userEditController.id = "1";
+            userEditController.user = createCorrectUser();
+            userEditController.updateUser();
+            // We expect that the service has been called
+            expect(userService.update).toHaveBeenCalledWith("1",createCorrectUser());
+        });
+
+
+        it('Verify edit done for an other user', function () {
+            loginService.getUserIdInSession.and.returnValue("NotSameValueAsUser");
+            defer.resolve(null);
+            userService.update.and.returnValue(defer.promise);
+            userEditController.user = createCorrectUser();
+            userEditController.userBeforeChange = createCorrectUser();
+            userEditController.updateUser();
+            verifyPromiseAndDigest(userEditController, defer, rootScope);
+            // We expect the location should change to the list of users
+            expect(location.path()).toBe('/users');
+        });
+
+
+        it('Verify edit done for the same user and change nothing', function () {
+            loginService.getUserIdInSession.and.returnValue("1");
+            defer.resolve(null);
+            userService.update.and.returnValue(defer.promise);
+            userEditController.user = new FifaLeagueClient.Module.User.UserModel({ Id: "1", Name: "Tony"});
+            userEditController.nameBeforeChange = userEditController.user.Name;
             userEditController.updateUser();
             verifyPromiseAndDigest(userEditController, defer, rootScope);
             // We expect the location should change to the list of users
@@ -159,7 +157,7 @@ describe('Testing the UserEditController', function() {
             defer.resolve(null);
             userService.update.and.returnValue(defer.promise);
             userEditController.user = new FifaLeagueClient.Module.User.UserModel({ Id: "1", Name: "Tony"});
-            userEditController.userBeforeChange = new FifaLeagueClient.Module.User.UserModel({ Id: "1", Name: "To"});
+            userEditController.nameBeforeChange = "To";
             userEditController.updateUser();
             verifyPromiseAndDigest(userEditController, defer, rootScope);
             // We expect the location should change to the list of users
@@ -172,7 +170,7 @@ describe('Testing the UserEditController', function() {
             defer.resolve(null);
             userService.update.and.returnValue(defer.promise);
             userEditController.user = createCorrectUser();
-            userEditController.userBeforeChange = createCorrectUser();
+            userEditController.nameBeforeChange = userEditController.user.Name;
             userEditController.updateUser();
             verifyPromiseAndDigest(userEditController, defer, rootScope);
             // We expect the location should change to the list of users
