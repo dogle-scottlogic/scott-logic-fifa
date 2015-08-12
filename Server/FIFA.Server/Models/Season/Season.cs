@@ -20,6 +20,8 @@ namespace FIFA.Server.Models
         [ForeignKey("SeasonCountry"), Column(Order = 0)]
         [Index("SeasonNameForCountry", 1, IsUnique = true)]
         public int CountryId { get; set; }
+        
+        public bool Archived { get; set; }
 
         public virtual Country SeasonCountry  { get; set; }
 

@@ -24,79 +24,97 @@ namespace FIFA.Server.Migrations
             // Creating the users
             initUsers(context);
 
-            // Populating the countries
-            context.Countries.AddOrUpdate(
-                c => c.Id,
-                new Country { Id = 1, Name = "Scotland" }
-            );
-            context.SaveChanges();
-
-            var season = new Season { Id = 1, Name = "Scottish season", CountryId = 1 };
-            // Populating the seasons
-            context.Seasons.AddOrUpdate(
-                s => s.Id,
-                season
-            );
-            context.SaveChanges();
-
-            var allPlayers = new List<Player> {
-                // League 1
-                new Player { Id = 1, Name = "Tony" },
-                new Player { Id = 2, Name = "Jack"},
-                new Player { Id = 3, Name = "Pete"},
-                new Player { Id = 4, Name = "Will" },
-                new Player { Id = 5, Name = "Ian" },
-                new Player { Id = 6, Name = "Craig" },
-                // League 2
-                new Player { Id = 7, Name = "Stevie" },
-                new Player { Id = 8, Name = "Graham" },
-                new Player { Id = 9, Name = "Murray" },
-                new Player { Id = 10, Name = "Rob" },
-                new Player { Id = 11, Name = "Steven" },
-                new Player { Id = 12, Name = "Nils" }
-            };
-
-            // half the players in League 1, half in 2
-            var playersLeague1 = allPlayers.GetRange(0, 6);
-            var playersLeague2 = allPlayers.GetRange(6, 6);
-
-
-            // Populating the players
-            foreach (Player player in allPlayers) {
-                context.Players.AddOrUpdate(
-                    p => p.Id,
-                    player
-                );
-            }
-            context.SaveChanges();
-
-            var allTeams = new List<Team> {
-                new Team { Id = 1, Name = "Rangers", CountryId = 1},
-                new Team { Id = 2, Name = "Inverness CT", CountryId = 1 },
-                new Team { Id = 3, Name = "Hearts", CountryId = 1 },
-                new Team { Id = 4, Name = "Aberdeen", CountryId = 1 },
-                new Team { Id = 5, Name = "Ross County", CountryId = 1 },
-                new Team { Id = 6, Name = "Dundee United", CountryId = 1 },
-                new Team { Id = 7, Name = "St Mirren", CountryId = 1 },
-                new Team { Id = 8, Name = "Motherwell", CountryId = 1 },
-                new Team { Id = 9, Name = "Patrick Thistle", CountryId = 1 },
-                new Team { Id = 10, Name = "Hibs", CountryId = 1 },
-                new Team { Id = 11, Name = "St Johnstone", CountryId = 1 },
-                new Team { Id = 12, Name = "Kilmarnock", CountryId = 1 }
-            };
-
-            foreach (Team team in allTeams){
-                context.Teams.AddOrUpdate(
-                    t => t.Id,
-                    team
-                );
-            }
-            context.SaveChanges();
-
-
-            // team & player combo
-            var allTeamPlayers = new List<TeamPlayer>
+            if(context.Countries.Count() == 0)
             {
+                // Populating the countries
+                context.Countries.AddOrUpdate(
+                    c => c.Id,
+                    new Country { Id = 1, Name = "Scotland" }
+                );
+                context.SaveChanges();
+            }
+
+            if (context.Seasons.Count() == 0)
+            {
+                var season = new Season { Id = 1, Name = "Scottish season", CountryId = 1 };
+                // Populating the seasons
+                context.Seasons.AddOrUpdate(
+                    s => s.Id,
+                    season
+                );
+                context.SaveChanges();
+            }
+
+
+            if (context.Players.Count() == 0)
+            {
+                var allPlayers = new List<Player> {
+                    // League 1
+                    new Player { Id = 1, Name = "Tony" },
+                    new Player { Id = 2, Name = "Jack"},
+                    new Player { Id = 3, Name = "Pete"},
+                    new Player { Id = 4, Name = "Will" },
+                    new Player { Id = 5, Name = "Ian" },
+                    new Player { Id = 6, Name = "Craig" },
+                    // League 2
+                    new Player { Id = 7, Name = "Stevie" },
+                    new Player { Id = 8, Name = "Graham" },
+                    new Player { Id = 9, Name = "Murray" },
+                    new Player { Id = 10, Name = "Rob" },
+                    new Player { Id = 11, Name = "Steven" },
+                    new Player { Id = 12, Name = "Nils" }
+                };
+
+                // half the players in League 1, half in 2
+                var playersLeague1 = allPlayers.GetRange(0, 6);
+                var playersLeague2 = allPlayers.GetRange(6, 6);
+
+
+                // Populating the players
+                foreach (Player player in allPlayers)
+                {
+                    context.Players.AddOrUpdate(
+                        p => p.Id,
+                        player
+                    );
+                }
+                context.SaveChanges();
+            }
+
+
+            if (context.Teams.Count() == 0)
+            {
+                var allTeams = new List<Team> {
+                    new Team { Id = 1, Name = "Rangers", CountryId = 1},
+                    new Team { Id = 2, Name = "Inverness CT", CountryId = 1 },
+                    new Team { Id = 3, Name = "Hearts", CountryId = 1 },
+                    new Team { Id = 4, Name = "Aberdeen", CountryId = 1 },
+                    new Team { Id = 5, Name = "Ross County", CountryId = 1 },
+                    new Team { Id = 6, Name = "Dundee United", CountryId = 1 },
+                    new Team { Id = 7, Name = "St Mirren", CountryId = 1 },
+                    new Team { Id = 8, Name = "Motherwell", CountryId = 1 },
+                    new Team { Id = 9, Name = "Patrick Thistle", CountryId = 1 },
+                    new Team { Id = 10, Name = "Hibs", CountryId = 1 },
+                    new Team { Id = 11, Name = "St Johnstone", CountryId = 1 },
+                    new Team { Id = 12, Name = "Kilmarnock", CountryId = 1 }
+                };
+
+                foreach (Team team in allTeams)
+                {
+                    context.Teams.AddOrUpdate(
+                        t => t.Id,
+                        team
+                    );
+                }
+                context.SaveChanges();
+            }
+
+
+            if (context.TeamPlayers.Count() == 0)
+            {
+                // team & player combo
+                var allTeamPlayers = new List<TeamPlayer>
+                {
                 // League 1
                 new TeamPlayer { Id = 1, PlayerId = 1, TeamId = 5},
                 new TeamPlayer { Id = 2, PlayerId = 2, TeamId = 3},
@@ -111,18 +129,19 @@ namespace FIFA.Server.Migrations
                 new TeamPlayer { Id = 10, PlayerId = 10, TeamId = 11},
                 new TeamPlayer { Id = 11, PlayerId = 11, TeamId = 9},
                 new TeamPlayer { Id = 12, PlayerId = 12, TeamId = 12}
-            };
+                };
 
 
 
-            foreach (TeamPlayer teamPlayer in allTeamPlayers)
-            {
-                context.TeamPlayers.AddOrUpdate(
-                    tp => tp.Id,
-                    teamPlayer
-                );
+                foreach (TeamPlayer teamPlayer in allTeamPlayers)
+                {
+                    context.TeamPlayers.AddOrUpdate(
+                        tp => tp.Id,
+                        teamPlayer
+                    );
+                }
+                context.SaveChanges();
             }
-            context.SaveChanges();
 
             // half the players in League 1, half in 2
             /*var teamPlayersLeague1 = allTeamPlayers.GetRange(0, 6);
@@ -191,35 +210,45 @@ namespace FIFA.Server.Migrations
 
         protected List<IdentityUser> initUsers(FIFAServerContext context)
         {
-            // Initializing the roles for users
-            IdentityRole role = context.Roles.Add(new IdentityRole(AuthenticationRoles.UserRole));
-            context.Roles.Add(role);
 
-            IdentityRole adminRole = context.Roles.Add(new IdentityRole(AuthenticationRoles.AdministratorRole));
-            context.Roles.Add(adminRole);
-            context.SaveChanges();
-
-            // Creating generic users
-            var users = new List<IdentityUser>
+            // Creating new user only if no one exists
+            if(context.Users.Count() == 0)
             {
-                new IdentityUser("user1"),
-                new IdentityUser("user2"),
-                new IdentityUser("admin")
-            };
+                
+                // Initializing the roles for users
+                IdentityRole role = context.Roles.Add(new IdentityRole(AuthenticationRoles.UserRole));
+                context.Roles.Add(role);
 
-            initUser(users[0], role.Id);
-            context.Users.Add(users[0]);
-            initUser(users[1], role.Id);
-            context.Users.Add(users[1]);
+                IdentityRole adminRole = context.Roles.Add(new IdentityRole(AuthenticationRoles.AdministratorRole));
+                context.Roles.Add(adminRole);
+                context.SaveChanges();
 
-            // adding the Admin role to the admin user
-            initUser(users[2], role.Id);
-            users[2].Roles.Add(new IdentityUserRole { RoleId = adminRole.Id, UserId = users[2].Id });
-            context.Users.Add(users[2]);
+                // Creating generic users
+                var users = new List<IdentityUser>
+                {
+                    new IdentityUser("user1"),
+                    new IdentityUser("user2"),
+                    new IdentityUser("admin")
+                };
 
-            context.SaveChanges();
+                initUser(users[0], role.Id);
+                context.Users.Add(users[0]);
+                initUser(users[1], role.Id);
+                context.Users.Add(users[1]);
 
-            return users;
+                // adding the Admin role to the admin user
+                initUser(users[2], role.Id);
+                users[2].Roles.Add(new IdentityUserRole { RoleId = adminRole.Id, UserId = users[2].Id });
+                context.Users.Add(users[2]);
+
+                context.SaveChanges();
+
+                return users;
+            }
+            else
+            {
+                return null;
+            }
 
         }
 

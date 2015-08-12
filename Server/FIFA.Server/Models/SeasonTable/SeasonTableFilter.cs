@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Web;
+﻿using System.Linq;
 
 namespace FIFA.Server.Models
 {
@@ -18,6 +13,8 @@ namespace FIFA.Server.Models
         public int? LeagueId { get; set; }
 
         public bool? HasRemainingMatchToPlay { get; set; }
+
+        public bool? Archived { get; set; }
 
         public IQueryable<League> FilterLeagueTable(IQueryable<League> query)
         {
@@ -64,6 +61,11 @@ namespace FIFA.Server.Models
                 query = query.Where(s => s.Leagues.Any(l => l.Id == this.LeagueId));
             }
 
+            if (this.Archived != null)
+            {
+                query = query.Where(s => s.Archived == this.Archived);
+            }
+
 
             return query;
         }
@@ -104,7 +106,12 @@ namespace FIFA.Server.Models
                     query = query.Where(sc => sc.Match.League.Matches.All(lm => lm.Played == true));
                 }
             }
-            
+
+            if (this.Archived != null)
+            {
+                query = query.Where(sc => sc.Match.League.Season.Archived == this.Archived);
+            }
+
             return query;
         }
     }

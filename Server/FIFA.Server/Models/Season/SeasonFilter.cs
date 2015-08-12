@@ -19,6 +19,8 @@ namespace FIFA.Server.Models
 
         public bool? HasRemainingMatchToPlay { get; set; }
 
+        public bool? Archived { get; set; }
+
 
         public IQueryable<Season> FilterSeasons(IQueryable<Season> query)
         {
@@ -52,6 +54,11 @@ namespace FIFA.Server.Models
                 {
                     query = query.Where(s => s.Leagues.All(l => l.Matches.All(m => m.Played == true)));
                 }
+            }
+
+            if(this.Archived != null)
+            {
+                query = query.Where(s => s.Archived == this.Archived);
             }
 
 

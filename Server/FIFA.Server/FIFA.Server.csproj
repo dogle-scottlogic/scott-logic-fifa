@@ -182,6 +182,9 @@
     <EmbeddedResource Include="Migrations\201508031001538_IdentityUsers.resx">
       <DependentUpon>201508031001538_IdentityUsers.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201508111510244_SeasonArchive.resx">
+      <DependentUpon>201508111510244_SeasonArchive.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
@@ -209,6 +212,10 @@
     <Compile Include="Authentication\BasicAuthenticationAttribute.cs" />
     <Compile Include="Authentication\HttpAuthenticationChallengeContextExtensions.cs" />
     <Compile Include="Authentication\IdentityBasicAuthenticationAttribute.cs" />
+    <Compile Include="Migrations\201508111510244_SeasonArchive.cs" />
+    <Compile Include="Migrations\201508111510244_SeasonArchive.Designer.cs">
+      <DependentUpon>201508111510244_SeasonArchive.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\Authentication\ICurrentUserTool.cs" />
     <Compile Include="Authentication\RestrictAccessFromUserID.cs" />
     <Compile Include="Controllers\AbstractCRUDAPIController.cs" />

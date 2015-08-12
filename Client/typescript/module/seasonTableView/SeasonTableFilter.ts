@@ -6,6 +6,7 @@ module FifaLeagueClient.Module.SeasonTableView {
         public CountryId:number;
         public SeasonId:number;
         public LeagueId:number;
+        public Archived:boolean;
 
         public HasRemainingMatchToPlay:boolean;
 
@@ -20,6 +21,7 @@ module FifaLeagueClient.Module.SeasonTableView {
             this.SeasonId = null;
             this.LeagueId = null;
             this.HasRemainingMatchToPlay = null;
+            this.Archived = null;
         }
 
         // Add the request with the names
@@ -30,7 +32,8 @@ module FifaLeagueClient.Module.SeasonTableView {
               .addRequestNumberParameter("CountryId", this.CountryId)
               .addRequestNumberParameter("SeasonId", this.SeasonId)
               .addRequestNumberParameter("LeagueId", this.LeagueId)
-              .addRequestBooleanParameter("HasRemainingMatchToPlay", this.HasRemainingMatchToPlay);
+              .addRequestBooleanParameter("HasRemainingMatchToPlay", this.HasRemainingMatchToPlay)
+              .addRequestBooleanParameter("Archived", this.Archived);
 
             return this.query;
         }
