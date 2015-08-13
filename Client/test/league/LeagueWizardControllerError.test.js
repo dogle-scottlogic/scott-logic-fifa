@@ -42,6 +42,11 @@ describe('Testing the LeagueWizardController in error', function() {
 
       // And that we clicked a button or something
       generateLeagueController.generateLeague.CountryId = 1;
+      generateLeagueController.generateLeague.Rules = new FifaLeagueClient.Module.Rules.RulesSetModel({
+          Id: 1,
+          Name: "Standard",
+          LegsPlayedPerOpponent: 2
+      });
       generateLeagueController.generateLeague.SeasonName = "Test";
       generateLeagueController.validatePlayerSelectionStep();
       verifyPromiseAndFlush(generateLeagueController, $httpBackend);

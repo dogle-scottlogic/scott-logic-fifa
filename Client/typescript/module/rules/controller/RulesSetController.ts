@@ -27,7 +27,7 @@ module FifaLeagueClient.Module.Rules {
             this.rulesSets = rulesSets;
             // Automatically select the top value
             if(this.rulesSets.length > 0){
-                    this.scope.selectedrulesset = this.rulesSets[0].Id;
+                    this.scope.selectedrulesset = this.rulesSets[0];
             }
         }
 

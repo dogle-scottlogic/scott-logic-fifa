@@ -1,7 +1,7 @@
 module FifaLeagueClient.Module.Rules {
     export class RulesSetModel {
 
-        public Id:number;
+        public Id: string;
         public Name: string;
         public LegsPlayedPerOpponent: number;
 

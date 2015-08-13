@@ -40,6 +40,11 @@ describe('Testing the LeagueWizardController', function() {
 
        // Facking the selected players
        leagueWizardController.generateLeague.CountryId = 1;
+       leagueWizardController.generateLeague.Rules = new FifaLeagueClient.Module.Rules.RulesSetModel({
+          Id: 1,
+          Name: "Standard",
+          LegsPlayedPerOpponent: 2
+       });
        leagueWizardController.generateLeague.SeasonName = "Test";
        var player1 = new FifaLeagueClient.Module.Player.PlayerModel({Id:1,Name:"Roger"});
        var player2 = new FifaLeagueClient.Module.Player.PlayerModel({Id:2,Name:"Robert"});

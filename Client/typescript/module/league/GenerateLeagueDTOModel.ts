@@ -17,7 +17,7 @@ module FifaLeagueClient.Module.League {
     export class GenerateLeagueDTOModel extends Common.Services.AbstractFilter {
 
         public CountryId:number;
-        public RulesId:string;
+        public Rules:FifaLeagueClient.Module.Rules.RulesSetModel;
         public SeasonName:string;
         public PlayerLeagues:PlayerAssignLeagueModel[];
 
@@ -26,7 +26,7 @@ module FifaLeagueClient.Module.League {
             super();
             if(data != null){
                 this.CountryId = data.CountryId;
-                this.RulesId = data.RulesId;
+                this.Rules = data.Rules;
                 this.SeasonName = data.SeasonName;
                 this.PlayerLeagues = data.PlayerLeagues;
             }
@@ -37,7 +37,7 @@ module FifaLeagueClient.Module.League {
            this.query = query;
 
            this.addRequestNumberParameter("CountryId", this.CountryId)
-              .addRequestParameter("RulesId", this.RulesId)
+              .addRequestParameter("RulesId", this.Rules.Id)
               .addRequestParameter("SeasonName", this.SeasonName);
 
             return this.query;

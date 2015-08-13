@@ -63,7 +63,7 @@ describe('The RulesSetController', function() {
             defer.resolve(createRulesSetList());
             verifyPromiseAndDigest(ruleSetController, defer, rootScope);
 
-            expect(scope.selectedrulesset).toEqual(createRulesSetList()[0].Id);
+            expect(scope.selectedrulesset).toEqual(createRulesSetList()[0]);
         });
 
         it('fails it adds the errors to the controller', function() {

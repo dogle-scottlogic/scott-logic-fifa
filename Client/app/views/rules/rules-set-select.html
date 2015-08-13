@@ -2,9 +2,13 @@
     <div class="clear"></div>
     <div class="alert alert-danger" role="alert" ng-repeat="value in vm.errors['item.Global']">{{value}}</div>
     <select class="form-control" ng-model="selectedrulesset" ng-change="vm.select()"
-            ng-options="rulesset.Id as rulesset.Name for rulesset in vm.rulesSets"
+            ng-options="rulesset as rulesset.Name for rulesset in vm.rulesSets"
             ng-required='required'>
         <option value=""></option>
     </select>
+    <div class="rules-display">
+        <div class="mini-rules-header">Rules for <span ng-bind="selectedrulesset.Name"></span></div>
+        <span>Number of games versus each opponent: </span><span ng-bind="selectedrulesset.LegsPlayedPerOpponent"></span>
+    </div>
 
 </div>

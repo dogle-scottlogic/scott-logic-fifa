@@ -128,6 +128,7 @@ namespace FIFATests.ControllerTests
         {
             GenerateLeagueDTO generateLeagueDTO = new GenerateLeagueDTO();
             generateLeagueDTO.PlayerLeagues = new List<PlayerAssignLeagueModel>();
+            generateLeagueDTO.Rules = new RuleSet();
             // We create a list of players
             List<Player> players = new List<Player>();
             for (int i = 0; i < 3; i++)
@@ -178,6 +179,7 @@ namespace FIFATests.ControllerTests
 
             GenerateLeagueDTO generateLeagueDTO = new GenerateLeagueDTO();
             generateLeagueDTO.PlayerLeagues = new List<PlayerAssignLeagueModel>();
+            generateLeagueDTO.Rules = new RuleSet();
             // We create a list of players
             List<Player> players = new List<Player>();
             for (int i = 0; i < 5; i++)
@@ -229,6 +231,7 @@ namespace FIFATests.ControllerTests
                 players.Add(new Player());
             }
             generateLeagueDTO.PlayerLeagues.Add(new PlayerAssignLeagueModel { league = new League {Name="League 1" }, Players = players });
+            generateLeagueDTO.Rules = new RuleSet();
         }
         
 
@@ -405,9 +408,6 @@ namespace FIFATests.ControllerTests
             {
                 teams.Add(new Team());
             }
-
-
-
             Season season = new Season();
             Player player = new Player();
 

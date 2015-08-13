@@ -2,9 +2,9 @@
   <wizard on-finish="vm.finishedWizard()">
     <wz-step title="Select a rule set">
         <h1>Selecting a rule set</h1>
-        <p>Please select a ruleset for the tournament</p>
+        <p>Please select a set of rules for the tournament</p>
         <form class="simple-form" ng-submit="vm.validateRulesetSelectionStep()">
-          <rulessetselect selectedrulesset="vm.generateLeague.RulesId" required='true'></rulessetselect>
+          <rulessetselect selectedrulesset="vm.generateLeague.Rules" required='true'></rulessetselect>
           <input type="submit" class="btn btn-primary" value="Continue" />
         </form>
     </wz-step>
