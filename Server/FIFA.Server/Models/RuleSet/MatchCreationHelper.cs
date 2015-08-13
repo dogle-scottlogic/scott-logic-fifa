@@ -9,15 +9,16 @@ namespace FIFA.Server.Models
         public static List<Match> create(IEnumerable<TeamPlayer> teamPlayers, int numLegsPerOpponent)
         {
             List<Match> matchsToCreate = new List<Match>();
-            for (int i = 0; i < numLegsPerOpponent; i++)
+            List<TeamPlayer> remainingPlayers = new List<TeamPlayer>(teamPlayers);
+            foreach (var teamPlayer in teamPlayers)
             {
-                List<TeamPlayer> remainingPlayers = new List<TeamPlayer>(teamPlayers);
-                foreach (var teamPlayer in teamPlayers)
+                remainingPlayers.Remove(teamPlayer);
+                foreach (var opponent in remainingPlayers)
                 {
-                    remainingPlayers.Remove(teamPlayer);
-                    foreach (var opponent in remainingPlayers)
+                    var firstPlayerAtHome = true;
+                    for (int i = 0; i < numLegsPerOpponent; i++)
                     {
-                        if (i % 2 == 0)
+                        if (firstPlayerAtHome)
                         {
                             matchsToCreate.Add(createMatch(teamPlayer, opponent));
                         }
@@ -25,6 +26,7 @@ namespace FIFA.Server.Models
                         {
                             matchsToCreate.Add(createMatch(opponent, teamPlayer));
                         }
+                        firstPlayerAtHome = !firstPlayerAtHome;
                     }
                 }
             }

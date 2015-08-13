@@ -378,14 +378,6 @@
     <Content Include="Areas\HelpPage\Views\Shared\_Layout.cshtml" />
     <Content Include="Areas\HelpPage\Views\Web.config" />
     <Content Include="Areas\HelpPage\Views\_ViewStart.cshtml" />
-    <None Include="Properties\PublishProfiles\xb-fifaleague - FTP %282%29.pubxml" />
-    <None Include="Properties\PublishProfiles\xb-fifaleague - FTP.pubxml" />
-    <None Include="Properties\PublishProfiles\xb-fifaleague - Web Deploy %282%29.pubxml" />
-    <None Include="Properties\PublishProfiles\xb-fifaleague - Web Deploy.pubxml" />
-    <None Include="Properties\PublishProfiles\xb-fifaleague-preprod - FTP.pubxml" />
-    <None Include="Properties\PublishProfiles\xb-fifaleague-preprod - Web Deploy.pubxml" />
-    <None Include="Properties\PublishProfiles\xb-fifaleague-test - FTP.pubxml" />
-    <None Include="Properties\PublishProfiles\xb-fifaleague-test - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
