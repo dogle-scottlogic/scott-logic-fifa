@@ -7,10 +7,11 @@ module FifaLeagueClient.Module.Season {
         public CountryId:number;
         public HavingLeague:boolean;
         public HasRemainingMatchToPlay:boolean;
+        public Archived:boolean;
 
         // build the model directly from the data returned by the service
         constructor(){
-          super();
+            super();
         }
 
         public reset(){
@@ -19,17 +20,19 @@ module FifaLeagueClient.Module.Season {
             this.CountryId = null;
             this.HavingLeague = null;
             this.HasRemainingMatchToPlay = null;
+            this.Archived = null;
         }
 
         // Add the request with the names
         public getParameters(query:string):string{
-           this.query = query;
+            this.query = query;
 
-           this.addRequestNumberParameter("Id", this.Id)
-              .addRequestParameter("Name", this.Name)
-              .addRequestNumberParameter("CountryId", this.CountryId)
-              .addRequestBooleanParameter("HavingLeague", this.HavingLeague)
-              .addRequestBooleanParameter("HasRemainingMatchToPlay", this.HasRemainingMatchToPlay);
+            this.addRequestNumberParameter("Id", this.Id)
+            .addRequestParameter("Name", this.Name)
+            .addRequestNumberParameter("CountryId", this.CountryId)
+            .addRequestBooleanParameter("HavingLeague", this.HavingLeague)
+            .addRequestBooleanParameter("HasRemainingMatchToPlay", this.HasRemainingMatchToPlay)
+            .addRequestBooleanParameter("Archived", this.Archived);
 
             return this.query;
         }
