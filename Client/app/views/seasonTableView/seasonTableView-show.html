@@ -34,7 +34,7 @@
                           </tr>
                       </thead>
                       <tbody ng-repeat="teamPlayer in leagueTableView.TeamPlayers">
-                          <tr ng-click="vm.showTeamPlayerStatistic(teamPlayer)" class="clickable ng-class: vm.getClsForTeamRow($index, leagueTableView, $parent.$index, seasonTableView);">
+                          <tr ng-click="vm.showTeamPlayerStatistic(teamPlayer)" class="clickable" ng-class="vm.getClsForTeamRow($index, leagueTableView, $parent.$index, seasonTableView);">
                               <td class="hidden-xs hidden-sm">
                               <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': teamPlayer.show, 'glyphicon-chevron-right': !teamPlayer.show}"></i>
                               </td>
