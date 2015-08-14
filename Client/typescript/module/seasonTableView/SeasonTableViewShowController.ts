@@ -40,6 +40,21 @@ module FifaLeagueClient.Module.SeasonTableView {
 			teamPlayer.show = !teamPlayer.show;
 		}
 
+		public getClsForTeamRow = (playerIndex:number, league:LeagueTableViewModel, leagueIndex:number, seasonTableView: SeasonTableViewModel ) => {
+			var numPromotionPlaces = seasonTableView.RuleSet.NumPromotionPlaces;
+			if (playerIndex < numPromotionPlaces && leagueIndex > 0) {
+				return "promotion";
+			} 
+			var placesFromBottom = (league.TeamPlayers.length- 1) - playerIndex;
+			var lastLeagueIndex = seasonTableView.LeagueTables.length - 1
+			if (placesFromBottom < numPromotionPlaces && leagueIndex < lastLeagueIndex) {
+				return "relegation";
+			} else {
+				return "no-promotion-relegation";
+			}
+		}
+
+
 
 	}
 

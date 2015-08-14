@@ -190,6 +190,9 @@
     <EmbeddedResource Include="Migrations\201508130828040_LinkSeasonsToRuleSets.resx">
       <DependentUpon>201508130828040_LinkSeasonsToRuleSets.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201508141016233_PromotionPlaces.resx">
+      <DependentUpon>201508141016233_PromotionPlaces.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
@@ -217,6 +220,10 @@
     <Compile Include="Authentication\BasicAuthenticationAttribute.cs" />
     <Compile Include="Authentication\HttpAuthenticationChallengeContextExtensions.cs" />
     <Compile Include="Authentication\IdentityBasicAuthenticationAttribute.cs" />
+    <Compile Include="Migrations\201508141016233_PromotionPlaces.cs" />
+    <Compile Include="Migrations\201508141016233_PromotionPlaces.Designer.cs">
+      <DependentUpon>201508141016233_PromotionPlaces.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\Authentication\ICurrentUserTool.cs" />
     <Compile Include="Authentication\RestrictAccessFromUserID.cs" />
     <Compile Include="Controllers\AbstractCRUDAPIController.cs" />

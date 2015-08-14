@@ -52,8 +52,9 @@ namespace FIFA.Server.Models
                                             {
                                                 Id = lq.FirstOrDefault().leagueId,
                                                 Name = lq.FirstOrDefault().leagueName,
-                                                seasonId = lq.FirstOrDefault().seasonId,
-                                                seasonName = lq.FirstOrDefault().seasonName,
+                                                SeasonId = lq.FirstOrDefault().seasonId,
+                                                SeasonName = lq.FirstOrDefault().seasonName,
+                                                RuleSet = lq.FirstOrDefault().ruleSet,
                                                 TeamPlayers = lq.ToList()
                                             }
                                    ).OrderBy(l => l.Name).ToList()
@@ -64,8 +65,9 @@ namespace FIFA.Server.Models
             var seasonTeamPlayers = leagueTeamPlayers.Select(
                      lg => new SeasonTableViewModel
                                 {
-                                    Id = lg.FirstOrDefault().seasonId,
-                                    Name = lg.FirstOrDefault().seasonName,
+                                    Id = lg.FirstOrDefault().SeasonId,
+                                    Name = lg.FirstOrDefault().SeasonName,
+                                    RuleSet = lg.FirstOrDefault().RuleSet,
                                     LeagueTables = lg.ToList()
                                 }
                        ).OrderBy(l => l.Name).ToList()
@@ -114,6 +116,7 @@ namespace FIFA.Server.Models
             public int matchId { get; set; }
             public int seasonId { get; set; }
             public string seasonName { get; set; }
+            public RuleSet ruleSet { get; set; }
             public int leagueId { get; set; }
             public string leagueName { get; set; }
             public Team team { get; set; }
@@ -131,6 +134,7 @@ namespace FIFA.Server.Models
                     {
                         seasonId = sc.Match.League.Season.Id,
                         seasonName = sc.Match.League.Season.Name,
+                        ruleSet = sc.Match.League.Season.RuleSet,
                         leagueId = sc.Match.League.Id,
                         leagueName = sc.Match.League.Name,
                         Id = sc.TeamPlayer.Id,
@@ -157,6 +161,7 @@ namespace FIFA.Server.Models
                             leagueName = tp.FirstOrDefault().leagueName,
                             seasonId = tp.FirstOrDefault().seasonId,
                             seasonName = tp.FirstOrDefault().seasonName,
+                            ruleSet = tp.FirstOrDefault().ruleSet,
                             Id = tp.FirstOrDefault().Id,
                             player = tp.FirstOrDefault().player,
                             team = tp.FirstOrDefault().team,

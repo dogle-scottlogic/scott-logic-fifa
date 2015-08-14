@@ -28,6 +28,6 @@ namespace FIFA.Server.Models
         [ForeignKey("RuleSet")]
         public int RuleSetId { get; set; }
 
-        public RuleSet RuleSet { get; set; }
+        public virtual RuleSet RuleSet { get; set; }
     }
 }

@@ -15,5 +15,7 @@ namespace FIFA.Server.Models
 
         public int LegsPlayedPerOpponent { get; set; }
 
+        public int NumPromotionPlaces { get; set; }
+
     }
 }

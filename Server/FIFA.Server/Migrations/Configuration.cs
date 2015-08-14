@@ -34,19 +34,22 @@ namespace FIFA.Server.Migrations
             //Populating rule sets
             context.RuleSets.AddOrUpdate(
                 rs => rs.Id,
-                new RuleSet { Id = 1, Name = "Standard League", LegsPlayedPerOpponent = 2 },
-                new RuleSet { Id = 2, Name = "Round Robin", LegsPlayedPerOpponent = 1 }
+                new RuleSet { Id = 1, Name = "Standard League", LegsPlayedPerOpponent = 2, NumPromotionPlaces = 1 },
+                new RuleSet { Id = 2, Name = "Round Robin", LegsPlayedPerOpponent = 1, NumPromotionPlaces = 0 }
             );
 
             context.SaveChanges();
 
-            var season = new Season { Id = 1, Name = "Scottish season66", CountryId = 1, RuleSetId = 1 };
+            var season = new Season { Id = 1, Name = "Scottish season", CountryId = 1, RuleSetId = 1 };
             // Populating the seasons
-            context.Seasons.AddOrUpdate(
-                s => s.Id,
-                season
-            );
-            context.SaveChanges();
+            if (context.Seasons.Count() == 0)
+            {
+                context.Seasons.AddOrUpdate(
+                    s => s.Id,
+                    season
+                );
+                context.SaveChanges();
+            }
 
             var allPlayers = new List<Player> {
                 // League 1

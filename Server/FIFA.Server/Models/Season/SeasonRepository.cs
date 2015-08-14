@@ -22,6 +22,7 @@ namespace FIFA.Server.Models
         {
             IEnumerable<Season> seasons = await db.Seasons
                 .Include(s => s.SeasonCountry)
+                .Include(s => s.RuleSet)
                 .OrderBy(s => s.Name)
                 .ToListAsync();
 
@@ -30,7 +31,7 @@ namespace FIFA.Server.Models
 
         public async Task<IEnumerable<Season>> GetAllWithFilter(SeasonFilter filter)
         {
-            return await FilterSeasons(db.Seasons.Include(s => s.SeasonCountry), filter)
+            return await FilterSeasons(db.Seasons.Include(s => s.SeasonCountry).Include(s => s.RuleSet), filter)
                 .OrderBy(s => s.Name)
                 .ToListAsync();
         }
