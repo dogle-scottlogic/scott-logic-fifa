@@ -18,6 +18,7 @@ module FifaLeagueClient.Module.League.Directives {
         vm : PlayerAssignLeagueListController;
         players:PlayerAssignLeague[];
         leagues:LeagueModel[];
+        parentcontroller:Common.Controllers.AbstractController;
     }
 
     export function PlayerAssignLeagueListDirective(): ng.IDirective {
@@ -25,7 +26,8 @@ module FifaLeagueClient.Module.League.Directives {
             restrict: "E",
             scope: {
                 players:'=',
-                leagues:'='
+                leagues:'=',
+                parentcontroller:"="
             },
             controller: PlayerAssignLeagueListController,
             controllerAs: "vm",

@@ -4,13 +4,15 @@ module FifaLeagueClient.Module.League {
 
   export class PlayerAssignLeagueListController extends Common.Controllers.AbstractController {
 
-      scope;
+    scope;
+    parentController;
 
     static $inject = ["$scope"];
 
     constructor(scope:Directives.IPlayerAssignLeagueListScope){
         super(scope);
         this.scope.players = [];
+        this.parentController = this.scope.parentcontroller;
     }
 
     // Select a league for a player
@@ -30,6 +32,9 @@ module FifaLeagueClient.Module.League {
       return players;
     }
 
+    public getErrorForLeague = function(leagueId:number) {
+        return this.parentController.seasonErrors[leagueId];
+    }
 
   }
 
