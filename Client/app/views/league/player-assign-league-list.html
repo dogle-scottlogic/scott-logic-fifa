@@ -8,7 +8,7 @@
       </thead>
       <tbody>
         <tr>
-          <td colspan="2"><h2>Unselected League</h2></td>
+          <td colspan="2"><div class="league-title">Unselected League</div></td>
         </tr>
         <tr ng-repeat="playerleague in vm.getPlayersForLeague(null)">
           <td>
@@ -25,7 +25,10 @@
       </tbody>
       <tbody ng-repeat="league in vm.scope.leagues">
         <tr>
-          <td colspan="2"><h2>{{league.Name}}</h2></td>
+          <td colspan="2">
+            <div class="league-title">{{league.Name}}</div>
+            <div ng-show="vm.getErrorForLeague(league.Id)" ng-bind="vm.getErrorForLeague(league.Id)" class="alert alert-danger"></div>
+          </td>
         </tr>
         <tr ng-repeat="playerleague in vm.getPlayersForLeague(league.Id)">
           <td>

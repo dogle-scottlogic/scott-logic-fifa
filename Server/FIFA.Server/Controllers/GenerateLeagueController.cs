@@ -21,8 +21,9 @@ namespace FIFA.Server.Controllers
     [ConfigurableCorsPolicy("localhost")]
     public class GenerateLeagueController : ApiController
     {
-        public const int minNumberOfPlayers = 4;
-        public const int maxNumberOfPlayersByLeague = 6;
+        public const int MinNumberOfPlayers = 4;
+        public const int MaxNumberOfPlayersByLeague = 6;
+        public const int MinNumberOfPlayersByLeague = 2;
 
         ILeagueRepository leagueRepository;
         ISeasonRepository seasonRepository;
@@ -46,7 +47,7 @@ namespace FIFA.Server.Controllers
         private String checkNumberOfPlayersRules(int totalOfPlayers, int totalOfTeamAvalaible)
         {
             // Their will be at least <minNumberOfPlayers> players
-            if (totalOfPlayers < minNumberOfPlayers)
+            if (totalOfPlayers < MinNumberOfPlayers)
             {
                 return "You must choose at least 4 players.";
             }
@@ -102,13 +103,13 @@ namespace FIFA.Server.Controllers
                     string leagueName = "League " + leagueNumber;
 
                     // If numberOfPlayers / maxNumberOfPlayersByLeague > 2, we remove the max number of players
-                    if ((numberOfPlayers / maxNumberOfPlayersByLeague) >= 2)
+                    if ((numberOfPlayers / MaxNumberOfPlayersByLeague) >= 2)
                     {
-                        numberOfPlayers -= maxNumberOfPlayersByLeague;
+                        numberOfPlayers -= MaxNumberOfPlayersByLeague;
                     }
-                    else if (numberOfPlayers > maxNumberOfPlayersByLeague)
+                    else if (numberOfPlayers > MaxNumberOfPlayersByLeague)
                     {
-                        numberOfPlayers -= minNumberOfPlayers;
+                        numberOfPlayers -= MinNumberOfPlayers;
                     }
                     else
                     {
@@ -195,11 +196,16 @@ namespace FIFA.Server.Controllers
             Random rand = new Random();
             List<League> leaguesInCreation = new List<League>();
 
-            // For each player leagu in player leagues, we genereage a league
+            // For each player league in player leagues, we genereage a league
             foreach (PlayerAssignLeagueModel playerleague in playerleagues)
             {
                 if(playerleague.Players != null && playerleague.Players.Count > 0)
                 {
+                    if (playerleague.Players.Count < MinNumberOfPlayersByLeague)
+                    {
+                        string errorMessage = "A league must have at least " + MinNumberOfPlayersByLeague + " players";
+                        return Request.CreateErrorResponse(HttpStatusCode.BadRequest, errorMessage);
+                    }
                     string leagueName = playerleague.league.Name;
                     // We create the league attached to the players only if their is at least one player into
                     League createdLeague = await this.createLeagueWithTeams(leagueName, playerleague.Players, teams, rand);

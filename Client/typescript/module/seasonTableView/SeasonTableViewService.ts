@@ -27,17 +27,11 @@ module FifaLeagueClient.Module.SeasonTableView {
 
         public getSeasonTableViewFilteredList(seasonTableFilter:SeasonTableFilter): ng.IPromise<SeasonTableViewModel[]> {
             var deferred = this.qService.defer();
-            var getParams = "";
             var url;
             if(seasonTableFilter!= null){
-                getParams = seasonTableFilter.getParameters(getParams);
-                if(getParams!= ""){
-                    url = this.apiURL +"?"+ getParams;
-                }else{
-                  url = this.apiURLWithSlash;
-                }
+                url = seasonTableFilter.buildApiUrl(this.apiURL, "");
             }else{
-              url = this.apiURLWithSlash;
+                url = this.apiURLWithSlash;
             }
 
             var self = this;

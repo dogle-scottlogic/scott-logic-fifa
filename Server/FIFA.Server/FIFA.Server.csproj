@@ -27,7 +27,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\</OutputPath>
-    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <PublishDatabaseSettings>
@@ -41,8 +41,6 @@
         </ObjectGroup>
       </Objects>
     </PublishDatabaseSettings>
-    <DocumentationFile>
-    </DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -184,6 +182,9 @@
     <EmbeddedResource Include="Migrations\201508031001538_IdentityUsers.resx">
       <DependentUpon>201508031001538_IdentityUsers.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201508111510244_SeasonArchive.resx">
+      <DependentUpon>201508111510244_SeasonArchive.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201508130826576_AddRuleSets.resx">
       <DependentUpon>201508130826576_AddRuleSets.cs</DependentUpon>
     </EmbeddedResource>
@@ -220,6 +221,10 @@
     <Compile Include="Authentication\BasicAuthenticationAttribute.cs" />
     <Compile Include="Authentication\HttpAuthenticationChallengeContextExtensions.cs" />
     <Compile Include="Authentication\IdentityBasicAuthenticationAttribute.cs" />
+    <Compile Include="Migrations\201508111510244_SeasonArchive.cs" />
+    <Compile Include="Migrations\201508111510244_SeasonArchive.Designer.cs">
+      <DependentUpon>201508111510244_SeasonArchive.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\201508141016233_PromotionPlaces.cs" />
     <Compile Include="Migrations\201508141016233_PromotionPlaces.Designer.cs">
       <DependentUpon>201508141016233_PromotionPlaces.cs</DependentUpon>
@@ -304,14 +309,12 @@
     <Compile Include="Models\Authentication\AuthenticationModel.cs" />
     <Compile Include="Models\Authentication\ClaimModel.cs" />
     <Compile Include="Models\Authentication\CurrentUserTool.cs" />
-    <Compile Include="Models\DbSetRepository.cs" />
     <Compile Include="Models\Country\CountryFilter.cs" />
     <Compile Include="Models\Country\Country.cs" />
     <Compile Include="Models\Country\CountryRepository.cs" />
     <Compile Include="Models\Country\ICountryRepository.cs" />
     <Compile Include="Models\FIFAServerContext.cs" />
     <Compile Include="Models\ICRUDRepository.cs" />
-    <Compile Include="Models\IQueryFilter.cs" />
     <Compile Include="Models\RuleSet\IRuleSetRepository.cs" />
     <Compile Include="Models\RuleSet\MatchCreationHelper.cs" />
     <Compile Include="Models\RuleSet\RuleSet.cs" />

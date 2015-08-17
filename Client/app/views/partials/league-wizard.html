@@ -45,7 +45,7 @@
         <p>Please assign the players to a league </p>
         <form class="simple-form" ng-submit="vm.validateAssignPlayerToLeagueStep()">
           <div class="alert alert-danger" role="alert" ng-repeat="value in vm.errors['item.Global']">{{value}}</div>
-          <playerassignleaguelist leagues="vm.leagues" players="vm.playerAssignLeague"></playerassignleaguelist>
+          <playerassignleaguelist leagues="vm.leagues" players="vm.playerAssignLeague" parentcontroller="vm"></playerassignleaguelist>
           <input type="submit" class="btn btn-primary" value="Generate league" />
         </form>
     </wz-step>
