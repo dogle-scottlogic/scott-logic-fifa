@@ -1,12 +1,17 @@
 namespace FIFA.Server.Migrations
 {
+    using Models;
     using System;
     using System.Data.Entity.Migrations;
-    
+    using System.Linq;
+
     public partial class LinkSeasonsToRuleSets : DbMigration
     {
         public override void Up()
         {
+            Sql("SET IDENTITY_INSERT dbo.RuleSets ON");
+            Sql("INSERT INTO dbo.RuleSets (Id, Name, LegsPlayedPerOpponent) VALUES (1, 'Standard League', 2)");
+            Sql("SET IDENTITY_INSERT dbo.RuleSets OFF");
             AddColumn("dbo.Seasons", "RuleSetId", c => c.Int(nullable: false, defaultValue: 1));
             CreateIndex("dbo.Seasons", "RuleSetId");
             AddForeignKey("dbo.Seasons", "RuleSetId", "dbo.RuleSets", "Id", cascadeDelete: true);
@@ -18,5 +23,6 @@ namespace FIFA.Server.Migrations
             DropIndex("dbo.Seasons", new[] { "RuleSetId" });
             DropColumn("dbo.Seasons", "RuleSetId");
         }
+        
     }
 }
