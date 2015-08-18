@@ -194,6 +194,9 @@
     <EmbeddedResource Include="Migrations\201508141016233_PromotionPlaces.resx">
       <DependentUpon>201508141016233_PromotionPlaces.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201508180821497_SeasonArchive2.resx">
+      <DependentUpon>201508180821497_SeasonArchive2.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
@@ -228,6 +231,10 @@
     <Compile Include="Migrations\201508141016233_PromotionPlaces.cs" />
     <Compile Include="Migrations\201508141016233_PromotionPlaces.Designer.cs">
       <DependentUpon>201508141016233_PromotionPlaces.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201508180821497_SeasonArchive2.cs" />
+    <Compile Include="Migrations\201508180821497_SeasonArchive2.Designer.cs">
+      <DependentUpon>201508180821497_SeasonArchive2.cs</DependentUpon>
     </Compile>
     <Compile Include="Models\Authentication\ICurrentUserTool.cs" />
     <Compile Include="Authentication\RestrictAccessFromUserID.cs" />
