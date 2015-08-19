@@ -10,7 +10,7 @@ namespace FIFA.Server.Migrations
         public override void Up()
         {
             Sql("SET IDENTITY_INSERT dbo.RuleSets ON");
-            Sql("INSERT INTO dbo.RuleSets (Id, Name, LegsPlayedPerOpponent) VALUES (1, 'Standard League', 2)");
+            Sql("INSERT INTO dbo.RuleSets (Id, Name, LegsPlayedPerOpponent) SELECT 1, 'Standard League', 2 WHERE NOT EXISTS( select 1 from dbo.RuleSets where Id = 1 )");
             Sql("SET IDENTITY_INSERT dbo.RuleSets OFF");
             AddColumn("dbo.Seasons", "RuleSetId", c => c.Int(nullable: false, defaultValue: 1));
             CreateIndex("dbo.Seasons", "RuleSetId");

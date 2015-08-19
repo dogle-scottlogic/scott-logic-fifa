@@ -8,12 +8,13 @@ namespace FIFA.Server.Migrations
         public override void Up()
         {
             DropColumn("dbo.Seasons", "Archived");
-            AddColumn("dbo.Seasons", "Archived", c => c.Boolean(nullable: false));
+            AddColumn("dbo.Seasons", "Archived", c => c.Boolean(nullable: false, defaultValue: false));
         }
         
         public override void Down()
         {
             DropColumn("dbo.Seasons", "Archived");
+            AddColumn("dbo.Seasons", "Archived", c => c.Boolean(nullable: false, defaultValue: false));
         }
     }
 }
