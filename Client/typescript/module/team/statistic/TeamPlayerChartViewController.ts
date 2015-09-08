@@ -100,8 +100,20 @@ module FifaLeagueClient.Module.Team {
         }
 
         protected getGraphWidth(margin:any){
-            var width = this.scope.parentcontext.parentNode.clientWidth - margin.left - margin.right - 50;
-            return width;
+
+            var width = this.scope.parentcontext.parentNode.clientWidth;
+
+            // We loop to the parent until finding a width (this because it can be in an accordeon which doesn't have with anymore)
+            var maxLoop = 10;
+            var parentNode = this.scope.parentcontext.parentNode.parentNode;
+
+            while(width == 0 && maxLoop > 0 && parentNode){
+                maxLoop--;
+                width = parentNode.clientWidth;
+                parentNode = parentNode.parentNode;
+            }
+
+            return width - margin.left - margin.right - 50;
         }
 
 
@@ -173,7 +185,6 @@ module FifaLeagueClient.Module.Team {
                   .attr("transform", "translate(0," + y(0) + ")")
                   .call(xAxis);
 
-
                 svg.append("g")
                   .attr("class", "y axis")
                   .call(yAxis)
@@ -188,6 +199,8 @@ module FifaLeagueClient.Module.Team {
                   .datum(results)
                   .attr("class", "line")
                   .attr("d", line);
+
+
 
                 this.displayToolTip(svg, results, x, y);
 
