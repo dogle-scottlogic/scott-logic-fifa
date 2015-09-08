@@ -106,6 +106,8 @@
         "./typescript/module/team/TeamModel.ts",
         "./typescript/module/team/TeamModule.ts",
         "./typescript/module/team/TeamService.ts",
+        "./typescript/module/team/statistic/TeamPlayerChartViewController.ts",
+        "./typescript/module/team/statistic/TeamPlayerChartViewDirective.ts",
         "./typescript/module/team/statistic/TeamPlayerStatisticViewModel.ts",
         "./typescript/module/team/statistic/TeamPlayerStatisticViewService.ts",
         "./typescript/module/team/statistic/TeamPlayerStatisticViewShowController.ts",

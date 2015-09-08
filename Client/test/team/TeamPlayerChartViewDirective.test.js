@@ -1,4 +1,4 @@
-describe('Testing the TeamPlayerStatisticViewShowDirective', function() {
+describe('Testing the TeamPlayerChartViewDirective', function() {
   var $compile,
       $rootScope,
       selectedseason;
@@ -12,11 +12,10 @@ describe('Testing the TeamPlayerStatisticViewShowDirective', function() {
   beforeEach(module('cgBusy'));
 
   var $httpBackend;
-  var dataRepository;
   var $http;
   var resultViewService;
 
-  // Mocking the season service
+  // Mocking the resultViewService service
   beforeEach(function() {
 
       module(function($provide) {
@@ -26,17 +25,12 @@ describe('Testing the TeamPlayerStatisticViewShowDirective', function() {
       resultViewService = jasmine.createSpyObj('resultViewService', [ 'getResultViewFilteredList' ]);
       resultViewService.getResultViewFilteredList.and.returnValue(defer.promise);
 
-    dataRepository = teamPlayerStatisticView_buildDataRepository();
-
-    // Mocking the datas
     inject(function($injector) {
 
       config = $injector.get(FifaLeagueClient.Module.Common.configService);
       $httpBackend = $injector.get('$httpBackend');
       $q = $injector.get('$q');
       $http = $injector.get('$http');
-
-      teamPlayerStatisticView_mockHTTPBackend(config, $httpBackend, $q, dataRepository);
     });
 
   });
@@ -51,36 +45,43 @@ describe('Testing the TeamPlayerStatisticViewShowDirective', function() {
 
 
   describe(' Tests show directive', function(){
-    it('Show at false shouldn t load the teamPlayerStatistic', function() {
+    it('Show at false shouldn t load the teamPlayerChart', function() {
         var scope = $rootScope.$new();
         scope.seasonid = 1;
         scope.teamplayerid = 1;
         scope.show = null;
-        var html = angular.element('<teamplayerstatisticviewshow seasonid="seasonid" teamplayerid="teamplayerid" show="show"></teamplayerstatisticviewshow>');
+        var html = angular.element('<teamplayerchartview seasonid="seasonid" teamplayerid="teamplayerid" show="show"></teamplayerchartview>');
         var element = $compile(html)(scope);
 
         $rootScope.$digest();
 
         expect($http.pendingRequests.length).toEqual(0);
+        expect(resultViewService.getResultViewFilteredList).not.toHaveBeenCalled();
     });
 
-    it('Show at tru should load the teamPlayerStatistic', function() {
+    it('Show at true should load the teamplayerchartview', function() {
         var scope = $rootScope.$new();
         scope.seasonid = 1;
         scope.teamplayerid = 1;
         scope.show = null;
-        var html = angular.element('<teamplayerstatisticviewshow seasonid="seasonid" teamplayerid="teamplayerid" show="show"></teamplayerstatisticviewshow>');
+        var html = angular.element('<teamplayerchartview seasonid="seasonid" teamplayerid="teamplayerid" show="show"></teamplayerchartview>');
         var element = $compile(html)(scope);
 
         $rootScope.$digest();
 
         expect($http.pendingRequests.length).toEqual(0);
+
+        // expecting that the filter has been called
+        var resultFilter = new FifaLeagueClient.Module.Results.ResultViewFilter();
+        resultFilter.PlayedMatch = true;
+        resultFilter.SeasonId = scope.seasonid;
+        resultFilter.TeamPlayerId = scope.teamplayerid;
 
         scope.show = true;
 
         $rootScope.$digest();
-        verifyPromiseAndFlush(element.isolateScope().vm, $httpBackend);
-          expect(element.html()).toContain(getTeamPlayerStat(dataRepository,scope.teamplayerid, scope.seasonid).nbAverageGoals);
+
+        expect(resultViewService.getResultViewFilteredList).toHaveBeenCalledWith(resultFilter);
     });
 
   });

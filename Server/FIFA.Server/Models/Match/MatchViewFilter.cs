@@ -15,6 +15,7 @@ namespace FIFA.Server.Models
         public int? LeagueId { get; set; }
         public int? SeasonId { get; set; }
         public int? CountryId { get; set; }
+        public int? TeamPlayerId { get; set; }
         public bool? PlayedMatch { get; set; }
         public DateTime? DateFrom { get; set; }
         public DateTime? DateTo { get; set; }
@@ -51,6 +52,11 @@ namespace FIFA.Server.Models
             if (this.CountryId != null)
             {
                 query = query.Where(m => m.League.Season.SeasonCountry.Id == this.CountryId);
+            }
+
+            if(this.TeamPlayerId != null)
+            {
+                query = query.Where(m => m.Scores.Any(sc => sc.TeamPlayer.Id == this.TeamPlayerId));
             }
 
             if (this.DateFrom != null)

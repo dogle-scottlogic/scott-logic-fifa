@@ -21,7 +21,8 @@ var htmlSrc = 'app/**/*.html';
 var jsSrc= [
         bowerAssets+'jquery/dist/jquery.js',
         bowerAssets+'bootstrap/dist/js/bootstrap.js',
-        bowerAssets+'underscore/underscore.js'
+        bowerAssets+'underscore/underscore.js',
+        bowerAssets+'d3/d3.js'
     ];
 
 // Destination path
@@ -242,6 +243,7 @@ var testFiles = [
   'lib/angular-wizard/dist/angular-wizard.js',
   'lib/angular-local-storage/dist/angular-local-storage.js',
   'app/leagueManager.js',
+  'app/script.js',
   'test/**/*.js',
   // Loading the html files
   'app/views/**/*.html'

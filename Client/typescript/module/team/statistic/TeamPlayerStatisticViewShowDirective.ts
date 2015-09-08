@@ -6,6 +6,7 @@ module FifaLeagueClient.Module.Team.Directives {
         vm : TeamPlayerStatisticViewShowController;
         seasonid:number;
         teamplayerid:number;
+        currentelement:any;
     }
 
     export function TeamPlayerStatisticViewShowDirective(): ng.IDirective {
@@ -21,6 +22,7 @@ module FifaLeagueClient.Module.Team.Directives {
             templateUrl: 'views/team/teamPlayerStatisticView-show.html',
             link: function (scope:IMyScope, $elm, $attr)
             {
+              scope.currentelement = $elm;
               // Reload the season if its ID changed
               scope.$watch('show', function(newshow, oldshow) {
                         // We load the teamplayer statistic only if it asks to show and has not been loaded before
