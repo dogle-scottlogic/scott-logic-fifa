@@ -7,6 +7,8 @@ module FifaLeagueClient.Module.Team.Directives {
         seasonid:number;
         teamplayerid:number;
         parentcontext:any;
+        playerid:number;
+        height:number;
     }
 
     export function TeamPlayerChartViewDirective(): ng.IDirective {
@@ -15,14 +17,16 @@ module FifaLeagueClient.Module.Team.Directives {
             scope: {
                 seasonid:'=',
                 teamplayerid:'=',
+                playerid:'=',
                 show:'=',
-                parentcontext:'='
+                height:'='
             },
             controller: TeamPlayerChartViewController,
             controllerAs: "vm",
             templateUrl: 'views/team/teamPlayerChartView-show.html',
             link: function (scope:IMyScope, $elm, $attr)
             {
+              scope.parentcontext = $elm.context;
               // Reload the season if its ID changed
               scope.$watch('show', function(newshow, oldshow) {
                         // We load the teamplayer chart only if it asks to show and has not been loaded before

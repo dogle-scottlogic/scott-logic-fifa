@@ -76,6 +76,7 @@ describe('Testing the TeamPlayerChartViewDirective', function() {
         resultFilter.PlayedMatch = true;
         resultFilter.SeasonId = scope.seasonid;
         resultFilter.TeamPlayerId = scope.teamplayerid;
+        resultFilter.PlayerId = undefined;
 
         scope.show = true;
 

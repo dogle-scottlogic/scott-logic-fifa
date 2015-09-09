@@ -2,8 +2,16 @@
 
 module FifaLeagueClient.Module.Team {
 
+    export class SeasonMatches {
+        public SeasonId:number;
+        public SeasonName: string;
+        public TeamPlayerMatches: TeamPlayerChartModel[];
+    }
+
     export class TeamPlayerChartModel {
         public Date: Date;
+        public SeasonId:string;
+        public SeasonName: string;
         public nbGoalsDiff: number;
         public matches: TeamPlayerMatch[];
     }
@@ -14,11 +22,12 @@ module FifaLeagueClient.Module.Team {
         public teamPlayerAgainst: string;
     }
 
+
     export class TeamPlayerChartViewController extends Common.Controllers.AbstractController {
 
         mainService:Results.ResultViewService;
         resultFilter:Results.ResultViewFilter;
-
+        chartId:string;
 
         static $inject = ["$scope", 'resultViewService'];
 
@@ -27,17 +36,27 @@ module FifaLeagueClient.Module.Team {
             this.mainService = resultViewService;
             this.resultFilter = new Results.ResultViewFilter();
             this.resultFilter.PlayedMatch = true;
+
+            this.chartId = "teamPlayerChart";
+            if (this.scope.teamplayerid){
+                this.chartId +=this.scope.teamplayerid;
+            } else {
+                this.chartId +=this.scope.playerid;
+            }
         }
 
         // Get the statistics from a teamPlayer
         public loadTeamPlayerChart = () => {
             this.resultFilter.SeasonId = this.scope.seasonid;
             this.resultFilter.TeamPlayerId = this.scope.teamplayerid;
+            this.resultFilter.PlayerId = this.scope.playerid;
+
             this.loadingPromise =
                 this.mainService.getResultViewFilteredList(this.resultFilter)
                     .then(this.handleLoadResultSuccess)
                     .catch(this.handleLoadErrors);
         }
+
 
         private convertData = (data) =>{
             var results = [];
@@ -49,24 +68,26 @@ module FifaLeagueClient.Module.Team {
                 var format = d3.time.format("%Y-%m-%d").parse;
 
                 data.forEach(function(d){
-                    var result = new TeamPlayerChartModel();
                     if(d.Date){
-
-                        result.Date = format(d.Date.split("T")[0]);
-                        result.nbGoalsDiff = 0;
-                        result.matches = [];
 
                         d.countryMatches.forEach(function(country){
 
                             country.seasonMatches.forEach(function(season){
 
+                                var result = new TeamPlayerChartModel();
+                                result.Date = format(d.Date.split("T")[0]);
+                                result.nbGoalsDiff = 0;
+                                result.matches = [];
+                                result.SeasonId = season.Id;
+                                result.SeasonName = season.Name;
+
                                 season.leagueMatches.forEach(function(league){
 
                                     league.matches.forEach(function(match){
 
-
                                         var tpm = new TeamPlayerMatch();
-                                        if(match.homeTeamPlayer.Id === that.scope.teamplayerid)
+                                        if(match.homeTeamPlayer.Id === that.scope.teamplayerid
+                                          || match.homeTeamPlayer.PlayerId === that.scope.playerid)
                                         {
                                             tpm.nbGoalsDone = match.homeTeamPlayer.nbGoals;
                                             tpm.nbGoalsTaken = match.awayTeamPlayer.nbGoals;
@@ -83,15 +104,12 @@ module FifaLeagueClient.Module.Team {
 
                                 });
 
+                                results.push(result);
                             });
 
                         });
                     }
 
-                    // We push only if the datas are in
-                    if(result.Date){
-                        results.push(result);
-                    }
 
                 });
 
@@ -100,6 +118,10 @@ module FifaLeagueClient.Module.Team {
         }
 
         protected getGraphWidth(margin:any){
+            return this.getSVGWidth() - margin.left - margin.right - 100;
+        }
+
+        protected getSVGWidth(){
 
             var width = this.scope.parentcontext.parentNode.clientWidth;
 
@@ -113,7 +135,7 @@ module FifaLeagueClient.Module.Team {
                 parentNode = parentNode.parentNode;
             }
 
-            return width - margin.left - margin.right - 50;
+            return width;
         }
 
 
@@ -126,17 +148,17 @@ module FifaLeagueClient.Module.Team {
 
 
             // Creating a results object with only what is usefull
-            var results = this.convertData(data);
+            var convertedData = this.convertData(data);
 
             // we display the graph only if we have at least 2 results
-            if(results.length > 1){
+            if(convertedData.length > 1){
 
-                var chartId = "#teamPlayerChart"+this.scope.teamplayerid;
+                var chartId = "#"+this.chartId;
 
                 // Draw a chart with the results
                 var margin = {top: 20, right: 20, bottom: 30, left: 50},
                     width = this.getGraphWidth(margin),
-                    height = 125 - margin.top - margin.bottom;
+                    height = this.scope.height - margin.top - margin.bottom;
 
                 var svg = d3.select(chartId).select("svg");
                 // removing the previous graph
@@ -146,7 +168,7 @@ module FifaLeagueClient.Module.Team {
 
                 svg = d3.select(chartId).append("svg")
                     .attr("width", "100%")
-                    .attr("height", "100%")
+                    .attr("height", this.scope.height)
                   .append("g")
                     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
@@ -174,11 +196,13 @@ module FifaLeagueClient.Module.Team {
                         return y(d.nbGoalsDiff);
                     });
 
+                var that = this;
+
                 // Creating the x domain
-                x.domain(d3.extent(results, function(d:any) { return d.Date; }));
+                x.domain(d3.extent(convertedData, function(d:any) { return d.Date; }));
 
                 // Creating the y domain with the nb goals
-                y.domain(d3.extent(results, function(result:any) { return (result.nbGoalsDiff); }));
+                y.domain(d3.extent(convertedData, function(d:any) { return (d.nbGoalsDiff); }));
 
                 svg.append("g")
                   .attr("class", "x axis")
@@ -195,23 +219,45 @@ module FifaLeagueClient.Module.Team {
                   .style("text-anchor", "end")
                   .text("Goal diff");
 
-                svg.append("path")
-                  .datum(results)
-                  .attr("class", "line")
-                  .attr("d", line);
+
+              // grouping lines by season
+              var dataGroupedBySeason = d3.nest()
+                  .key(function(d:TeamPlayerChartModel){return d.SeasonId;})
+                  .rollup(function(v:any){return v;})
+                  .entries(convertedData);
+
+                // For each season we create differents lines
+                var lineClassI = 0;
+                dataGroupedBySeason.forEach(function(seasonMatcheToReturn){
+
+                    var currentSeasonClass = "seasonChart"+lineClassI;
+
+                    var results = seasonMatcheToReturn.values;
+
+                    svg.append("path")
+                      .datum(results)
+                      .attr("class", "line "+currentSeasonClass)
+                      .attr("d", line);
+
+                    that.displayMatchToolTip(svg, results, x, y);
+
+                    // Display the tooltip of the seasons
+                    that.displaySeasonToolTip(svg, x, y, height, currentSeasonClass);
+
+                    lineClassI++;
+
+                });
 
 
 
-                this.displayToolTip(svg, results, x, y);
-
-                var that = this;
 
                 function resize() {
+
                     // update width
                     width = that.getGraphWidth(margin);
 
                     // reset x range
-                    x.range([0, width]);
+                    x.range([5, width]);
 
                     // update axes
                     svg.select('.x.axis').call(xAxis);
@@ -235,20 +281,21 @@ module FifaLeagueClient.Module.Team {
 
         }
 
-        // function to display a tooltip
-        protected displayToolTip = (svg, results, x, y) => {
+        // function to display the match tooltip
+        protected displayMatchToolTip = (svg, results, x, y) => {
 
             var that = this;
 
             var div = d3.select("body").append("div")
-                .attr("class", "tooltip")
+                .attr("class", "matchTooltip")
                 .style("opacity", 0);
 
+            // Tooltip displaying the matches for a date
             svg.selectAll("dot")
                     .data(results)
                 .enter().append("circle")
                     .attr("class", "circle")
-                    .attr("r", 5)
+                    .attr("r", 3)
                     .attr("cx", function(d:any) { return x(d.Date); })
                     .attr("cy", function(d:any) { return y(d.nbGoalsDiff); })
                     .on("mouseover", function(d:any) {
@@ -267,11 +314,75 @@ module FifaLeagueClient.Module.Team {
         }
 
         protected showMatches = (result) => {
+
             var formatTime = d3.time.format("%d %B %Y");
             var show = formatTime(result.Date)+" : "+result.nbGoalsDiff;
             result.matches.forEach(function(match){
                 show += "<br/> Against : "+ match.teamPlayerAgainst +" : "  + match.nbGoalsDone + " - " + match.nbGoalsTaken
             });
+            return show;
+        }
+
+
+        // function to display the season tooltip
+        protected displaySeasonToolTip = (svg, x, y, height, currentSeasonClass) => {
+
+          var that = this;
+
+          // append the x line
+          var lineTooltip = svg.append("line")
+              .attr("class", "lineTooltip")
+              .style("stroke", "blue")
+              .style("stroke-dasharray", "3,3")
+              .style("opacity", 0.5)
+              .attr("y1", 0)
+              .attr("y2", height);
+
+          var seasonTextTooltip = svg.append("text")
+              .attr("class", "seasonTextTooltip")
+              .attr("y", 6)
+              .attr("y1", 0)
+              .attr("y2", height);
+
+            // Tooltip displaying the season for a line
+            svg.selectAll("."+currentSeasonClass)
+                .on("mouseover", function(d:any) {
+
+                        //Getting the mean of the date
+                        var meanDate = d3.mean(d, function(m:any){return m.Date;});
+
+                        seasonTextTooltip.text(that.showSeason(d[0]))
+                                .attr("transform",
+                                "translate(" + x(meanDate) + "," +
+                                               -15 + ")")
+                                     .attr("y2", height).transition()
+                                         .duration(200)
+                                         .style("opacity", .9);
+
+                        // Displaying the X line
+                        lineTooltip.attr("transform",
+                        "translate(" + x(meanDate) + "," +
+                                       0 + ")")
+                             .attr("y2", height).transition()
+                                 .duration(200)
+                                 .style("opacity", .9);
+                    })
+                    .on("mouseout", function(d) {
+                        seasonTextTooltip.transition()
+                            .duration(500)
+                            .style("opacity", 0);
+
+                        // Hidding the X line
+                        lineTooltip.transition()
+                            .duration(500)
+                            .style("opacity", 0);
+
+                    });
+
+        }
+
+        protected showSeason = (result) => {
+            var show = result.SeasonName;
             return show;
         }
 
