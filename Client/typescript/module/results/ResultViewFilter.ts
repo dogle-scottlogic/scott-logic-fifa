@@ -9,6 +9,7 @@ module FifaLeagueClient.Module.Results {
         public SeasonId:string;
         public CountryId:string;
         public TeamPlayerId:string;
+        public PlayerId:string;
         public PlayedMatch:boolean;
         public DateTo:Date;
         public DateFrom:Date;
@@ -29,6 +30,7 @@ module FifaLeagueClient.Module.Results {
             this.SeasonId = null;
             this.CountryId = null;
             this.TeamPlayerId = null;
+            this.PlayerId = null;
             this.PlayedMatch = null;
             this.DateTo = null;
             this.DateFrom = null;
@@ -44,6 +46,7 @@ module FifaLeagueClient.Module.Results {
               .addRequestParameter("SeasonId", this.SeasonId)
               .addRequestParameter("CountryId", this.CountryId)
               .addRequestParameter("TeamPlayerId", this.TeamPlayerId)
+              .addRequestParameter("PlayerId", this.PlayerId)
               .addRequestBooleanParameter("PlayedMatch", this.PlayedMatch)
               .addRequestDayDateParameter("DateTo", this.DateTo)
               .addRequestDayDateParameter("DateFrom", this.DateFrom)

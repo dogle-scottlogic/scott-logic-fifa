@@ -55,6 +55,7 @@ describe('Testing the TeamPlayerChartViewController', function() {
         filter.PlayedMatch = true;
         filter.SeasonId = teamPlayerChartViewController.scope.seasonid;
         filter.TeamPlayerId = teamPlayerChartViewController.scope.teamplayerid;
+        filter.PlayerId = undefined;
 
         // we load the team player
         teamPlayerChartViewController.loadTeamPlayerChart();
