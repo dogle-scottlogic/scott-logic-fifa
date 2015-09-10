@@ -128,6 +128,7 @@ namespace FIFA.Server.Models
                             .Select(s => new TeamPlayerResultViewModel
                             {
                                 Id = s.TeamPlayerId,
+                                PlayerId = s.TeamPlayer.Player.Id,
                                 PlayerName = s.TeamPlayer.Player.Name,
                                 TeamName = s.TeamPlayer.Team.Name,
                                 nbGoals = s.Goals
@@ -138,6 +139,7 @@ namespace FIFA.Server.Models
                             .Select(s => new TeamPlayerResultViewModel
                             {
                                 Id = s.TeamPlayerId,
+                                PlayerId = s.TeamPlayer.Player.Id,
                                 PlayerName = s.TeamPlayer.Player.Name,
                                 TeamName = s.TeamPlayer.Team.Name,
                                 nbGoals = s.Goals
