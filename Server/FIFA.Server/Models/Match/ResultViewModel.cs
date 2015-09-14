@@ -10,6 +10,7 @@ namespace FIFA.Server.Models
     public class TeamPlayerResultViewModel
     {
         public int Id { get; set; }
+        public int PlayerId { get; set; }
         public string TeamName { get; set; }
         public string PlayerName { get; set; }
         public int nbGoals { get; set; }

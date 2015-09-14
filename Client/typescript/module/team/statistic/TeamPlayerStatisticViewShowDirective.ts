@@ -6,6 +6,7 @@ module FifaLeagueClient.Module.Team.Directives {
         vm : TeamPlayerStatisticViewShowController;
         seasonid:number;
         teamplayerid:number;
+        currentelement:any;
     }
 
     export function TeamPlayerStatisticViewShowDirective(): ng.IDirective {

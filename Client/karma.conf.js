@@ -23,6 +23,7 @@ module.exports = function(config) {
       'lib/angular-wizard/dist/angular-wizard.js',
       'lib/angular-local-storage/dist/angular-local-storage.js',
       'app/leagueManager.js',
+      'app/script.js',
       'test/**/*.js',
       // Loading the html files
       'app/views/**/*.html'
