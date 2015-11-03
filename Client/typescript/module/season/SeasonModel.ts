@@ -6,6 +6,7 @@ module FifaLeagueClient.Module.Season {
         public Name: string;
         public SeasonCountry: Country.CountryModel;
         public Archived:boolean;
+        public RuleSetId:number;
 
         // build the model directly from the data returned by the service
         constructor(data){
@@ -15,6 +16,7 @@ module FifaLeagueClient.Module.Season {
                 this.Name = data.Name;
                 this.SeasonCountry = data.SeasonCountry;
                 this.Archived = data.Archived;
+                this.RuleSetId = data.RuleSetId;
             }
         }
     }
