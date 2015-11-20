@@ -11,6 +11,7 @@ module FifaLeagueClient.Module.Results {
         ];
 
         constructor(scope, $modal, matchService) {
+            super(scope);
             this.scope = scope;
             this.modal = $modal;
             this.matchService = matchService;
