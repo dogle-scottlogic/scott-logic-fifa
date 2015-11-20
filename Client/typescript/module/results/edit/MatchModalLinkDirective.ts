@@ -15,9 +15,10 @@ module FifaLeagueClient.Module.Results {
             scope: {
                 showeditlink:'=',
                 id:'=',
+                errors:'=',
                 'callbackupdate':'&callbackupdate'
             },
-            controller: MatchModalLinkDirectiveControleur,
+            controller: MatchModalLinkDirectiveController,
             controllerAs: "vm",
             templateUrl: 'views/results/match-modal-link.html',
             link: function(scope:IMyScope, modal, element, attrs) {

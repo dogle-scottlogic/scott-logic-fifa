@@ -1,6 +1,6 @@
 module FifaLeagueClient.Module.Results {
 
-    export class MatchModalLinkDirectiveControleur{
+    export class MatchModalLinkDirectiveController extends Common.Controllers.AbstractController {
 
         scope;
         modal;
@@ -45,7 +45,12 @@ module FifaLeagueClient.Module.Results {
             var self = this;
             self.loadingPromise =
             self.matchService.deleteMatch(this.scope.id)
-                .then(self.callbackupdate);
+                .then(self.callbackupdate)
+                .catch(self.onError);
+        }
+
+        protected onError = (config) => {
+            this.scope.errors = config.errors;
         }
 
         public callbackupdate = () => {
