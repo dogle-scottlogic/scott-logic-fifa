@@ -26,7 +26,33 @@ namespace FIFA.Server.Controllers
             this.scoreRepository = scoreRepository;
             this.userTool = _userTool;
         }
-                public async Task<HttpResponseMessage> Post(MatchResultDTO matchResult) { 
+
+
+        [Authorize(Roles = AuthenticationRoles.AdministratorRole)] // Require authenticated requests.
+        public async Task<HttpResponseMessage> Delete(int matchId)
+        {
+            Match match = await matchRepository.Get(matchId);
+            
+            if (!match.Played)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Cannot reset match not yet played");
+            }
+
+            ScoreFilter scoreFilter = new ScoreFilter();
+            scoreFilter.MatchId = matchId;
+            IEnumerable<Score> scores = await scoreRepository.GetAllWithFilter(scoreFilter);
+            foreach (var score in scores)
+            {
+                score.Goals = 0;
+                await scoreRepository.UpdateFromMatchResult(score);
+            }
+            match.Date = null;
+            match.Played = false;
+            await matchRepository.Update(matchId, match);
+            return Request.CreateResponse(HttpStatusCode.OK);
+        }
+
+        public async Task<HttpResponseMessage> Post(MatchResultDTO matchResult) { 
 
             if (matchResult != null)
             {
