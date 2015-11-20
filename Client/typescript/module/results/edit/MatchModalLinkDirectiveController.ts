@@ -4,17 +4,17 @@ module FifaLeagueClient.Module.Results {
 
         scope;
         modal;
-        matchService
+        matchResultService;
 
         static $inject = [
-            "$scope", '$modal', 'matchService'
+            "$scope", '$modal', 'matchResultsService'
         ];
 
-        constructor(scope, $modal, matchService) {
+        constructor(scope, $modal, matchResultService) {
             super(scope);
             this.scope = scope;
             this.modal = $modal;
-            this.matchService = matchService;
+            this.matchResultService = matchResultService;
         }
 
         public openMatchEdit = () => {
@@ -45,7 +45,7 @@ module FifaLeagueClient.Module.Results {
         public deleteMatch = () => {
             var self = this;
             self.loadingPromise =
-            self.matchService.deleteMatch(this.scope.id)
+            self.matchResultService.deleteResult(this.scope.id)
                 .then(self.callbackupdate)
                 .catch(self.onError);
         }
