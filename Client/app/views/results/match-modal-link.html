@@ -1,6 +1,6 @@
 <table>
     <tr ng-show="showeditlink">
         <td><button class="btn btn-primary" type="button" ng-click="vm.openMatchEdit()">Edit</button></td>
-        <td><button class="btn btn-primary" type="button" ng-click="vm.deleteMatch()">Delete</button></td>
+        <td><button class="btn btn-primary" type="button" ng-click="vm.deleteMatch()" hideunlessadmin>Delete</button></td>
     </tr>
 </table>

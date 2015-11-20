@@ -14,5 +14,7 @@ namespace FIFA.Server.Models.Authentication
         public string UserName { get; set; }
 
         public IEnumerable<ClaimModel> Claims { get; set; }
+
+        public bool IsAdmin { get; set; }
     }
 }

@@ -66,7 +66,7 @@
                                   <td width="50%">{{match.homeTeamPlayer.PlayerName}} ({{match.homeTeamPlayer.TeamName}})</td>
                                   <td class="text-nowrap">{{match.homeTeamPlayer.nbGoals}} - {{match.awayTeamPlayer.nbGoals}}</td>
                                   <td width="50%">{{match.awayTeamPlayer.PlayerName}} ({{match.awayTeamPlayer.TeamName}})</td>
-                                  <td class="hidden-xs"><matchmodallink showeditlink="true" id="match.Id" callbackupdate="vm.loadList()" errors="vm.errors"></matchmodallink></td>
+                                  <td class="hidden-xs" hideunlessadmin><matchmodallink showeditlink="true" id="match.Id" callbackupdate="vm.loadList()" errors="vm.errors"></matchmodallink></td>
                               </tr>                          </tbody>
                       </table>
                     </div>
