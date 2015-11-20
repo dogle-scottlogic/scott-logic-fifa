@@ -3,7 +3,7 @@ module FifaLeagueClient.Module.Results {
     resultsModule.directive("matchmodallink",MatchModalLinkDirective);
 
     interface IMyScope extends ng.IScope {
-        vm : MatchModalLinkDirectiveControleur;
+        vm : MatchModalLinkDirectiveController;
         id:string;
         showeditlink:boolean;
         callbackupdate;
@@ -15,9 +15,10 @@ module FifaLeagueClient.Module.Results {
             scope: {
                 showeditlink:'=',
                 id:'=',
+                errors:'=',
                 'callbackupdate':'&callbackupdate'
             },
-            controller: MatchModalLinkDirectiveControleur,
+            controller: MatchModalLinkDirectiveController,
             controllerAs: "vm",
             templateUrl: 'views/results/match-modal-link.html',
             link: function(scope:IMyScope, modal, element, attrs) {

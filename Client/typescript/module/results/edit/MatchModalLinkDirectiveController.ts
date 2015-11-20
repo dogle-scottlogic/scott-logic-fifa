@@ -1,17 +1,20 @@
 module FifaLeagueClient.Module.Results {
 
-    export class MatchModalLinkDirectiveControleur{
+    export class MatchModalLinkDirectiveController extends Common.Controllers.AbstractController {
 
         scope;
         modal;
+        matchService
 
         static $inject = [
-            "$scope", '$modal'
+            "$scope", '$modal', 'matchService'
         ];
 
-        constructor(scope, $modal) {
+        constructor(scope, $modal, matchService) {
+            super(scope);
             this.scope = scope;
             this.modal = $modal;
+            this.matchService = matchService;
         }
 
         public openMatchEdit = () => {
@@ -37,6 +40,18 @@ module FifaLeagueClient.Module.Results {
             modalInstance.result.then(function () {
                 self.callbackupdate();
             });
+        }
+
+        public deleteMatch = () => {
+            var self = this;
+            self.loadingPromise =
+            self.matchService.deleteMatch(this.scope.id)
+                .then(self.callbackupdate)
+                .catch(self.onError);
+        }
+
+        protected onError = (config) => {
+            this.scope.errors = config.errors;
         }
 
         public callbackupdate = () => {
