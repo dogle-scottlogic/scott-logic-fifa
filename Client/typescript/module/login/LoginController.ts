@@ -4,16 +4,18 @@ module FifaLeagueClient.Module.Login {
 
     export class LoginController extends Common.Controllers.AbstractController  {
 
+        rootScope;
         mainService:LoginService;
         loginData:AuthenticationModel;
         location;
 
         static $inject = [
-            "$scope", 'loginService', '$location'
+            "$scope", '$rootScope', 'loginService', '$location'
         ];
 
-        constructor(scope, loginService : LoginService, location) {
+        constructor(scope, rootScope, loginService : LoginService, location) {
             super(scope);
+            this.rootScope = rootScope;
             this.mainService = loginService;
             this.loginData = new AuthenticationModel();
             this.location = location;
@@ -34,6 +36,7 @@ module FifaLeagueClient.Module.Login {
         protected handleSuccess = (response:boolean) => {
             this.loginData.isAuth = response;
             this.location.path("/");
+            this.onChange();
         }
 
         // Method adding creating errors in creatingErrors list
@@ -44,7 +47,12 @@ module FifaLeagueClient.Module.Login {
 
         public logout = () => {
             this.mainService.logout();
+            this.onChange();
         };
+
+        public onChange = () => {
+            this.rootScope.$broadcast("loginChange");
+        }
 
     }
 

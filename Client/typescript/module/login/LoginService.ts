@@ -76,5 +76,14 @@ module FifaLeagueClient.Module.Login {
         public getUserIdInSession(){
           return this.localStorageService.getObjectSession(SessionStorageService.userID);
         }
+
+        public getIsAdminFromSession() {
+            var loginData = (<AuthenticationResponseModel>this.localStorageService.getObjectSession(SessionStorageService.loginData));
+            return loginData && loginData.IsAdmin;
+        }
+
+        public isUserLoggedIn(): boolean {
+            return this.getUserIdInSession() !== null;
+        }
       }
 }

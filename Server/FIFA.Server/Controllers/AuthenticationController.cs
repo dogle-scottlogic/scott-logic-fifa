@@ -32,7 +32,8 @@ namespace FIFA.Server.Controllers
             AuthenticationModel model = new AuthenticationModel
             {
                 ID = this.userTool.GetCurrentUserId(),
-                UserName = User.Identity.Name
+                UserName = User.Identity.Name,
+                IsAdmin = User.IsInRole(AuthenticationRoles.AdministratorRole)
             };
 
 
