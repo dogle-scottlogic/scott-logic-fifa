@@ -3,8 +3,8 @@
     <div class="rubric-title">Latest results</div>
     <div class="clear"></div>
     <div class="alert alert-danger" role="alert" ng-repeat="value in vm.errors['item.Global']">{{value}}</div>
-    <accordion close-others="true" ng-hide="vm.resultViewList.length==0">
-        <accordion-group  ng-repeat="resultView in vm.resultViewList" ng-init="status.open = $first" is-open="status.open" class="accordion-panel">
+    <accordion close-others="false" ng-hide="vm.resultViewList.length==0">
+        <accordion-group  ng-repeat="resultView in vm.resultViewList" ng-init="status.open = true" is-open="status.open" class="accordion-panel">
                 <accordion-heading>
                   <div>
                     {{resultView.Date | date :'EEEE dd MMMM yyyy'}}
@@ -23,16 +23,16 @@
                           </thead>
                           <tbody>
                               <tr ng-repeat="match in leagueMatch.matches" >
-                                  <td width="50%">{{match.homeTeamPlayer.PlayerName}} ({{match.homeTeamPlayer.TeamName}})</td>
+                                  <td width="50%">{{match.homeTeamPlayer.PlayerName}} (<a ng-href="http://sofifa.com/teams?keyword={{match.homeTeamPlayer.TeamName}}" target="_blank">{{match.homeTeamPlayer.TeamName}}</a>)</td>
                                   <td class="text-nowrap">{{match.homeTeamPlayer.nbGoals}} - {{match.awayTeamPlayer.nbGoals}}</td>
-                                  <td width="50%">{{match.awayTeamPlayer.PlayerName}} ({{match.awayTeamPlayer.TeamName}})</td>
+                                  <td width="50%">{{match.awayTeamPlayer.PlayerName}} (<a ng-href="http://sofifa.com/teams?keyword={{match.awayTeamPlayer.TeamName}}" target="_blank">{{match.awayTeamPlayer.TeamName}}</a>)</td>
                               </tr>
                           </tbody>
                       </table>
                     </div>
                   </div>
                 </div>
-              </div>
+                </div>
         </accordion-group>
     </accordion>
     <div ng-show="vm.resultViewList.length==0">

@@ -1,9 +1,7 @@
 ﻿using FIFA.Server.Authentication;
 using FIFA.Server.Infrastructure;
 using FIFA.Server.Models;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;

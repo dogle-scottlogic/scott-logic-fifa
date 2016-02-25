@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Web.Http;
 using System.Threading.Tasks;
 using System.Net.Http;
 using System.Net;
-using System.Collections;
-using System.Web.Mvc;
-using System.Web.Http.Description;
 using FIFA.Server.Models;
 
 namespace FIFA.Server.Controllers

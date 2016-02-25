@@ -38,7 +38,7 @@
 </accordion>
 <br>
 
-<div ng-init="vm.loadList()" cg-busy="vm.loadingPromise"> 
+<div ng-init="vm.loadList()" cg-busy="vm.loadingPromise">
   <div class="alert alert-danger" role="alert" ng-repeat="value in vm.errors['item.Global']">{{value}}</div>
   <div class="grid-view">
     <div class="rubric-title">Results</div>
@@ -67,7 +67,8 @@
                                   <td class="text-nowrap">{{match.homeTeamPlayer.nbGoals}} - {{match.awayTeamPlayer.nbGoals}}</td>
                                   <td width="50%">{{match.awayTeamPlayer.PlayerName}} ({{match.awayTeamPlayer.TeamName}})</td>
                                   <td class="hidden-xs" hideunlessadmin><matchmodallink showeditlink="true" id="match.Id" callbackupdate="vm.loadList()" errors="vm.errors"></matchmodallink></td>
-                              </tr>                          </tbody>
+                              </tr>
+                          </tbody>
                       </table>
                     </div>
                   </div>

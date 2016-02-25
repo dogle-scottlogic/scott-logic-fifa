@@ -2,9 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
-using FIFA.Server.Models;
-using System.Data.Entity;
 
 namespace FIFA.Server.Models
 {
@@ -70,10 +67,9 @@ namespace FIFA.Server.Models
                                     RuleSet = lg.FirstOrDefault().RuleSet,
                                     LeagueTables = lg.ToList()
                                 }
-                       ).OrderBy(l => l.Name).ToList()
-                       ;
+                       ).OrderBy(l => l.Name).ToList();
 
-            IEnumerable<SeasonTableViewModel> seasons = seasonTeamPlayers.ToList();
+            IEnumerable<SeasonTableViewModel> seasons = seasonTeamPlayers.ToList().OrderByDescending(s => s.Id);
 
             
             // Calculating the position -- easier to do it in a loop

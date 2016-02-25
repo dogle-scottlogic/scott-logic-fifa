@@ -26,8 +26,8 @@
                               <th class="hidden-xs"><span tooltip="Matches won">W</span></th>
                               <th class="hidden-xs"><span tooltip="Matches drawn">D</span></th>
                               <th class="hidden-xs"><span tooltip="Matches lost">L</span></th>
-                              <th class="hidden-xs hidden-sm"><span tooltip="Matches goals for">GS</span></th>
-                              <th class="hidden-xs hidden-sm"><span tooltip="Matches goals against">GC</span>
+                              <th class="hidden-xs hidden-sm"><span tooltip="Goals Scored">GS</span></th>
+                              <th class="hidden-xs hidden-sm"><span tooltip="Goals Conceded">GC</span>
                               </th>
                               <th><span tooltip="Goal difference">GD</span></th>
                               <th><span tooltip="Points">Pts</span></th>
@@ -39,7 +39,7 @@
                               <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': teamPlayer.show, 'glyphicon-chevron-right': !teamPlayer.show}"></i>
                               </td>
                               <td>{{teamPlayer.position}}</td>
-                              <td>{{teamPlayer.player.Name}} ({{teamPlayer.team.Name}})</td>
+                              <td>{{teamPlayer.player.Name}} (<a ng-click="$event.stopPropagation()" ng-href="http://sofifa.com/teams?keyword={{teamPlayer.team.Name}}" target="_blank">{{teamPlayer.team.Name}}</a>)</td>
                               <td>{{teamPlayer.nbPlayedMatches}}</td>
                               <td class="hidden-xs">{{teamPlayer.nbWin}}</td>
                               <td class="hidden-xs">{{teamPlayer.nbDraw}}</td>
