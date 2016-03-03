@@ -16,6 +16,8 @@
 /// <reference path="module/hideUnlessAdmin/HideUnlessAdminModule.ts" />
 /// <reference path="module/hideUnlessLoggedIn/HideUnlessLoggedInModule.ts" />
 /// <reference path="module/navBar/NavBarModule.ts" />
+/// <reference path="module/info/InfoModule.ts" />
+
 
 module FifaLeagueClient {
     export var mainModule = angular.module("FifaLeagueApp", ['ngRoute',
@@ -24,7 +26,7 @@ module FifaLeagueClient {
         Module.Team.moduleName, Module.League.moduleName, Module.Results.moduleName,
         Module.Dashboard.moduleName, Module.SeasonTableView.moduleName, Module.Login.moduleName,
         Module.User.moduleName, Module.Rules.moduleName, Module.HideUnlessAdmin.moduleName,
-        Module.HideUnlessLoggedIn.moduleName
+        Module.HideUnlessLoggedIn.moduleName, Module.Info.moduleName
     ]).config(["$routeProvider",
     function routes($routeProvider: ng.route.IRouteProvider){
       $routeProvider.when('/teams', {
