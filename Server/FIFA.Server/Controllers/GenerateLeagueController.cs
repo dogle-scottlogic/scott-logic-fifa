@@ -107,7 +107,7 @@ namespace FIFA.Server.Controllers
                     {
                         numberOfPlayers -= MaxNumberOfPlayersByLeague;
                     }
-                    else if (numberOfPlayers > MaxNumberOfPlayersByLeague)
+                    else if (numberOfPlayers >= MaxNumberOfPlayersByLeague)
                     {
                         numberOfPlayers -= MinNumberOfPlayers;
                     }
